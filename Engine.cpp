@@ -50,6 +50,6 @@ void Engine::MainLoop() {
 }
 
 void Engine::Start() {
-	if (!Init()) throw "B³¹d w inicjalizacji silnika";
+	if (!Init()) throw "Blad w inicjalizacji silnika";
 	MainLoop();
 }

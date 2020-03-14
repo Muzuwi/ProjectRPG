@@ -9,3 +9,5 @@ x64\
 *.png
 *.txt
 .vs\
+.idea/
+cmake-build-debug/
