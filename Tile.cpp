@@ -1,14 +1,12 @@
-#include "Tile.h"
+#include "TextureManager.h"
+#include "Tile.hpp"
 
-Tile::Tile(sf::Texture& image) {
-	baseSprite.setTexture(image);
+void Tile::draw(Vec2u position, sf::RenderTarget& target) {
+	sf::Sprite sprite(TextureManager::get()->GetTexture(tileType));
+	sprite.setPosition(sf::Vector2f{static_cast<float>(position.x), static_cast<float>(position.y)});
+	target.draw(sprite);
 }
 
-Tile::~Tile() {
-
-}
-
-void Tile::Draw(int x, int y, sf::RenderWindow* window) {
-	baseSprite.setPosition(x, y);
-	window->draw(baseSprite);
+Vec2u Tile::getDimensions() const {
+	return {32, 32};
 }

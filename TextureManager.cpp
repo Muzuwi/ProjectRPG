@@ -1,17 +1,21 @@
 #include "TextureManager.h"
 
-TextureManager::TextureManager() {
+TextureManager* TextureManager::instance = nullptr;
 
+TextureManager::TextureManager() {
+	instance = this;
 };
 
 TextureManager::~TextureManager() {
 
 };
 
-void TextureManager::AddTexture(sf::Texture& toAdd) {
-	textureVector.push_back(toAdd);
+void TextureManager::AddTexture(std::string path) {
+	sf::Texture texture;
+	texture.loadFromFile(path);
+	textureVector.push_back(texture);
 }
 
-sf::Texture& TextureManager::GetTexture(int index) {
+sf::Texture& TextureManager::GetTexture(unsigned index) {
 	return textureVector[index];
 }

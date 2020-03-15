@@ -1,18 +1,17 @@
 #pragma once
+#include <memory>
 #include <SFML/Graphics.hpp>
 #include "TextureManager.h"
-#include "Tile.h"
-#include "Camera.h"
-#include "Map.h"
+#include "Map.hpp"
 
 class Engine
 {
 private:
-	sf::RenderWindow* window;
-	Tile* testTile;
+	std::shared_ptr<sf::RenderWindow> window;
 
 	TextureManager textureManager;
-	Map* currentMap;
+
+	Map newMap;
 
 	bool Init();
 	void MainLoop();

@@ -1,3 +1,4 @@
+#include <memory>
 #include "Engine.h"
 
 Engine::Engine() {
@@ -9,24 +10,29 @@ Engine::~Engine() {
 }
 
 bool Engine::Init() {
-	window = new sf::RenderWindow(sf::VideoMode(800, 600, 32), "Projekt");
-	Camera* cam = new Camera(800, 600, 0.2f);
+	window = std::make_shared<sf::RenderWindow>(sf::VideoMode(800, 600, 32), "Projekt");
+	newMap = Map::from_file("");
 	LoadTextures();
 	if (!window) return false;
 	return true;
 }
 
 void Engine::LoadTextures() {
-	sf::Texture sprite;
-	
-	sprite.loadFromFile("sprite1.png");
-	textureManager.AddTexture(sprite);
-	testTile = new Tile(textureManager.GetTexture(0));
+	textureManager.AddTexture("sprite1.png");
+	textureManager.AddTexture("sprite2.png");
 }
 
 void Engine::RenderFrame() {
 	window->clear();
-	testTile->Draw(30, 30, window);
+
+	for(unsigned i = 0; i < newMap.getWidth(); i++) {
+		for(unsigned j = 0; j < newMap.getHeight(); j++) {
+			auto& tile = newMap.getTile({i, j});
+			tile.draw(Vec2u{i * tile.getDimensions().x,
+				   j * tile.getDimensions().y}, *this->window);
+		}
+	}
+
 	window->display();
 }
 

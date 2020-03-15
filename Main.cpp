@@ -2,8 +2,8 @@
 #include "Engine.h"
 
 int main() {
-	Engine* engine = new Engine();
-	engine->Start();
+	Engine engine;
+	engine.Start();
 
 	return 0;
 }

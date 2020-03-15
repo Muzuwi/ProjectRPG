@@ -1,41 +1,24 @@
-#include <vector>
-#include "Map.h"
-#include "Tile.h"
+#include <fstream>
+#include "Map.hpp"
 
-void Map::SetDimensions(int w, int h) {
-	map.resize(w);
-
-	for (int i = 0; i < w; i++) {
-		map.at(i).resize(h, 0);
+Map Map::from_file(const std::string& path) {
+//	size_t fileSize = 0;
+//
+//	std::ifstream file;
+//	file.open(path);
+//
+//	file.seekg(0, std::ios::end);
+//	fileSize = file.tellg();
+//	file.seekg(0, std::ios::beg);
+//
+//	file.close();
+	Map newMap;
+	newMap.size = {10 , 10};
+	newMap.tiles.resize(10, 10);
+	for(size_t i = 0; i < 10; i++) {
+		for(size_t j = 0; j < 10; j++) {
+			newMap.tiles[i][j] = Tile((i == j) ? 1 : 0, 0, false);
+		}
 	}
-}
-
-Map::Map(int w, int h) {
-	SetDimensions(w, h);
-	this->w = w;
-	this->h = h;
-}
-
-Map::~Map() {
-
-}
-
-void Map::AddTile(int x, int y, Tile* tile) {
-	map[x][y] = tile;
-}
-
-Tile* Map::GetTile(int x, int y) {
-	return map[x][y];
-}
-
-void Map::LoadMap() {
-	//
-}
-
-int Map::GetWidth() {
-	return w;
-}
-
-int Map::GetHeight() {
-	return h;
+	return newMap;
 }
