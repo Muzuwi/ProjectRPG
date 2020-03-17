@@ -13,11 +13,16 @@ Map Map::from_file(const std::string& path) {
 //
 //	file.close();
 	Map newMap;
-	newMap.size = {10 , 10};
-	newMap.tiles.resize(10, 10);
-	for(size_t i = 0; i < 10; i++) {
-		for(size_t j = 0; j < 10; j++) {
-			newMap.tiles[i][j] = Tile((i == j) ? 1 : 0, 0, false);
+	newMap.size = {100 , 100};
+	newMap.tiles.resize(100, 100);
+	for(size_t i = 0; i < 100; i++) {
+		for(size_t j = 0; j < 100; j++) {
+			unsigned type = 0;
+			if(i == 0 || j == 0 || i == 99 || j == 99) type = 1;
+			if(i % 8 == 0) type = 1;
+			if(i == 10 && j == 10) type = 2;
+
+			newMap.tiles[i][j] = Tile(type, 0, false);
 		}
 	}
 	return newMap;
