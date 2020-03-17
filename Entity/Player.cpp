@@ -25,8 +25,7 @@ void Player::draw(sf::RenderTarget &target) {
 	shape.setFillColor(sf::Color::Red);
 	target.draw(shape);
 
-
-	sf::Sprite sprite(TextureManager::get()->GetTexture(2));
+	auto sprite = TextureManager::get()->getSpritesheet("playersprite.png").getSprite();
 	sprite.setPosition(drawPosition);
 	target.draw(sprite);
 }

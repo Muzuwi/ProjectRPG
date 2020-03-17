@@ -1,15 +1,16 @@
 #pragma once
 #include <string>
-#include <vector>
 #include <cassert>
+#include <unordered_map>
 #include <SFML/Graphics.hpp>
+#include "Graphics/Spritesheet.hpp"
 
 using namespace std;
 
 class TextureManager
 {
 private:
-	vector<sf::Texture> textureVector;
+	unordered_map<std::string, Spritesheet> spritesheets;
     static TextureManager* instance;
 
 public:
@@ -21,7 +22,7 @@ public:
 	    return instance;
 	}
 
-	void AddTexture(std::string path);
-	sf::Texture& GetTexture(unsigned);
+	bool addSpritesheet(const std::string& resource);
+	const Spritesheet& getSpritesheet(const std::string& resource);
 };
 

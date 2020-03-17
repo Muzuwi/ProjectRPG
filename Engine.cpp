@@ -18,12 +18,10 @@ bool Engine::Init() {
 }
 
 void Engine::LoadTextures() {
-	textureManager.AddTexture("sprite1.png");
-	textureManager.AddTexture("sprite2.png");
-	textureManager.AddTexture("playersprite.png");
-	textureManager.AddTexture("coolsprite1.png");
-	textureManager.AddTexture("coolsprite2.png");
-	textureManager.AddTexture("coolsprite3.png");
+	textureManager.addSpritesheet("sprite1.png");
+	textureManager.addSpritesheet("sprite2.png");
+	textureManager.addSpritesheet("playersprite.png");
+	textureManager.addSpritesheet("spritesheets.png");
 }
 
 void Engine::RenderFrame() {

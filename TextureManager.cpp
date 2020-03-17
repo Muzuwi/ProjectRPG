@@ -8,14 +8,20 @@ TextureManager::TextureManager() {
 
 TextureManager::~TextureManager() {
 
-};
+}
 
-void TextureManager::AddTexture(std::string path) {
+bool TextureManager::addSpritesheet(const std::string &resource) {
 	sf::Texture texture;
-	texture.loadFromFile(path);
-	textureVector.push_back(texture);
+	if(!texture.loadFromFile(resource)) return false;
+
+	Spritesheet spritesheet(std::move(texture), {32, (resource == "playersprite.png") ? 64u : 32u});
+	spritesheets[resource] = spritesheet;
+
+	return true;
 }
 
-sf::Texture& TextureManager::GetTexture(unsigned index) {
-	return textureVector[index];
-}
+const Spritesheet &TextureManager::getSpritesheet(const std::string &resource) {
+	if(spritesheets.find(resource) == spritesheets.end())
+		throw std::runtime_error("Requested non-existant spritesheet");
+	return spritesheets[resource];
+};

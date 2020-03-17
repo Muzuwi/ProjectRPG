@@ -1,7 +1,7 @@
 #include <fstream>
 #include "Map.hpp"
 
-Map Map::from_file(const std::string& path) {
+Map Map::from_file(const std::string&) {
 //	size_t fileSize = 0;
 //
 //	std::ifstream file;
@@ -26,4 +26,9 @@ Map Map::from_file(const std::string& path) {
 		}
 	}
 	return newMap;
+}
+
+Map::Map(const Map &map) {
+	this->size = map.size;
+	this->tiles = map.tiles;
 }

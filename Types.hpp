@@ -27,7 +27,7 @@ public:
 		this->resize(x, y);
 	}
 
-	Array2D(Array2D& arr) {
+	Array2D(const Array2D& arr) {
 		this->resize(arr.m_x, arr.m_y);
 		for(size_t i = 0; i < m_x; i++) {
 			for(size_t j = 0; j < m_y; j++) {
