@@ -1,6 +1,11 @@
 #include <fstream>
 #include "Map.hpp"
 
+/*
+ *  Ładuje mapę z pliku i zwraca go w obiekcie klasy Map
+ *
+ *  Narazie mapa jest hardcodowana, ale ewentualnie będziemy tu ładować mapę z pliku.
+ */
 Map Map::from_file(const std::string&) {
 //	size_t fileSize = 0;
 //

@@ -54,7 +54,7 @@ void Engine::ProcessInput() {
 }
 
 void Engine::Update() {
-	//camera->Update();
+
 }
 
 void Engine::MainLoop() {
@@ -70,9 +70,14 @@ void Engine::Start() {
 	MainLoop();
 }
 
+/*
+ *  Rysowanie wszystkich kafelek/ziemi, czyli głównie elementy statyczne
+ */
 void Engine::RenderTile() {
 	unsigned tilesX = (windowWidth / 32),
 			tilesY = (windowHeight / 32);
+
+	//  FIXME: To wszystko tylko tymczasowe, później to pewnie wyrzuce
 
 	auto playerPos = tempPlayer.getWorldPosition();
 	auto playerTilePos = playerPos / 32.0f;
@@ -102,10 +107,16 @@ void Engine::RenderTile() {
 	drawTilesStartingFrom(start);
 }
 
+/*
+ *  Rysowanie dekoracji świata, np. kwiaty na trawie, krzaki, itp.
+ */
 void Engine::RenderTilePass2() {
 
 }
 
+/*
+ *  Rysowanie elementów aktywnych świata. NPC, gracz, przedmioty na ziemi, ...
+ */
 void Engine::RenderEntity() {
 	tempPlayer.draw(*this->window);
 }

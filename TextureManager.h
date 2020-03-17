@@ -10,6 +10,7 @@ using namespace std;
 class TextureManager
 {
 private:
+	//  Hashmapa spritesheetów, by móc odwoływać się do nich przez nazwy, np. 'player'
 	unordered_map<std::string, Spritesheet> spritesheets;
     static TextureManager* instance;
 

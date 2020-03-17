@@ -11,7 +11,12 @@ Spritesheet::Spritesheet(sf::Texture &&texture, Vec2u defaultDimensions) {
 	          << "animations: " << m_animations << ", frames: " << m_frames << "\n";
 }
 
+/*
+ *  Zwraca sprite odpowiedno przystosowany, by rysować daną animację i ramkę
+ *  ze spritesheet'a. Może byc on bezpośrednio przekazany do funkcji draw w oknie gry.
+ */
 sf::Sprite Spritesheet::getSprite(unsigned int animation, unsigned int frame) const {
+	//  Miejsce, od którego wyznaczamy obszar który będzie rysowany
 	auto textureCoords = Vec2u(m_sprite_size.x * frame, m_sprite_size.y * animation);
 
 	sf::Sprite sprite(m_texture);

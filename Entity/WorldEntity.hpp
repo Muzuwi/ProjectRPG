@@ -1,6 +1,14 @@
 #pragma once
 #include "Types.hpp"
 
+/*
+ *      WorldEntity - klasa reprezentująca obiekt aktywny w świecie gry
+ *  Przez obiekt aktywny rozumie się te elementy świata, których pozycja ulega częstym zmianom
+ *  Dostępne funkcje wirtualne, dzięki którym (ewentualnie) będzie można implementować
+ *  zaawansowane interakcje ze światem gry.
+ *  entityType wskazuje na typ obiektu
+ */
+
 class WorldEntity {
 protected:
 	unsigned entityType;
