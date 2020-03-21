@@ -20,9 +20,9 @@ private:
 
 	Player tempPlayer;
 
-	void RenderTile();
-	void RenderTilePass2();
-	void RenderEntity();
+	void RenderTile(sf::RenderTarget&);
+	void RenderTilePass2(sf::RenderTarget&);
+	void RenderEntity(sf::RenderTarget&);
 
 	bool Init();
 	void MainLoop();

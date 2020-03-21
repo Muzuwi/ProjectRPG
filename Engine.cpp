@@ -26,9 +26,32 @@ void Engine::LoadTextures() {
 
 void Engine::RenderFrame() {
 	window->clear();
-	RenderTile();
-	RenderTilePass2();
-	RenderEntity();
+	sf::RenderTexture texture {};
+	auto textureSize = Vec2u(newMap.getWidth() * 32u, newMap.getHeight() * 32u);
+	if(!texture.create(textureSize.x, textureSize.y))
+		throw std::runtime_error("Failed creating texture for display");
+
+	RenderTile(texture);
+	RenderTilePass2(texture);
+	RenderEntity(texture);
+
+	texture.display();
+
+	auto playerCentre = tempPlayer.getWorldPosition() + Vec2f(tempPlayer.getDimensions()/2u);
+	Vec2f viewCenter = playerCentre;
+
+	if(playerCentre.x + (windowWidth/2.0f) > textureSize.x)
+		viewCenter.x = textureSize.x - (windowWidth/2.0f);
+	if(playerCentre.y + (windowHeight/2.0f) > textureSize.y)
+		viewCenter.y = textureSize.y - (windowHeight/2.0f);
+	if(playerCentre.x - (windowWidth/2.0f) < 0)
+		viewCenter.x = (windowWidth/2.0f);
+	if(playerCentre.y - (windowHeight/2.0f) < 0)
+		viewCenter.y = (windowHeight/2.0f);
+
+	sf::View view(viewCenter, Vec2f(windowWidth, windowHeight));
+	window->setView(view);
+	window->draw(sf::Sprite(texture.getTexture()));
 	window->display();
 }
 
@@ -73,50 +96,28 @@ void Engine::Start() {
 /*
  *  Rysowanie wszystkich kafelek/ziemi, czyli głównie elementy statyczne
  */
-void Engine::RenderTile() {
-	unsigned tilesX = (windowWidth / 32),
-			tilesY = (windowHeight / 32);
-
-	//  FIXME: To wszystko tylko tymczasowe, później to pewnie wyrzuce
-
-	auto playerPos = tempPlayer.getWorldPosition();
-	auto playerTilePos = playerPos / 32.0f;
-
-	auto drawTilesStartingFrom = [&](Vec2u startpoint) {
-		for(unsigned i = startpoint.x; i < tilesX + + startpoint.x; i++) {
-			for(unsigned j = startpoint.y; j < tilesY + + startpoint.y; j++) {
-				if(i >= 100 || j >= 100) continue;
-
-				auto& tile = newMap.getTile({i, j});
-				auto position = Vec2u {(i - startpoint.x) * tile.getDimensions().x,
-				                       (j - startpoint.y) * tile.getDimensions().y};
-				tile.draw(position, *this->window);
-				tile.frameTick();
-			}
+void Engine::RenderTile(sf::RenderTarget& target) {
+	for(unsigned i = 0; i < newMap.getWidth(); i++) {
+		for(unsigned j = 0; j < newMap.getHeight(); j++) {
+			auto& tile = newMap.getTile({i, j});
+			auto position = Vec2u {i * tile.getDimensions().x,
+			                       j * tile.getDimensions().y};
+			tile.draw(position, target);
+			tile.frameTick();
 		}
-	};
-
-	auto centerTile = Vec2u {tilesX / 2, tilesY / 2};
-	auto centerDiffFromPlayer = Vec2i {(int)playerTilePos.x - (int)centerTile.x, (int)playerTilePos.y - (int)centerTile.y};
-	Vec2u start {0, 0};
-	if(centerDiffFromPlayer.x > 0)
-		start.x = centerDiffFromPlayer.x;
-	if(centerDiffFromPlayer.y > 0)
-		start.y = centerDiffFromPlayer.y;
-
-	drawTilesStartingFrom(start);
+	}
 }
 
 /*
  *  Rysowanie dekoracji świata, np. kwiaty na trawie, krzaki, itp.
  */
-void Engine::RenderTilePass2() {
+void Engine::RenderTilePass2(sf::RenderTarget&) {
 
 }
 
 /*
  *  Rysowanie elementów aktywnych świata. NPC, gracz, przedmioty na ziemi, ...
  */
-void Engine::RenderEntity() {
-	tempPlayer.draw(*this->window);
+void Engine::RenderEntity(sf::RenderTarget& target) {
+	tempPlayer.draw(target);
 }

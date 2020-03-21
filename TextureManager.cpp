@@ -21,7 +21,7 @@ bool TextureManager::addSpritesheet(const std::string &resource) {
 	sf::Texture texture;
 	if(!texture.loadFromFile(resource)) return false;
 
-	Spritesheet spritesheet(std::move(texture), {32, (resource == "playersprite.png") ? 64u : 32u});
+	Spritesheet spritesheet(std::move(texture), {32, (resource == "playersprite.png") ? 48u : 32u});
 	spritesheets[resource] = spritesheet;
 
 	return true;
