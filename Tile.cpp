@@ -1,4 +1,4 @@
-#include "TextureManager.h"
+#include "TextureManager.hpp"
 #include "Tile.hpp"
 
 void Tile::draw(Vec2u position, sf::RenderTarget& target) {

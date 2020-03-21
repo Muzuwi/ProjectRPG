@@ -1,5 +1,5 @@
-#include "TextureManager.h"
-#include "Player.h"
+#include "TextureManager.hpp"
+#include "Player.hpp"
 
 void Player::draw(sf::RenderTarget &target) {
 	sf::Sprite sprite;
