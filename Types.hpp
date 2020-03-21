@@ -6,6 +6,13 @@
 #include <cstddef>
 #include <cstdint>
 
+enum class Direction {
+	Up,
+	Down,
+	Left,
+	Right
+};
+
 typedef sf::Vector2<int> Vec2i;
 typedef sf::Vector2<unsigned> Vec2u;
 typedef sf::Vector2<float> Vec2f;

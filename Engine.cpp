@@ -11,6 +11,7 @@ Engine::~Engine() {
 
 bool Engine::Init() {
 	window = std::make_shared<sf::RenderWindow>(sf::VideoMode(windowWidth, windowHeight, 32), "Projekt");
+	window->setFramerateLimit(60);
 	newMap = Map::from_file("");
 	LoadTextures();
 	if (!window) return false;
@@ -37,7 +38,7 @@ void Engine::RenderFrame() {
 
 	texture.display();
 
-	auto playerCentre = tempPlayer.getWorldPosition() + Vec2f(tempPlayer.getDimensions()/2u);
+	auto playerCentre = tempPlayer.getSpritePosition() + Vec2f(tempPlayer.getDimensions()/2u);
 	Vec2f viewCenter = playerCentre;
 
 	if(playerCentre.x + (windowWidth/2.0f) > textureSize.x)
@@ -63,21 +64,18 @@ void Engine::ProcessInput() {
 				window->close();
 				break;
 			}
-			case sf::Event::KeyPressed: {
-				tempPlayer.handleKeyboardEvent(true, event.key);
-				break;
-			}
-			case sf::Event::KeyReleased: {
-				tempPlayer.handleKeyboardEvent(false, event.key);
-				break;
-			}
 			default: break;
 		}
 	}
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) tempPlayer.move(Direction::Up);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) tempPlayer.move(Direction::Down);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) tempPlayer.move(Direction::Left);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) tempPlayer.move(Direction::Right);
 }
 
 void Engine::Update() {
-
+	tempPlayer.update();
 }
 
 void Engine::MainLoop() {
