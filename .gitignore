@@ -7,7 +7,7 @@ x64\
 *.vcxproj.filters
 *.vcxproj.user
 *.png
-*.txt
 .vs\
+out\
 .idea/
-cmake-build-debug/
+CMakeSettings.json
