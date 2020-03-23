@@ -19,10 +19,10 @@ bool Engine::Init() {
 }
 
 void Engine::LoadTextures() {
-	textureManager.addSpritesheet("sprite1.png");
-	textureManager.addSpritesheet("sprite2.png");
-	textureManager.addSpritesheet("playersprite.png");
-	textureManager.addSpritesheet("spritesheets.png");
+	assert(textureManager.addSpritesheet("sprite1.png"));
+	assert(textureManager.addSpritesheet("sprite2.png"));
+	assert(textureManager.addSpritesheet("playersprite.png"));
+	assert(textureManager.addSpritesheet("spritesheets.png"));
 }
 
 void Engine::RenderFrame() {

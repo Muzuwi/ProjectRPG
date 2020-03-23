@@ -17,4 +17,10 @@ add_executable(ProjectRPG
 	    Graphics/Spritesheet.hpp 
 	    Graphics/Spritesheet.cpp)
 
-target_link_libraries(ProjectRPG sfml-graphics sfml-system sfml-window)
+if(MSVC) 
+target_link_libraries(ProjectRPG sfml-graphics-d sfml-system-d sfml-window-d)
+endif(MSVC)
+
+if(UNIX) 
+target_link_libraries(ProjectRPG -lsfml-graphics -lsfml-system -lsfml-window)
+endif(UNIX)
