@@ -11,6 +11,7 @@ add_executable(ProjectRPG
         Engine.cpp
         TextureManager.cpp
         Main.cpp
+        Hud.cpp
         Entity/Player.cpp 
 	    Entity/Player.hpp 
 	    Entity/Actor.hpp 

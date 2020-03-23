@@ -14,6 +14,7 @@ bool Engine::Init() {
 	window->setFramerateLimit(60);
 	newMap = Map::from_file("");
 	LoadTextures();
+	gameHud.Init();
 	if (!window) return false;
 	return true;
 }
@@ -49,10 +50,11 @@ void Engine::RenderFrame() {
 		viewCenter.x = (windowWidth/2.0f);
 	if(playerCentre.y - (windowHeight/2.0f) < 0)
 		viewCenter.y = (windowHeight/2.0f);
-
 	sf::View view(viewCenter, Vec2f(windowWidth, windowHeight));
 	window->setView(view);
 	window->draw(sf::Sprite(texture.getTexture()));
+	window->setView(window->getDefaultView());
+	RenderHud(*window);
 	window->display();
 }
 
@@ -118,4 +120,12 @@ void Engine::RenderTilePass2(sf::RenderTarget&) {
  */
 void Engine::RenderEntity(sf::RenderTarget& target) {
 	tempPlayer.draw(target);
+}
+
+void Engine::RenderHud(sf::RenderTarget& target) {
+	int HP = tempPlayer.getHP();
+	int MP = tempPlayer.getMP();
+	int maxHP = tempPlayer.getMaxHP();
+	int maxMP = tempPlayer.getMaxMP();
+	gameHud.draw(target, HP, MP, maxHP, maxMP);
 }

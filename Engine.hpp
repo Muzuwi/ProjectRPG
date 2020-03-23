@@ -4,6 +4,7 @@
 #include "TextureManager.hpp"
 #include "Map.hpp"
 #include "Entity/Player.hpp"
+#include "Hud.hpp"
 
 class Engine
 {
@@ -19,10 +20,12 @@ private:
 	Map newMap;
 
 	Player tempPlayer;
+	Hud gameHud;
 
 	void RenderTile(sf::RenderTarget&);
 	void RenderTilePass2(sf::RenderTarget&);
 	void RenderEntity(sf::RenderTarget&);
+	void RenderHud(sf::RenderTarget&);
 
 	bool Init();
 	void MainLoop();
@@ -30,7 +33,6 @@ private:
 	void RenderFrame();
 	void ProcessInput();
 	void Update();
-	void LoadMap();
 
 public:
 	Engine();

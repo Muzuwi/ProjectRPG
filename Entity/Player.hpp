@@ -4,11 +4,17 @@
 #include "RenderableObject.hpp"
 
 class Player final : protected Actor, protected RenderableObject {
+	int maxHP = 100;
+	int maxMP = 100;
+
+	int HP = 64;
+	int	MP = 23;
+
 	unsigned frameCounter;
 	bool isMoving;
 public:
 	Player()
-			: Actor(0, 4), frameCounter(0), isMoving(false) { }
+			: Actor(0, 100), frameCounter(0), isMoving(false) { }
 
 	virtual void draw(Vec2u, sf::RenderTarget&) override {};
 	virtual void draw(sf::RenderTarget& target) override;
@@ -21,6 +27,11 @@ public:
 	void move(Direction dir) override;
 	void go_to(Vec2f f) override;
 	void update() override;
+
+	int getHP() { return HP; }
+	int getMP() { return MP; }
+	int getMaxHP() { return maxHP; }
+	int getMaxMP() { return maxMP; }
 protected:
 	void onInteract() override;
 	void onStep() override;
