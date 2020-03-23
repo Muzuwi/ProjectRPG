@@ -2,22 +2,15 @@
 
 Hud::Hud() { }
 
-void Hud::Init() {
-	hudT.loadFromFile("hud_empty.png");
-	hpT.loadFromFile("hp_fill.png");
-	mpT.loadFromFile("mp_fill.png");
-
-	hud.setTexture(hudT);
-	hud.setPosition(Vec2f(0.f, 300.f));
-
-	hp.setTexture(hpT);
-	hp.setPosition(Vec2f(1.f, 466.f));
-
-	mp.setTexture(mpT);
-	mp.setPosition(Vec2f(669.f, 464.f));
-}
-
 void Hud::draw(sf::RenderTarget& target, int HP, int MP, int maxHP, int maxMP) {
+	auto hp = TextureManager::get()->getSpritesheet("hp_fill").getSprite();
+	auto mp = TextureManager::get()->getSpritesheet("mp_fill").getSprite();
+	auto hud = TextureManager::get()->getSpritesheet("hud_empty").getSprite();
+
+	hud.setPosition(Vec2f(0.f, 300.f));
+	hp.setPosition(Vec2f(1.f, 466.f));
+	mp.setPosition(Vec2f(669.f, 464.f));
+
 	target.draw(hud);
 	float shiftHP = 131 - 131 * ( HP / double(maxHP) );
 	float shiftMP = 131 - 131 * ( MP / double(maxMP) );

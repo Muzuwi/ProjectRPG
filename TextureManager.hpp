@@ -23,6 +23,8 @@ public:
 		return instance;
 	}
 
-	bool addSpritesheet(const std::string& resource);
+	bool addSpritesheet(const std::string& resourcePath, bool useConfigSize=true);
 	const Spritesheet& getSpritesheet(const std::string& resource);
+
+	void autoload();
 };

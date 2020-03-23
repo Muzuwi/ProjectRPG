@@ -14,16 +14,12 @@ bool Engine::Init() {
 	window->setFramerateLimit(60);
 	newMap = Map::from_file("");
 	LoadTextures();
-	gameHud.Init();
 	if (!window) return false;
 	return true;
 }
 
 void Engine::LoadTextures() {
-	assert(textureManager.addSpritesheet("sprite1.png"));
-	assert(textureManager.addSpritesheet("sprite2.png"));
-	assert(textureManager.addSpritesheet("playersprite.png"));
-	assert(textureManager.addSpritesheet("spritesheets.png"));
+	textureManager.autoload();
 }
 
 void Engine::RenderFrame() {
