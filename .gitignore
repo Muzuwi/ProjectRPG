@@ -11,3 +11,4 @@ x64\
 out\
 .idea/
 CMakeSettings.json
+cmake-build-debug/

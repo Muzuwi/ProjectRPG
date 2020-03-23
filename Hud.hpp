@@ -8,8 +8,8 @@ private:
 	sf::Texture hudT, hpT, mpT;
 	sf::Sprite hud, hp, mp;
 public:
-	Hud::Hud();
+	Hud();
 
-	void Hud::Init();
+	void Init();
 	void draw(sf::RenderTarget&, int, int, int, int);
 };

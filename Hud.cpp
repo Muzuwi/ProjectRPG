@@ -22,8 +22,6 @@ void Hud::draw(sf::RenderTarget& target, int HP, int MP, int maxHP, int maxMP) {
 	float shiftHP = 131 - 131 * ( HP / double(maxHP) );
 	float shiftMP = 131 - 131 * ( MP / double(maxMP) );
 
-	sf::View view;
-	
 	hp.setTextureRect(sf::IntRect(0, shiftHP, 131, 131));
 	hp.setPosition(1, 466 + shiftHP);
 	
