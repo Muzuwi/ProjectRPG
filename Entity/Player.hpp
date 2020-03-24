@@ -16,7 +16,6 @@ public:
 	Player()
 			: Actor(0, 100), frameCounter(0), isMoving(false) { }
 
-	virtual void draw(Vec2u, sf::RenderTarget&) override {};
 	virtual void draw(sf::RenderTarget& target) override;
 	virtual Vec2u getDimensions() const override;
 	virtual void frameTick() override {};
