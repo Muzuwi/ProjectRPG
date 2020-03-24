@@ -2,23 +2,42 @@
 #include <memory>
 #include "RenderableObject.hpp"
 
-class Tile : public RenderableObject {
+class Tile {
 	unsigned tileType;
-	unsigned mapPriority;
 	bool     collision;
-	//  Event event??
-	unsigned frame;
 
+	bool animated;
+	bool animationRepeat;
+	unsigned frame;
+	unsigned animationSpeed;
+	unsigned animationStartNumber;
+	unsigned animationFrameCount;
 public:
 	Tile() = default;
-	Tile(unsigned type, unsigned priority, bool coll)
-		: tileType(type), mapPriority(priority), collision(coll), frame(0) {}
+
+	Tile(unsigned type, bool coll)
+	: tileType(type), collision(coll), animated(false) {}
+
+	Tile(unsigned int type, bool coll, unsigned aSpeed, unsigned aStart, unsigned aFrameCount, bool repeat)
+	: tileType(type), collision(coll), animated(true), animationRepeat(repeat), frame(0), animationSpeed(aSpeed),
+	  animationStartNumber(aStart), animationFrameCount(aFrameCount) {}
+
+	void tickFrame() { ++frame; }
+
+	bool isCollidable() const { return collision; }
+	bool isAnimated() const  { return animated; }
+	bool isAnimationRepeat() const { return animationRepeat; }
 
 	unsigned getType() const { return tileType; }
-	bool isCollidable() const { return collision; }
+	unsigned getFrame() const { return frame; }
+	unsigned getAnimationSpeed() const { return animationSpeed; }
+	unsigned getAnimationStart() const { return animationStartNumber; }
+	unsigned getFrameCount() const { return animationFrameCount; }
 
-	virtual void draw(sf::RenderTarget& target) override {};
-	virtual void draw(Vec2u position, sf::RenderTarget& target) override;
-	virtual Vec2u getDimensions() const override;
-	virtual void frameTick() override {frame = (frame + 1) % (48*30);};
+	/*
+	 *  Stały rozmiar kafelek mapy dla silnika
+	 */
+	static Vec2u dimensions() {
+		return Vec2u(32, 32);
+	}
 };

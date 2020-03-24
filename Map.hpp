@@ -1,5 +1,7 @@
 #pragma once
+#include <vector>
 #include <string>
+#include <SFML/Graphics.hpp>
 #include "Tile.hpp"
 #include "Types.hpp"
 
@@ -10,6 +12,8 @@ class Map {
 	//  Array2D<Event> events;
 	//  Array2D<Entity> entities;
 
+	sf::VertexArray vertices;
+	std::vector<Vec2u> animatedTiles;
 public:
 	~Map() = default;
 
@@ -24,4 +28,7 @@ public:
 	Map(const Map&);
 
 	Map() { }
+
+	void draw(sf::RenderTarget&);
+	void initializeVertexArrays();
 };

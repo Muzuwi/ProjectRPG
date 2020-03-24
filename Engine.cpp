@@ -15,6 +15,9 @@ bool Engine::Init() {
 	newMap = Map::from_file("");
 	LoadTextures();
 	if (!window) return false;
+
+	newMap.initializeVertexArrays();
+
 	return true;
 }
 
@@ -24,6 +27,7 @@ void Engine::LoadTextures() {
 
 void Engine::RenderFrame() {
 	window->clear();
+
 	sf::RenderTexture texture {};
 	auto textureSize = Vec2u(newMap.getWidth() * 32u, newMap.getHeight() * 32u);
 	if(!texture.create(textureSize.x, textureSize.y))
@@ -37,7 +41,6 @@ void Engine::RenderFrame() {
 
 	auto playerCentre = tempPlayer.getSpritePosition() + Vec2f(tempPlayer.getDimensions()/2u);
 	Vec2f viewCenter = playerCentre;
-
 	if(playerCentre.x + (windowWidth/2.0f) > textureSize.x)
 		viewCenter.x = textureSize.x - (windowWidth/2.0f);
 	if(playerCentre.y + (windowHeight/2.0f) > textureSize.y)
@@ -46,11 +49,14 @@ void Engine::RenderFrame() {
 		viewCenter.x = (windowWidth/2.0f);
 	if(playerCentre.y - (windowHeight/2.0f) < 0)
 		viewCenter.y = (windowHeight/2.0f);
+
 	sf::View view(viewCenter, Vec2f(windowWidth, windowHeight));
 	window->setView(view);
 	window->draw(sf::Sprite(texture.getTexture()));
+
 	window->setView(window->getDefaultView());
 	RenderHud(*window);
+
 	window->display();
 }
 
@@ -93,15 +99,7 @@ void Engine::Start() {
  *  Rysowanie wszystkich kafelek/ziemi, czyli głównie elementy statyczne
  */
 void Engine::RenderTile(sf::RenderTarget& target) {
-	for(unsigned i = 0; i < newMap.getWidth(); i++) {
-		for(unsigned j = 0; j < newMap.getHeight(); j++) {
-			auto& tile = newMap.getTile({i, j});
-			auto position = Vec2u {i * tile.getDimensions().x,
-			                       j * tile.getDimensions().y};
-			tile.draw(position, target);
-			tile.frameTick();
-		}
-	}
+	newMap.draw(target);
 }
 
 /*
