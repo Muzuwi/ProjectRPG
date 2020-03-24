@@ -7,8 +7,8 @@ class Player final : protected Actor, protected RenderableObject {
 	int maxHP = 100;
 	int maxMP = 100;
 
-	int HP = 64;
-	int	MP = 23;
+	int HP = 89;
+	int	MP = 65;
 
 	unsigned frameCounter;
 	bool isMoving;
