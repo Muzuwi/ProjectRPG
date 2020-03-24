@@ -2,17 +2,23 @@
 
 Hud::Hud() { }
 
-void Hud::draw(sf::RenderTarget& target, int HP, int MP, int maxHP, int maxMP) {
-	auto hp = TextureManager::get()->getSpritesheet("hp_fill").getSprite();
-	auto mp = TextureManager::get()->getSpritesheet("mp_fill").getSprite();
-	auto hud = TextureManager::get()->getSpritesheet("hud_empty").getSprite();
-	auto cricle = TextureManager::get()->getSpritesheet("hud_cricle").getSprite();
+void Hud::Init() {
+	hp = TextureManager::get()->getSpritesheet("hp_fill").getSprite();
+	mp = TextureManager::get()->getSpritesheet("mp_fill").getSprite();
+	base = TextureManager::get()->getSpritesheet("hud_empty").getSprite();
+	cricleL = TextureManager::get()->getSpritesheet("hud_cricle").getSprite();
+	cricleR = TextureManager::get()->getSpritesheet("hud_cricle").getSprite();
 
-	hud.setPosition(Vec2f(0.f, 300.f));
+	base.setPosition(Vec2f(0.f, 300.f));
 	hp.setPosition(Vec2f(1.f, 466.f));
 	mp.setPosition(Vec2f(669.f, 464.f));
+	cricleL.setPosition(Vec2f(-1.f, 467.f));
+	cricleR.setPosition(Vec2f(669.f, 468.f));
+}
 
-	target.draw(hud);
+void Hud::draw(sf::RenderTarget& target, int HP, int MP, int maxHP, int maxMP) {
+
+	target.draw(base);
 	float shiftHP = 131 - 131 * ( HP / double(maxHP) );
 	float shiftMP = 131 - 131 * ( MP / double(maxMP) );
 
@@ -26,8 +32,6 @@ void Hud::draw(sf::RenderTarget& target, int HP, int MP, int maxHP, int maxMP) {
 
 	target.draw(mp);
 
-	cricle.setPosition(Vec2f(-1.f, 467.f));
-	target.draw(cricle);
-	cricle.setPosition(Vec2f(669.f, 468.f));
-	target.draw(cricle);
+	target.draw(cricleL);
+	target.draw(cricleR);
 }

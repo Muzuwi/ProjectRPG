@@ -31,6 +31,7 @@ public:
 	int getMP() { return MP; }
 	int getMaxHP() { return maxHP; }
 	int getMaxMP() { return maxMP; }
+
 protected:
 	void onInteract() override;
 	void onStep() override;

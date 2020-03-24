@@ -14,6 +14,7 @@ bool Engine::Init() {
 	window->setFramerateLimit(60);
 	newMap = Map::from_file("");
 	LoadTextures();
+	GUI.Init();
 	if (!window) return false;
 
 	newMap.initializeVertexArrays();
@@ -121,5 +122,5 @@ void Engine::RenderHud(sf::RenderTarget& target) {
 	int MP = tempPlayer.getMP();
 	int maxHP = tempPlayer.getMaxHP();
 	int maxMP = tempPlayer.getMaxMP();
-	gameHud.draw(target, HP, MP, maxHP, maxMP);
+	GUI.DrawGUI(target, HP, MP, maxHP, maxMP);
 }

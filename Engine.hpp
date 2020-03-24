@@ -5,6 +5,7 @@
 #include "Map.hpp"
 #include "Entity/Player.hpp"
 #include "Hud.hpp"
+#include "GameUI.hpp"
 
 class Engine
 {
@@ -20,7 +21,7 @@ private:
 	Map newMap;
 
 	Player tempPlayer;
-	Hud gameHud;
+	GameUI GUI;
 
 	void RenderTile(sf::RenderTarget&);
 	void RenderTilePass2(sf::RenderTarget&);
