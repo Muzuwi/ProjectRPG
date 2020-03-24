@@ -5,7 +5,7 @@ TextureManager* TextureManager::instance = nullptr;
 
 TextureManager::TextureManager() {
 	instance = this;
-};
+}
 
 TextureManager::~TextureManager() {
 
@@ -65,14 +65,14 @@ void TextureManager::autoload() {
 	for(const auto& entry : fs::directory_iterator("GameContent/Spritesheet/")) {
 		if(entry.is_regular_file() ) {
 			std::cout << "TextureManager::autoload()/ Adding spritesheet " << entry.path().filename() << "\n";
-			addSpritesheet(entry.path());
+			addSpritesheet(entry.path().string());
 		}
 	}
 
 	for(const auto& entry : fs::directory_iterator("GameContent/UI/")) {
 		if(entry.is_regular_file() ) {
 			std::cout << "TextureManager::autoload()/ Adding UI element " << entry.path().filename() << "\n";
-			addSpritesheet(entry.path(), false);
+			addSpritesheet(entry.path().string(), false);
 		}
 	}
-};
+}
