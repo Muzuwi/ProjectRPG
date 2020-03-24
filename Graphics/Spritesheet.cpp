@@ -23,3 +23,11 @@ sf::Sprite Spritesheet::getSprite(unsigned int animation, unsigned int frame) co
 	sprite.setTextureRect(sf::IntRect(textureCoords.x, textureCoords.y, m_sprite_size.x, m_sprite_size.y));
 	return sprite;
 }
+
+
+sf::IntRect Spritesheet::getTextureCoordinates(unsigned animation, unsigned frame) const {
+	auto textureCoords = Vec2u(m_sprite_size.x * frame, m_sprite_size.y * animation);
+	auto rect = sf::IntRect(textureCoords.x, textureCoords.y, m_sprite_size.x, m_sprite_size.y);
+
+	return rect;
+}

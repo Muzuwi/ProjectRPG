@@ -20,5 +20,6 @@ public:
 	Spritesheet(sf::Texture&& texture, Vec2u defaultDimensions);
 
 	sf::Sprite getSprite(unsigned animation = 0, unsigned frame = 0) const;
+	sf::IntRect getTextureCoordinates(unsigned animation, unsigned frame) const;
 	const sf::Texture& getTexture() const { return m_texture; }
 };
