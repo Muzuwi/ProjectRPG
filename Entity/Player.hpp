@@ -20,7 +20,7 @@ public:
 	virtual Vec2u getDimensions() const override;
 	virtual void frameTick() override {};
 
-	Vec2f getWorldPosition() const { return worldPosition; }
+	Vec2u getWorldPosition() const { return worldPosition; }
 	Vec2f getSpritePosition() const { return spritePosition; }
 
 	void move(Direction dir) override;

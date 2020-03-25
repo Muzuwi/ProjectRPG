@@ -33,6 +33,10 @@ public:
 	unsigned getWidth() const { return size.x; }
 	unsigned getHeight() const { return size.y; }
 
+	//  FIXME:  Const
+	bool checkCollision(Vec2u pos);
+	bool checkCollision(unsigned x, unsigned y);
+
 	Map(const Map&);
 
 	Map() { }

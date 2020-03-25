@@ -12,7 +12,7 @@
 class Actor {
 protected:
 	unsigned entityType;
-	Vec2f worldPosition;
+	Vec2u worldPosition;
 	Vec2f spritePosition;
 	unsigned movementSpeed;
 	Direction facing;
@@ -20,7 +20,7 @@ public:
 	Actor(unsigned type, unsigned moveSpeed)
 	: entityType(type), movementSpeed(moveSpeed), facing(Direction::Down) {}
 
-	Vec2f getWorldPosition() const { return worldPosition; }
+	Vec2u getWorldPosition() const { return worldPosition; }
 	Vec2f getSpritePosition() const { return spritePosition; }
 	Direction getDirection() const { return facing; }
 

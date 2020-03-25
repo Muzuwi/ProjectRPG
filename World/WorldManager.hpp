@@ -13,4 +13,5 @@ public:
 	Player& getPlayer() { return player; };
 
 	void loadMap(const std::string& mapName);
+	bool movePlayer(Direction dir);
 };

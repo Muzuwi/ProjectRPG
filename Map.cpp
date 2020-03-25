@@ -31,7 +31,7 @@ Map Map::from_file(const std::string&) {
 	newMap.tileDecors.push_back(
 			Decor( Vec2u(5, 5),
 			       {
-					Tile(3, false, 4, 3, 4, true)
+					Tile(3, true, 4, 3, 4, true)
 			       }
 				)
 			);
@@ -114,4 +114,23 @@ void Map::initializeVertexArrays() {
 			}
 		}
 	}
+}
+
+bool Map::checkCollision(unsigned x, unsigned y) {
+	assert(x < size.x && y < size.y);
+
+	bool tileCollision = floorTiles[x][y].isCollidable();
+	if(tileCollision) return true;
+
+	for(auto& decor : tileDecors) {
+		if(decor.pos.x == x && decor.pos.y == y) {
+			return decor.decor.isCollidable();
+		}
+	}
+
+	return false;
+}
+
+bool Map::checkCollision(Vec2u pos) {
+	return this->checkCollision(pos.x, pos.y);
 }

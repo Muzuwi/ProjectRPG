@@ -1,3 +1,4 @@
+#include "Tile.hpp"
 #include "TextureManager.hpp"
 #include "Player.hpp"
 
@@ -40,48 +41,52 @@ bool Player::collisionCheck(Actor&) {
 
 void Player::update() {
 	++frameCounter;
-	if(worldPosition.x != spritePosition.x) {
-		double delta = spritePosition.x - worldPosition.x;
-		if(delta < 0) {
-			spritePosition.x += (double)movementSpeed;
-			if(spritePosition.x >= worldPosition.x) {
-				spritePosition.x = worldPosition.x;
-				isMoving = false;
+
+	if(isMoving) {
+		auto targetPosition = Vec2u(worldPosition.x * Tile::dimensions().x,
+									worldPosition.y * Tile::dimensions().y);
+		if(targetPosition.x != spritePosition.x) {
+			if(targetPosition.x > spritePosition.x) {
+				spritePosition.x += (double)movementSpeed;
+				if(spritePosition.x >= targetPosition.x) {
+					spritePosition.x = targetPosition.x;
+					isMoving = false;
+				}
+			} else {
+				spritePosition.x -= (double)movementSpeed;
+				if(spritePosition.x <= targetPosition.x) {
+					spritePosition.x = targetPosition.x;
+					isMoving = false;
+				}
 			}
-		} else {
-			spritePosition.x -= (double)movementSpeed;
-			if(spritePosition.x <= worldPosition.x) {
-				spritePosition.x = worldPosition.x;
-				isMoving = false;
+		} else if(targetPosition.y != spritePosition.y) {
+			if(targetPosition.y > spritePosition.y) {
+				spritePosition.y += (double)movementSpeed;
+				if(spritePosition.y >= targetPosition.y) {
+					spritePosition.y = targetPosition.y;
+					isMoving = false;
+				}
+			} else {
+				spritePosition.y -= (double)movementSpeed;
+				if(spritePosition.y <= targetPosition.y) {
+					spritePosition.y = targetPosition.y;
+					isMoving = false;
+				}
 			}
-		}
-	} else if(worldPosition.y != spritePosition.y) {
-		double delta = spritePosition.y - worldPosition.y;
-		if(delta < 0) {
-			spritePosition.y += (double)movementSpeed;
-			if(spritePosition.y >= worldPosition.y) {
-				spritePosition.y = worldPosition.y;
-				isMoving = false;
-			}
-		} else {
-			spritePosition.y -= (double)movementSpeed;
-			if(spritePosition.y <= worldPosition.y) {
-				spritePosition.y = worldPosition.y;
-				isMoving = false;
-			}
+
 		}
 
 	}
 }
 
 void Player::move(Direction dir) {
-	if(worldPosition != spritePosition) return;
+	if(isMoving) return;
 
 	switch(dir) {
-		case Direction::Up: this->worldPosition.y -= 32; isMoving = true; break;
-		case Direction::Down: this->worldPosition.y += 32; isMoving = true;  break;
-		case Direction::Left: this->worldPosition.x -= 32; isMoving = true;  break;
-		case Direction::Right: this->worldPosition.x += 32; isMoving = true;  break;
+		case Direction::Up:     --this->worldPosition.y; isMoving = true;  break;
+		case Direction::Down:   ++this->worldPosition.y; isMoving = true;  break;
+		case Direction::Left:   --this->worldPosition.x; isMoving = true;  break;
+		case Direction::Right:  ++this->worldPosition.x; isMoving = true;  break;
 		default: break;
 	}
 

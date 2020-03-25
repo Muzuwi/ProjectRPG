@@ -70,10 +70,10 @@ void Engine::ProcessInput() {
 		}
 	}
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) world.getPlayer().move(Direction::Up);
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) world.getPlayer().move(Direction::Down);
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) world.getPlayer().move(Direction::Left);
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) world.getPlayer().move(Direction::Right);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) world.movePlayer(Direction::Up);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) world.movePlayer(Direction::Down);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) world.movePlayer(Direction::Left);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) world.movePlayer(Direction::Right);
 }
 
 void Engine::Update() {
