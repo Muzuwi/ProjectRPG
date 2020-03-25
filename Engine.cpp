@@ -11,16 +11,15 @@ Engine::~Engine() {
 
 bool Engine::Init() {
 	window = std::make_shared<sf::RenderWindow>(sf::VideoMode(windowWidth, windowHeight, 32), "Projekt");
+	if (!window) return false;
 	window->setFramerateLimit(60);
-	newMap = Map::from_file("");
-	if(!mapTexture.create(newMap.getWidth() * Tile::dimensions().x, newMap.getHeight() * Tile::dimensions().y))
-		throw std::runtime_error("Failed creating texture for display");
 
 	LoadTextures();
 	GUI.Init();
-	if (!window) return false;
+	world.loadMap("");
 
-	newMap.initializeVertexArrays();
+	if(!mapTexture.create(world.getMap().getWidth() * Tile::dimensions().x, world.getMap().getHeight() * Tile::dimensions().y))
+		return false;
 
 	return true;
 }
@@ -33,12 +32,12 @@ void Engine::RenderFrame() {
 	window->clear();
 
 	RenderTile(mapTexture);
-	RenderTilePass2(mapTexture);
 	RenderEntity(mapTexture);
 
 	mapTexture.display();
 
-	auto playerCentre = tempPlayer.getSpritePosition() + Vec2f(tempPlayer.getDimensions()/2u);
+	auto player = world.getPlayer();
+	auto playerCentre = player.getSpritePosition() + Vec2f(player.getDimensions()/2u);
 	Vec2f viewCenter = playerCentre;
 	if(playerCentre.x + (windowWidth/2.0f) > mapTexture.getSize().x)
 		viewCenter.x = mapTexture.getSize().x - (windowWidth/2.0f);
@@ -71,14 +70,14 @@ void Engine::ProcessInput() {
 		}
 	}
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) tempPlayer.move(Direction::Up);
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) tempPlayer.move(Direction::Down);
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) tempPlayer.move(Direction::Left);
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) tempPlayer.move(Direction::Right);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) world.getPlayer().move(Direction::Up);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) world.getPlayer().move(Direction::Down);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) world.getPlayer().move(Direction::Left);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) world.getPlayer().move(Direction::Right);
 }
 
 void Engine::Update() {
-	tempPlayer.update();
+	world.getPlayer().update();
 }
 
 void Engine::MainLoop() {
@@ -90,35 +89,29 @@ void Engine::MainLoop() {
 }
 
 void Engine::Start() {
-	if (!Init()) throw "Blad w inicjalizacji silnika";
+	if (!Init()) throw std::runtime_error("Engine has failed to initialize!");
 	MainLoop();
 }
 
 /*
- *  Rysowanie wszystkich kafelek/ziemi, czyli głównie elementy statyczne
+ *  Rysowanie wszystkich kafelek/ziemi oraz dekoracji świata, np. kwiaty na trawie, krzaki, itp.
  */
 void Engine::RenderTile(sf::RenderTarget& target) {
-	newMap.draw(target);
-}
-
-/*
- *  Rysowanie dekoracji świata, np. kwiaty na trawie, krzaki, itp.
- */
-void Engine::RenderTilePass2(sf::RenderTarget&) {
-
+	world.getMap().draw(target);
 }
 
 /*
  *  Rysowanie elementów aktywnych świata. NPC, gracz, przedmioty na ziemi, ...
  */
 void Engine::RenderEntity(sf::RenderTarget& target) {
-	tempPlayer.draw(target);
+	world.getPlayer().draw(target);
 }
 
+
 void Engine::RenderHud(sf::RenderTarget& target) {
-	int HP = tempPlayer.getHP();
-	int MP = tempPlayer.getMP();
-	int maxHP = tempPlayer.getMaxHP();
-	int maxMP = tempPlayer.getMaxMP();
+	int HP = world.getPlayer().getHP();
+	int MP = world.getPlayer().getMP();
+	int maxHP = world.getPlayer().getMaxHP();
+	int maxMP = world.getPlayer().getMaxMP();
 	GUI.DrawGUI(target, HP, MP, maxHP, maxMP);
 }

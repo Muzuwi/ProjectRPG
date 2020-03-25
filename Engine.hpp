@@ -1,9 +1,8 @@
 #pragma once
 #include <memory>
 #include <SFML/Graphics.hpp>
+#include "World/WorldManager.hpp"
 #include "TextureManager.hpp"
-#include "Map.hpp"
-#include "Entity/Player.hpp"
 #include "Hud.hpp"
 #include "GameUI.hpp"
 
@@ -17,15 +16,11 @@ private:
 	sf::RenderTexture mapTexture;
 
 	TextureManager textureManager;
-//	OverworldManager overworld;
+	WorldManager world;
 
-	Map newMap;
-
-	Player tempPlayer;
 	GameUI GUI;
 
 	void RenderTile(sf::RenderTarget&);
-	void RenderTilePass2(sf::RenderTarget&);
 	void RenderEntity(sf::RenderTarget&);
 	void RenderHud(sf::RenderTarget&);
 

@@ -4,6 +4,7 @@ project(ProjectRPG)
 set(CMAKE_CXX_STANDARD 17)
  
 include_directories(.)
+set(CMAKE_CXX_FLAGS "-Wall -Wextra  -Wstrict-aliasing -pedantic -fmax-errors=5 -Werror -Wunreachable-code -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wnoexcept -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-promo -Wstrict-null-sentinel -Wstrict-overflow=5 -Wswitch-default -Wundef -Wno-unused -Wno-variadic-macros -Wno-parentheses -fdiagnostics-show-option ${CMAKE_CXX_FLAGS}")
 
 add_executable(ProjectRPG 
     Tile.hpp
@@ -19,7 +20,9 @@ add_executable(ProjectRPG
     Entity/Actor.hpp 
     Graphics/Spritesheet.hpp 
     Graphics/Spritesheet.cpp
-    )
+    World/WorldManager.hpp
+    World/WorldManager.cpp
+        )
 
 if(MSVC) 
 target_link_libraries(ProjectRPG sfml-graphics-d sfml-system-d sfml-window-d)
