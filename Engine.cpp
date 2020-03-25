@@ -74,6 +74,8 @@ void Engine::ProcessInput() {
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) world.movePlayer(Direction::Down);
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) world.movePlayer(Direction::Left);
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) world.movePlayer(Direction::Right);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) GUI.SetScene(event.key);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) GUI.SetScene(event.key);
 }
 
 void Engine::Update() {
