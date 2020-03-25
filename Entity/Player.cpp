@@ -19,7 +19,9 @@ void Player::draw(sf::RenderTarget &target) {
 			break;
 		default: break;
 	}
-	sprite.setPosition(spritePosition);
+
+	Vec2f drawPosition = spritePosition - Vec2f(0, getDimensions().y - Tile::dimensions().y);
+	sprite.setPosition(drawPosition);
 	target.draw(sprite);
 }
 
@@ -89,6 +91,8 @@ void Player::move(Direction dir) {
 		case Direction::Right:  ++this->worldPosition.x; isMoving = true;  break;
 		default: break;
 	}
+
+	facing = dir;
 }
 
 void Player::go_to(Vec2f) {

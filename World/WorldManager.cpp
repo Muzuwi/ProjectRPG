@@ -6,51 +6,50 @@ void WorldManager::loadMap(const std::string &mapName) {
 }
 
 bool WorldManager::movePlayer(Direction dir) {
-	player.setFacing(dir);
 	auto playerPos = player.getWorldPosition();
 	bool invalidMovements = (playerPos.x == 0 && dir == Direction::Left) ||
 							(playerPos.y == 0 && dir == Direction::Up)   ||
 			(playerPos.x == currentMap.getWidth()-1 && dir == Direction::Right) ||
 			(playerPos.y == currentMap.getHeight()-1 && dir == Direction::Down);
 
-	if(invalidMovements) return false;
-
-
-	switch(dir) {
-		case Direction::Up: {
-			if(!currentMap.checkCollision(playerPos.x, playerPos.y-1)) {
-				player.move(Direction::Up);
-				return true;
+	if(!invalidMovements) {
+		switch(dir) {
+			case Direction::Up: {
+				if(!currentMap.checkCollision(playerPos.x, playerPos.y-1)) {
+					player.move(Direction::Up);
+					return true;
+				}
+				break;
 			}
-			break;
-		}
 
-		case Direction::Down: {
-			if(!currentMap.checkCollision(playerPos.x, playerPos.y+1)) {
-				player.move(Direction::Down);
-				return true;
+			case Direction::Down: {
+				if(!currentMap.checkCollision(playerPos.x, playerPos.y+1)) {
+					player.move(Direction::Down);
+					return true;
+				}
+				break;
 			}
-			break;
-		}
 
-		case Direction::Left: {
-			if(!currentMap.checkCollision(playerPos.x-1, playerPos.y)) {
-				player.move(Direction::Left);
-				return true;
+			case Direction::Left: {
+				if(!currentMap.checkCollision(playerPos.x-1, playerPos.y)) {
+					player.move(Direction::Left);
+					return true;
+				}
+				break;
 			}
-			break;
-		}
 
-		case Direction::Right: {
-			if(!currentMap.checkCollision(playerPos.x+1, playerPos.y)) {
-				player.move(Direction::Right);
-				return true;
+			case Direction::Right: {
+				if(!currentMap.checkCollision(playerPos.x+1, playerPos.y)) {
+					player.move(Direction::Right);
+					return true;
+				}
+				break;
 			}
-			break;
-		}
 
-		default: break;
+			default: break;
+		}
 	}
 
+	player.setFacing(dir);
 	return false;
 }
