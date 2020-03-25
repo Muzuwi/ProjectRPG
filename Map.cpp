@@ -10,7 +10,7 @@
 Map Map::from_file(const std::string&) {
 	Map newMap;
 	newMap.size = {100 , 100};
-	newMap.tiles.resize(100, 100);
+	newMap.floorTiles.resize(100, 100);
 	for(size_t i = 0; i < 100; i++) {
 		for(size_t j = 0; j < 100; j++) {
 			unsigned type = 0;
@@ -19,9 +19,12 @@ Map Map::from_file(const std::string&) {
 			if(i == 10 && j == 10) type = 2;
 
 			if(i == 20 && j == 20)
-				newMap.tiles[i][j] = Tile(0, false, 4, 0, 3, true);
+				newMap.floorTiles[i][j] = Tile(0, false, 4, 0, 3, true);
 			else
-				newMap.tiles[i][j] = Tile(type, false);
+				newMap.floorTiles[i][j] = Tile(type, false);
+
+			if(!(rand() % 25))
+				newMap.tileDecors.push_back(Decor(Vec2u(i,j),Tile(4+(i%4), false)));
 		}
 	}
 
@@ -30,15 +33,18 @@ Map Map::from_file(const std::string&) {
 
 Map::Map(const Map &map) {
 	this->size = map.size;
-	this->tiles = map.tiles;
+	this->floorTiles = map.floorTiles;
+	this->tileDecors = map.tileDecors;
 	this->vertices = map.vertices;
 	this->animatedTiles = map.animatedTiles;
 }
 
 void Map::draw(sf::RenderTarget &target) {
+	static auto& tileset = TextureManager::get()->getSpritesheet("Tileset");
+
 	for(const auto& coords : animatedTiles) {
 		sf::Vertex* quad = &vertices[(coords.x+coords.y*100)*4];
-		auto& tile = tiles[coords.x][coords.y];
+		auto& tile = floorTiles[coords.x][coords.y];
 
 		auto currentAnimationFrame = tile.getAnimationStart() + (tile.getFrame() / tile.getAnimationSpeed());
 		if(currentAnimationFrame > tile.getFrameCount() && tile.isAnimationRepeat())
@@ -55,9 +61,25 @@ void Map::draw(sf::RenderTarget &target) {
 		tile.tickFrame();
 	}
 
+	target.draw(vertices, &tileset.getTexture());
 
-	auto& tileset = TextureManager::get()->getSpritesheet("Tileset").getTexture();
-	target.draw(vertices, &tileset);
+	for(auto& decoration : tileDecors) {
+		auto& tile = decoration.decor;
+
+		unsigned currentAnimationFrame = tile.getType();
+		if(tile.isAnimated()) {
+			currentAnimationFrame = tile.getAnimationStart() + (tile.getFrame() / tile.getAnimationSpeed());
+			if(currentAnimationFrame > tile.getFrameCount() && tile.isAnimationRepeat())
+				currentAnimationFrame %= tile.getFrameCount();
+			else
+				currentAnimationFrame = tile.getAnimationStart();
+			tile.tickFrame();
+		}
+
+		auto sprite = tileset.getSprite(0, currentAnimationFrame);
+		sprite.setPosition(Tile::dimensions().x * decoration.pos.x, Tile::dimensions().y * decoration.pos.y);
+		target.draw(sprite);
+	}
 }
 
 void Map::initializeVertexArrays() {
@@ -71,7 +93,7 @@ void Map::initializeVertexArrays() {
 			quad[2].position = sf::Vector2f((i + 1) * Tile::dimensions().x, (j + 1) * Tile::dimensions().y);
 			quad[3].position = sf::Vector2f(i * Tile::dimensions().x, (j + 1) * Tile::dimensions().y);
 
-			auto& tile = tiles[i][j];
+			auto& tile = floorTiles[i][j];
 			auto textureCoords = TextureManager::get()->getSpritesheet("Tileset").getTextureCoordinates(0, tile.getType());
 			quad[0].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top);
 			quad[1].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top);

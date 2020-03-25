@@ -8,7 +8,15 @@
 class Map {
 	Vec2u size;
 
-	Array2D<Tile> tiles;
+	Array2D<Tile> floorTiles;
+
+	struct Decor {
+		Vec2u pos;
+		Tile decor;
+		Decor(Vec2u _pos, Tile _tile)
+		: pos(_pos), decor(_tile) { }
+	};
+	std::vector<Decor> tileDecors;
 	//  Array2D<Event> events;
 	//  Array2D<Entity> entities;
 
@@ -19,8 +27,8 @@ public:
 
 	static Map from_file(const std::string& path);
 
-	Tile& getTile(unsigned x, unsigned y) { return tiles[x][y]; }
-	Tile& getTile(Vec2u pos) { return tiles[pos.x][pos.y]; }
+	Tile& getTile(unsigned x, unsigned y) { return floorTiles[x][y]; }
+	Tile& getTile(Vec2u pos) { return floorTiles[pos.x][pos.y]; }
 
 	unsigned getWidth() const { return size.x; }
 	unsigned getHeight() const { return size.y; }
