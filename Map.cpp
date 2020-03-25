@@ -28,6 +28,14 @@ Map Map::from_file(const std::string&) {
 		}
 	}
 
+	newMap.tileDecors.push_back(
+			Decor( Vec2u(5, 5),
+			       {
+					Tile(3, false, 4, 3, 4, true)
+			       }
+				)
+			);
+
 	return newMap;
 }
 
@@ -70,7 +78,7 @@ void Map::draw(sf::RenderTarget &target) {
 		if(tile.isAnimated()) {
 			currentAnimationFrame = tile.getAnimationStart() + (tile.getFrame() / tile.getAnimationSpeed());
 			if(currentAnimationFrame > tile.getFrameCount() && tile.isAnimationRepeat())
-				currentAnimationFrame %= tile.getFrameCount();
+				currentAnimationFrame = tile.getAnimationStart() + (currentAnimationFrame % tile.getFrameCount());
 			else
 				currentAnimationFrame = tile.getAnimationStart();
 			tile.tickFrame();
