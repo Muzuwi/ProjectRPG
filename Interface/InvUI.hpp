@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "TextureManager.hpp"
+#include "Graphics/TextureManager.hpp"
 #include "Graphics/Spritesheet.hpp"
 
 class InvUI {

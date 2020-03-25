@@ -2,9 +2,9 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "World/WorldManager.hpp"
-#include "TextureManager.hpp"
-#include "Hud.hpp"
-#include "GameUI.hpp"
+#include "Graphics/TextureManager.hpp"
+#include "Interface/Hud.hpp"
+#include "Interface/GameUI.hpp"
 
 class Engine
 {

@@ -1,7 +1,7 @@
 #pragma once
 #include "SFML/Window/Keyboard.hpp"
 #include "Entity/Actor.hpp"
-#include "RenderableObject.hpp"
+#include "Graphics/RenderableObject.hpp"
 
 class Player final : public Actor, protected RenderableObject {
 	int maxHP = 100;

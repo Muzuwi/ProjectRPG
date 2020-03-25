@@ -5,19 +5,19 @@ set(CMAKE_CXX_STANDARD 17)
  
 include_directories(.)
 
-add_executable(ProjectRPG 
-    Tile.hpp
-    GameUI.hpp
-    GameUI.cpp
-    InvUI.hpp
-    InvUI.cpp
-    StatUI.hpp
-    StatUI.cpp
-    Map.cpp
+add_executable(ProjectRPG
+    World/Tile.hpp
+    Interface/GameUI.hpp
+    Interface/GameUI.cpp
+    Interface/InvUI.hpp
+    Interface/InvUI.cpp
+    Interface/StatUI.hpp
+    Interface/StatUI.cpp
+    World/Map.cpp
     Engine.cpp
-    TextureManager.cpp
+    Graphics/TextureManager.cpp
     Main.cpp
-    Hud.cpp
+    Interface/Hud.cpp
     Entity/Player.cpp 
     Entity/Player.hpp 
     Entity/Actor.hpp 

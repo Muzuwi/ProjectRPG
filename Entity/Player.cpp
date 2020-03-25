@@ -1,5 +1,5 @@
-#include "Tile.hpp"
-#include "TextureManager.hpp"
+#include "World/Tile.hpp"
+#include "Graphics/TextureManager.hpp"
 #include "Player.hpp"
 
 void Player::draw(sf::RenderTarget &target) {

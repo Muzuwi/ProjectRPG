@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "RenderableObject.hpp"
+#include "Graphics/RenderableObject.hpp"
 
 class Tile {
 	unsigned tileType;
