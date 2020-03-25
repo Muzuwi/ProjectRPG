@@ -25,6 +25,7 @@ add_executable(ProjectRPG
     Graphics/Spritesheet.cpp
     World/WorldManager.hpp
     World/WorldManager.cpp
+    Entity/Actor.cpp
         )
 
 if(MSVC) 

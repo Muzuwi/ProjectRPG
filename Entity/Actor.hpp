@@ -16,19 +16,24 @@ protected:
 	Vec2f spritePosition;
 	unsigned movementSpeed;
 	Direction facing;
+	bool isMoving;
+	unsigned frameCounter;
 public:
 	Actor(unsigned type, unsigned moveSpeed)
-	: entityType(type), movementSpeed(moveSpeed), facing(Direction::Down) {}
+	: entityType(type), movementSpeed(moveSpeed), facing(Direction::Down), isMoving(false), frameCounter(0) {}
 
-	Vec2u getWorldPosition() const { return worldPosition; }
+	Vec2u getWorldPosition()  const { return worldPosition; }
 	Vec2f getSpritePosition() const { return spritePosition; }
-	Direction getDirection() const { return facing; }
+	Direction getDirection()  const { return facing; }
 
-	virtual void move(Direction dir) = 0;
-	virtual void go_to(Vec2f) = 0;
+	void setFacing(Direction dir) { facing = dir; }
+
+	void move(Direction dir);
+	void update();
+
+	virtual void onMove(Direction dir) = 0;
+	virtual void onUpdate() = 0;
 
 	virtual void onInteract() = 0;
 	virtual void onStep() = 0;
-	virtual bool collisionCheck(Actor&) = 0;
-	virtual void update() = 0;
 };
