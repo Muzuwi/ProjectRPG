@@ -89,10 +89,12 @@ void Player::move(Direction dir) {
 		case Direction::Right:  ++this->worldPosition.x; isMoving = true;  break;
 		default: break;
 	}
-
-	facing = dir;
 }
 
 void Player::go_to(Vec2f) {
 
+}
+
+void Player::setFacing(Direction dir) {
+	facing = dir;
 }

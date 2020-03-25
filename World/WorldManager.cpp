@@ -6,6 +6,7 @@ void WorldManager::loadMap(const std::string &mapName) {
 }
 
 bool WorldManager::movePlayer(Direction dir) {
+	player.setFacing(dir);
 	auto playerPos = player.getWorldPosition();
 	bool invalidMovements = (playerPos.x == 0 && dir == Direction::Left) ||
 							(playerPos.y == 0 && dir == Direction::Up)   ||

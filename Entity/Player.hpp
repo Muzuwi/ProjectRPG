@@ -22,6 +22,7 @@ public:
 
 	Vec2u getWorldPosition() const { return worldPosition; }
 	Vec2f getSpritePosition() const { return spritePosition; }
+	void setFacing(Direction dir);
 
 	void move(Direction dir) override;
 	void go_to(Vec2f f) override;
