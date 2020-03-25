@@ -13,6 +13,9 @@ bool Engine::Init() {
 	window = std::make_shared<sf::RenderWindow>(sf::VideoMode(windowWidth, windowHeight, 32), "Projekt");
 	window->setFramerateLimit(60);
 	newMap = Map::from_file("");
+	if(!mapTexture.create(newMap.getWidth() * Tile::dimensions().x, newMap.getHeight() * Tile::dimensions().y))
+		throw std::runtime_error("Failed creating texture for display");
+
 	LoadTextures();
 	GUI.Init();
 	if (!window) return false;
@@ -29,23 +32,18 @@ void Engine::LoadTextures() {
 void Engine::RenderFrame() {
 	window->clear();
 
-	sf::RenderTexture texture {};
-	auto textureSize = Vec2u(newMap.getWidth() * 32u, newMap.getHeight() * 32u);
-	if(!texture.create(textureSize.x, textureSize.y))
-		throw std::runtime_error("Failed creating texture for display");
+	RenderTile(mapTexture);
+	RenderTilePass2(mapTexture);
+	RenderEntity(mapTexture);
 
-	RenderTile(texture);
-	RenderTilePass2(texture);
-	RenderEntity(texture);
-
-	texture.display();
+	mapTexture.display();
 
 	auto playerCentre = tempPlayer.getSpritePosition() + Vec2f(tempPlayer.getDimensions()/2u);
 	Vec2f viewCenter = playerCentre;
-	if(playerCentre.x + (windowWidth/2.0f) > textureSize.x)
-		viewCenter.x = textureSize.x - (windowWidth/2.0f);
-	if(playerCentre.y + (windowHeight/2.0f) > textureSize.y)
-		viewCenter.y = textureSize.y - (windowHeight/2.0f);
+	if(playerCentre.x + (windowWidth/2.0f) > mapTexture.getSize().x)
+		viewCenter.x = mapTexture.getSize().x - (windowWidth/2.0f);
+	if(playerCentre.y + (windowHeight/2.0f) > mapTexture.getSize().y)
+		viewCenter.y = mapTexture.getSize().y - (windowHeight/2.0f);
 	if(playerCentre.x - (windowWidth/2.0f) < 0)
 		viewCenter.x = (windowWidth/2.0f);
 	if(playerCentre.y - (windowHeight/2.0f) < 0)
@@ -53,7 +51,7 @@ void Engine::RenderFrame() {
 
 	sf::View view(viewCenter, Vec2f(windowWidth, windowHeight));
 	window->setView(view);
-	window->draw(sf::Sprite(texture.getTexture()));
+	window->draw(sf::Sprite(mapTexture.getTexture()));
 
 	window->setView(window->getDefaultView());
 	RenderHud(*window);

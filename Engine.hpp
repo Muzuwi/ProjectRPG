@@ -14,6 +14,7 @@ private:
 	const unsigned windowHeight = 600;
 
 	std::shared_ptr<sf::RenderWindow> window;
+	sf::RenderTexture mapTexture;
 
 	TextureManager textureManager;
 //	OverworldManager overworld;
