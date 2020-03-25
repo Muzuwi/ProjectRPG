@@ -13,5 +13,7 @@ public:
 	Player& getPlayer() { return player; };
 
 	void loadMap(const std::string& mapName);
+
+	bool moveActor(Actor &actor, Direction dir);
 	bool movePlayer(Direction dir);
 };
