@@ -20,7 +20,7 @@ void Player::draw(sf::RenderTarget &target) {
 		default: break;
 	}
 
-	Vec2f drawPosition = spritePosition - Vec2f(0, getDimensions().y - Tile::dimensions().y);
+	Vec2f drawPosition = spritePosition - Vec2f(0, getDimensions().y - Tile::dimensions());
 	sprite.setPosition(drawPosition);
 	target.draw(sprite);
 }

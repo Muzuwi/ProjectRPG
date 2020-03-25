@@ -37,7 +37,7 @@ public:
 	/*
 	 *  Stały rozmiar kafelek mapy dla silnika
 	 */
-	static Vec2u dimensions() {
-		return Vec2u(32, 32);
+	static unsigned dimensions() {
+		return 32;
 	}
 };

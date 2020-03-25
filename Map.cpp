@@ -85,7 +85,7 @@ void Map::draw(sf::RenderTarget &target) {
 		}
 
 		auto sprite = tileset.getSprite(0, currentAnimationFrame);
-		sprite.setPosition(Tile::dimensions().x * decoration.pos.x, Tile::dimensions().y * decoration.pos.y);
+		sprite.setPosition(Vec2f(decoration.pos * Tile::dimensions()));
 		target.draw(sprite);
 	}
 }
@@ -96,10 +96,10 @@ void Map::initializeVertexArrays() {
 	for(unsigned i = 0; i < size.x; i++) {
 		for(unsigned j = 0; j < size.y; j++) {
 			sf::Vertex* quad = &vertices[(i+j*100)*4];
-			quad[0].position = sf::Vector2f(i * Tile::dimensions().x, j * Tile::dimensions().y);
-			quad[1].position = sf::Vector2f((i + 1) * Tile::dimensions().x, j * Tile::dimensions().y);
-			quad[2].position = sf::Vector2f((i + 1) * Tile::dimensions().x, (j + 1) * Tile::dimensions().y);
-			quad[3].position = sf::Vector2f(i * Tile::dimensions().x, (j + 1) * Tile::dimensions().y);
+			quad[0].position = sf::Vector2f(i * Tile::dimensions(), j * Tile::dimensions());
+			quad[1].position = sf::Vector2f((i + 1) * Tile::dimensions(), j * Tile::dimensions());
+			quad[2].position = sf::Vector2f((i + 1) * Tile::dimensions(), (j + 1) * Tile::dimensions());
+			quad[3].position = sf::Vector2f(i * Tile::dimensions(), (j + 1) * Tile::dimensions());
 
 			auto& tile = floorTiles[i][j];
 			auto textureCoords = TextureManager::get()->getSpritesheet("Tileset").getTextureCoordinates(0, tile.getType());

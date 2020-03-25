@@ -18,7 +18,7 @@ bool Engine::Init() {
 	GUI.Init();
 	world.loadMap("");
 
-	if(!mapTexture.create(world.getMap().getWidth() * Tile::dimensions().x, world.getMap().getHeight() * Tile::dimensions().y))
+	if(!mapTexture.create(world.getMap().getWidth() * Tile::dimensions(), world.getMap().getHeight() * Tile::dimensions()))
 		return false;
 
 	return true;
