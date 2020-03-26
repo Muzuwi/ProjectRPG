@@ -34,13 +34,22 @@ bool WorldManager::playerInteract() {
 	                        (playerPos.x == currentMap.getWidth() - 1 && player.getDirection() == Direction::Right) ||
 	                        (playerPos.y == currentMap.getHeight() - 1 && player.getDirection() == Direction::Down);
 	if(invalidInteract) {
-		std::cout << "Player would interact with outside of map\n";
 		return false;
 	}
 
 	auto interactionPos = Tile::offset(playerPos, player.getDirection());
 	std::cout << "Player interacted with " <<  interactionPos.x << " " << interactionPos.y << "\n";
 
+	auto* npc = currentMap.findNPC(interactionPos);
+	if(npc) {
+		Direction npcDir;
+		if(player.getDirection() == Direction::Down) npcDir = Direction::Up;
+		else if(player.getDirection() == Direction::Up) npcDir = Direction::Down;
+		else if(player.getDirection() == Direction::Left) npcDir = Direction::Right;
+		else if(player.getDirection() == Direction::Right) npcDir = Direction::Left;
+		npc->onInteract(npcDir);
+		return true;
+	}
 
 	return false;
 }

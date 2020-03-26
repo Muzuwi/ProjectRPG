@@ -36,6 +36,8 @@ Map Map::from_file(const std::string&) {
 				)
 			);
 
+	newMap.npcs.push_back(NPC("jotaro", {10,10}));
+
 	return newMap;
 }
 
@@ -45,6 +47,7 @@ Map::Map(const Map &map) {
 	this->tileDecors = map.tileDecors;
 	this->vertices = map.vertices;
 	this->animatedTiles = map.animatedTiles;
+	this->npcs = map.npcs;
 }
 
 void Map::draw(sf::RenderTarget &target) {
@@ -88,6 +91,13 @@ void Map::draw(sf::RenderTarget &target) {
 		sprite.setPosition(Vec2f(decoration.pos * Tile::dimensions()));
 		target.draw(sprite);
 	}
+
+	for(auto& npc : npcs) {
+		npc.draw(target);
+		npc.update();
+		npc.frameTick();
+	}
+
 }
 
 void Map::initializeVertexArrays() {
@@ -128,9 +138,28 @@ bool Map::checkCollision(unsigned x, unsigned y) {
 		}
 	}
 
+	for(auto& npc : npcs) {
+		if(npc.getWorldPosition().x == x && npc.getWorldPosition().y == y) {
+			return true;
+		}
+	}
+
 	return false;
 }
 
 bool Map::checkCollision(Vec2u pos) {
 	return this->checkCollision(pos.x, pos.y);
+}
+
+NPC* Map::findNPC(Vec2u pos) {
+	for(auto& npc : npcs) {
+		if(npc.getWorldPosition() == pos)
+			return &npc;
+	}
+
+	return nullptr;
+}
+
+NPC* Map::findNPC(unsigned x, unsigned y) {
+	return this->findNPC({x,y});
 }

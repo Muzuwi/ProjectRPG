@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Tile.hpp"
 #include "Types.hpp"
+#include "Entity/NPC.hpp"
 
 class Map {
 	Vec2u size;
@@ -17,8 +18,7 @@ class Map {
 		: pos(_pos), decor(_tile) { }
 	};
 	std::vector<Decor> tileDecors;
-	//  Array2D<Event> events;
-	//  Array2D<Entity> entities;
+	std::vector<NPC>   npcs;
 
 	sf::VertexArray vertices;
 	std::vector<Vec2u> animatedTiles;
@@ -43,4 +43,7 @@ public:
 
 	void draw(sf::RenderTarget&);
 	void initializeVertexArrays();
+
+	NPC* findNPC(Vec2u pos);
+	NPC* findNPC(unsigned x, unsigned y);
 };

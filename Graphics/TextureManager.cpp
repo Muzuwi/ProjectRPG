@@ -34,7 +34,7 @@ bool TextureManager::addSpritesheet(const std::string &resourcePath, bool useCon
 	Vec2u defaultDimensions {};
 	if(useConfigSize) {
 		//  TODO:  Ładowanie z konfiguracji albo coś takiego
-		if(resourceName == "playersprite") defaultDimensions = Vec2u(32, 48);
+		if(resourceName == "playersprite" || resourceName == "jotaro") defaultDimensions = Vec2u(32, 48);
 		else defaultDimensions = Vec2u(32, 32);
 	} else {
 		defaultDimensions = texture.getSize();
