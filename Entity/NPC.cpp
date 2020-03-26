@@ -29,7 +29,7 @@ void NPC::draw(sf::RenderTarget &target) {
 		default: break;
 	}
 
-	Vec2f drawPosition = spritePosition - Vec2f(0, getDimensions().y - Tile::dimensions());
+	Vec2f drawPosition = spritePosition - Vec2f((getDimensions().x - Tile::dimensions()) / 2, getDimensions().y - Tile::dimensions());
 	sprite.setPosition(drawPosition);
 	target.draw(sprite);
 }

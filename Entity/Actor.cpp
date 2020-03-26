@@ -51,6 +51,7 @@ void Actor::update() {
 			}
 
 		}
-
 	}
+
+	this->onUpdate();
 }
