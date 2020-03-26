@@ -13,40 +13,9 @@ bool WorldManager::moveActor(Actor &actor, Direction dir) {
 	                        (actorPos.y == currentMap.getHeight() - 1 && dir == Direction::Down);
 
 	if(!invalidMovements) {
-		switch(dir) {
-			case Direction::Up: {
-				if(!currentMap.checkCollision(actorPos.x, actorPos.y - 1)) {
-					actor.move(Direction::Up);
-					return true;
-				}
-				break;
-			}
-
-			case Direction::Down: {
-				if(!currentMap.checkCollision(actorPos.x, actorPos.y + 1)) {
-					actor.move(Direction::Down);
-					return true;
-				}
-				break;
-			}
-
-			case Direction::Left: {
-				if(!currentMap.checkCollision(actorPos.x - 1, actorPos.y)) {
-					actor.move(Direction::Left);
-					return true;
-				}
-				break;
-			}
-
-			case Direction::Right: {
-				if(!currentMap.checkCollision(actorPos.x + 1, actorPos.y)) {
-					actor.move(Direction::Right);
-					return true;
-				}
-				break;
-			}
-
-			default: break;
+		if(!currentMap.checkCollision(Tile::offset(actorPos, dir))) {
+			actor.move(dir);
+			return true;
 		}
 	}
 

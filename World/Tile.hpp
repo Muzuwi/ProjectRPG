@@ -40,4 +40,20 @@ public:
 	static unsigned dimensions() {
 		return 32;
 	}
+
+	static Vec2u offset(Vec2u pos, Direction dir) {
+		switch(dir) {
+			case Direction::Up:
+				return Vec2u(pos.x, pos.y - 1);
+			case Direction::Down:
+				return Vec2u(pos.x, pos.y + 1);
+			case Direction::Left:
+				return Vec2u(pos.x-1, pos.y);
+			case Direction::Right:
+				return Vec2u(pos.x+1, pos.y);
+
+			default:
+				return Vec2u();
+		}
+	}
 };
