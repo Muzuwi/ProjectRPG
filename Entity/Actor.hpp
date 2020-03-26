@@ -1,5 +1,6 @@
 #pragma once
 #include "Types.hpp"
+#include "World/Tile.hpp"
 
 /*
  *      WorldEntity - klasa reprezentująca obiekt aktywny w świecie gry
@@ -20,7 +21,14 @@ protected:
 	unsigned frameCounter;
 public:
 	Actor(unsigned type, unsigned moveSpeed)
-	: entityType(type), movementSpeed(moveSpeed), facing(Direction::Down), isMoving(false), frameCounter(0) {}
+	: entityType(type), movementSpeed(moveSpeed), facing(Direction::Down), isMoving(false), frameCounter(0) { }
+
+	Actor(unsigned type, unsigned moveSpeed, Vec2u worldPos)
+	: Actor(type, moveSpeed)
+	{
+		worldPosition = worldPos;
+		spritePosition = Vec2f(worldPos * Tile::dimensions());
+	}
 
 	Vec2u getWorldPosition()  const { return worldPosition; }
 	Vec2f getSpritePosition() const { return spritePosition; }
@@ -34,6 +42,6 @@ public:
 	virtual void onMove(Direction dir) = 0;
 	virtual void onUpdate() = 0;
 
-	virtual void onInteract() = 0;
+	virtual void onInteract(Direction dir) = 0;
 	virtual void onStep() = 0;
 };

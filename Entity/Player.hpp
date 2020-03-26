@@ -23,7 +23,7 @@ public:
 
 protected:
 	void frameTick() override {};
-	void onInteract() override {};
+	void onInteract(Direction dir) override {};
 	void onStep() override {};
 	void onMove(Direction) override {}
 	void onUpdate() override {}
