@@ -16,4 +16,6 @@ public:
 
 	bool moveActor(Actor &actor, Direction dir);
 	bool movePlayer(Direction dir);
+
+	bool playerInteract();
 };
