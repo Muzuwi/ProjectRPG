@@ -26,7 +26,8 @@ add_executable(ProjectRPG
     World/WorldManager.hpp
     World/WorldManager.cpp
     Entity/Actor.cpp
-        )
+    Entity/NPC.cpp
+    Entity/NPC.hpp)
 
 if(MSVC) 
 target_link_libraries(ProjectRPG sfml-graphics-d sfml-system-d sfml-window-d)
