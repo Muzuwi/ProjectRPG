@@ -6,7 +6,8 @@
 class InvUI {
 private:
 	sf::Sprite UI;
-
+	sf::Text title;
+	sf::Font font;
 public:
 	InvUI();
 	void Init();

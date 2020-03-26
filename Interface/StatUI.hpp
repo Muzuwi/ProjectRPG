@@ -6,7 +6,8 @@
 class StatUI {
 private:
 	sf::Sprite UI;
-
+	sf::Text title;
+	sf::Font font;
 public:
 	StatUI();
 	void Init();
