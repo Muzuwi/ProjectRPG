@@ -21,5 +21,6 @@ public:
 
 	sf::Sprite getSprite(unsigned animation = 0, unsigned frame = 0) const;
 	sf::IntRect getTextureCoordinates(unsigned animation, unsigned frame) const;
+	Vec2u getSpriteSize() const { return m_sprite_size; }
 	const sf::Texture& getTexture() const { return m_texture; }
 };
