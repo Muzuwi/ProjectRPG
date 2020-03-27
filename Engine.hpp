@@ -20,8 +20,7 @@ private:
 
 	GameUI GUI;
 
-	void RenderTile(sf::RenderTarget&);
-	void RenderEntity(sf::RenderTarget&);
+	void RenderWorld(sf::RenderTarget&);
 	void RenderHud(sf::RenderTarget&);
 
 	bool Init();

@@ -50,54 +50,10 @@ Map::Map(const Map &map) {
 	this->npcs = map.npcs;
 }
 
-void Map::draw(sf::RenderTarget &target) {
-	static auto& tileset = TextureManager::get()->getSpritesheet("Tileset");
-
-	for(const auto& coords : animatedTiles) {
-		sf::Vertex* quad = &vertices[(coords.x+coords.y*100)*4];
-		auto& tile = floorTiles[coords.x][coords.y];
-
-		auto currentAnimationFrame = tile.getAnimationStart() + (tile.getFrame() / tile.getAnimationSpeed());
-		if(currentAnimationFrame > tile.getFrameCount() && tile.isAnimationRepeat())
-			currentAnimationFrame %= tile.getFrameCount();
-		else
-			currentAnimationFrame = tile.getAnimationStart();
-
-		auto textureCoords = TextureManager::get()->getSpritesheet("Tileset").getTextureCoordinates(0, currentAnimationFrame);
-		quad[0].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top);
-		quad[1].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top);
-		quad[2].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top+textureCoords.height);
-		quad[3].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top+textureCoords.height);
-
-		tile.tickFrame();
-	}
-
-	target.draw(vertices, &tileset.getTexture());
-
-	for(auto& decoration : tileDecors) {
-		auto& tile = decoration.decor;
-
-		unsigned currentAnimationFrame = tile.getType();
-		if(tile.isAnimated()) {
-			currentAnimationFrame = tile.getAnimationStart() + (tile.getFrame() / tile.getAnimationSpeed());
-			if(currentAnimationFrame > tile.getFrameCount() && tile.isAnimationRepeat())
-				currentAnimationFrame = tile.getAnimationStart() + (currentAnimationFrame % tile.getFrameCount());
-			else
-				currentAnimationFrame = tile.getAnimationStart();
-			tile.tickFrame();
-		}
-
-		auto sprite = tileset.getSprite(0, currentAnimationFrame);
-		sprite.setPosition(Vec2f(decoration.pos * Tile::dimensions()));
-		target.draw(sprite);
-	}
-
-	for(auto& npc : npcs) {
-		npc.draw(target);
-		npc.update();
-		npc.frameTick();
-	}
-
+void Map::draw(sf::RenderTarget &target, const Player& player) {
+	this->drawTiles(target);
+	this->drawDecor(target);
+	this->drawEntities(target, player);
 }
 
 void Map::initializeVertexArrays() {
@@ -162,4 +118,85 @@ NPC* Map::findNPC(Vec2u pos) {
 
 NPC* Map::findNPC(unsigned x, unsigned y) {
 	return this->findNPC({x,y});
+}
+
+
+/*
+ *  Rysowanie wszystkich kafli mapy
+ */
+void Map::drawTiles(sf::RenderTarget &target) {
+	auto& tileset = TextureManager::get()->getSpritesheet("Tileset");
+
+	for(const auto& coords : animatedTiles) {
+		sf::Vertex* quad = &vertices[(coords.x+coords.y*100)*4];
+		auto& tile = floorTiles[coords.x][coords.y];
+
+		auto currentAnimationFrame = tile.getAnimationStart() + (tile.getFrame() / tile.getAnimationSpeed());
+		if(currentAnimationFrame > tile.getFrameCount() && tile.isAnimationRepeat())
+			currentAnimationFrame %= tile.getFrameCount();
+		else
+			currentAnimationFrame = tile.getAnimationStart();
+
+		auto textureCoords = TextureManager::get()->getSpritesheet("Tileset").getTextureCoordinates(0, currentAnimationFrame);
+		quad[0].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top);
+		quad[1].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top);
+		quad[2].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top+textureCoords.height);
+		quad[3].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top+textureCoords.height);
+
+		tile.tickFrame();
+	}
+
+	target.draw(vertices, &tileset.getTexture());
+}
+
+
+/*
+ *  Rysowanie wszystkich dekoracji świata
+ */
+void Map::drawDecor(sf::RenderTarget &target) {
+	auto& tileset = TextureManager::get()->getSpritesheet("Tileset");
+
+	for(auto& decoration : tileDecors) {
+		auto& tile = decoration.decor;
+
+		unsigned currentAnimationFrame = tile.getType();
+		if(tile.isAnimated()) {
+			currentAnimationFrame = tile.getAnimationStart() + (tile.getFrame() / tile.getAnimationSpeed());
+			if(currentAnimationFrame > tile.getFrameCount() && tile.isAnimationRepeat())
+				currentAnimationFrame = tile.getAnimationStart() + (currentAnimationFrame % tile.getFrameCount());
+			else
+				currentAnimationFrame = tile.getAnimationStart();
+			tile.tickFrame();
+		}
+
+		auto sprite = tileset.getSprite(0, currentAnimationFrame);
+		sprite.setPosition(Vec2f(decoration.pos * Tile::dimensions()));
+		target.draw(sprite);
+	}
+}
+
+
+/*
+ *  Rysuje wszystkie NPC mapy oraz gracza
+ *  Konieczne jest przekazanie tu gracza, by rysować wszystkie tekstury w prawidłowej kolejności
+ *  W przeciwnym wypadku tekstury mogą na siebie nachodzić w złych momentach
+ */
+void Map::drawEntities(sf::RenderTarget &target, const Player& player) {
+	std::sort(npcs.begin(), npcs.end(), [](const NPC& one, const NPC& two) {
+		return one.getSpritePosition().y < two.getSpritePosition().y;
+	});
+
+	bool playerDrawn = false;
+	for(auto& npc : npcs) {
+		if(npc.getSpritePosition().y > player.getSpritePosition().y && !playerDrawn) {
+			player.draw(target);
+			playerDrawn = true;
+		}
+
+		npc.draw(target);
+		npc.update();
+		npc.frameTick();
+	}
+
+	if(!playerDrawn) player.draw(target);
 }

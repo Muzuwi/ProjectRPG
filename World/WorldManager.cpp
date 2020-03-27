@@ -53,3 +53,10 @@ bool WorldManager::playerInteract() {
 
 	return false;
 }
+
+/*
+ *  Ogólna funkcja do wyrenderowania całej mapy do danego targetu
+ */
+void WorldManager::draw(sf::RenderTarget &target) {
+	currentMap.draw(target, player);
+}

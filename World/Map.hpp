@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <SFML/Graphics.hpp>
+#include <Entity/Player.hpp>
 #include "Tile.hpp"
 #include "Types.hpp"
 #include "Entity/NPC.hpp"
@@ -22,6 +23,10 @@ class Map {
 
 	sf::VertexArray vertices;
 	std::vector<Vec2u> animatedTiles;
+
+	void drawTiles(sf::RenderTarget&);
+	void drawDecor(sf::RenderTarget&);
+	void drawEntities(sf::RenderTarget&, const Player& player);
 public:
 	~Map() = default;
 
@@ -41,7 +46,7 @@ public:
 
 	Map() { }
 
-	void draw(sf::RenderTarget&);
+	void draw(sf::RenderTarget&, const Player&);
 	void initializeVertexArrays();
 
 	NPC* findNPC(Vec2u pos);

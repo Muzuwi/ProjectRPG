@@ -18,4 +18,6 @@ public:
 	bool movePlayer(Direction dir);
 
 	bool playerInteract();
+
+	void draw(sf::RenderTarget&);
 };

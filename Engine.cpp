@@ -31,8 +31,7 @@ void Engine::LoadTextures() {
 void Engine::RenderFrame() {
 	window->clear();
 
-	RenderTile(mapTexture);
-	RenderEntity(mapTexture);
+	RenderWorld(mapTexture);
 
 	mapTexture.display();
 
@@ -101,18 +100,11 @@ void Engine::Start() {
 
 /*
  *  Rysowanie wszystkich kafelek/ziemi oraz dekoracji świata, np. kwiaty na trawie, krzaki, itp.
- */
-void Engine::RenderTile(sf::RenderTarget& target) {
-	world.getMap().draw(target);
-}
-
-/*
  *  Rysowanie elementów aktywnych świata. NPC, gracz, przedmioty na ziemi, ...
  */
-void Engine::RenderEntity(sf::RenderTarget& target) {
-	world.getPlayer().draw(target);
+void Engine::RenderWorld(sf::RenderTarget& target) {
+	world.draw(target);
 }
-
 
 void Engine::RenderHud(sf::RenderTarget& target) {
 	int HP = world.getPlayer().getHP();
