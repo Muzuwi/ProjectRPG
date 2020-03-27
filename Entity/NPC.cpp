@@ -11,7 +11,7 @@ void NPC::onInteract(Direction dir) {
 void NPC::onStep() { }
 void NPC::frameTick() { }
 
-void NPC::draw(sf::RenderTarget &target) {
+void NPC::draw(sf::RenderTarget &target) const {
 	sf::Sprite sprite;
 	switch(facing) {
 		case Direction::Up:

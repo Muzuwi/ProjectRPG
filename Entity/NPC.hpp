@@ -10,7 +10,7 @@ class NPC : public Actor, public RenderableObject {
 public:
 	NPC(const std::string& texture, Vec2u worldPos);
 
-	void draw(sf::RenderTarget &target) override;
+	void draw(sf::RenderTarget &target) const override;
 	Vec2u getDimensions() const override;
 	void frameTick() override;
 

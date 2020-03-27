@@ -2,7 +2,7 @@
 #include "Graphics/TextureManager.hpp"
 #include "Player.hpp"
 
-void Player::draw(sf::RenderTarget &target) {
+void Player::draw(sf::RenderTarget &target) const {
 	sf::Sprite sprite;
 	switch(facing) {
 		case Direction::Up:

@@ -13,7 +13,7 @@ public:
 	Player()
 	: Actor(0, 7) {}
 
-	void draw(sf::RenderTarget& target) override;
+	void draw(sf::RenderTarget& target) const override;
 
 	int getHP() const { return HP; }
 	int getMP() const { return MP; }
