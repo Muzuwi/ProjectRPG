@@ -1,12 +1,15 @@
 #include "World/Tile.hpp"
 #include "Graphics/TextureManager.hpp"
 #include "NPC.hpp"
+#include "Script.hpp"
 
 void NPC::onMove(Direction) { }
 void NPC::onUpdate() { }
 void NPC::onInteract(Direction dir) {
+	Script script(scriptName);
+	script.set("npc", *this);
+	script.executeFunction("onInteract", dir);
 	facing = dir;
-	std::cout << "I was interacted with!\n";
 }
 void NPC::onStep() { }
 void NPC::frameTick() { }
@@ -38,8 +41,9 @@ Vec2u NPC::getDimensions() const {
 	return spritesheet.get().getSpriteSize();
 }
 
-NPC::NPC(const std::string &texture, Vec2u worldPos)
+NPC::NPC(const std::string &texture, Vec2u worldPos, const std::string& scrName)
 : Actor(1, 5, worldPos), spritesheet(TextureManager::get()->getSpritesheet(texture))
 {
+	scriptName = scrName;
 	spritesheet = TextureManager::get()->getSpritesheet(texture);
 }

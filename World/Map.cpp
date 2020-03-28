@@ -36,7 +36,7 @@ Map Map::from_file(const std::string&) {
 				)
 			);
 
-	newMap.npcs.push_back(NPC("jotaro", {10,10}));
+	newMap.npcs.push_back(NPC("jotaro", {10,10}, "testscript"));
 
 	return newMap;
 }

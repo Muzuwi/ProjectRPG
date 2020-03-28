@@ -27,12 +27,14 @@ add_executable(ProjectRPG
     World/WorldManager.cpp
     Entity/Actor.cpp
     Entity/NPC.cpp
-    Entity/NPC.hpp)
+    Entity/NPC.hpp
+    Entity/Script.cpp
+    Entity/Script.hpp)
 
 if(MSVC) 
-target_link_libraries(ProjectRPG sfml-graphics-d sfml-system-d sfml-window-d)
+target_link_libraries(ProjectRPG sfml-graphics-d sfml-system-d sfml-window-d lua53)
 endif(MSVC)
 
 if(UNIX) 
-target_link_libraries(ProjectRPG -lsfml-graphics -lsfml-system -lsfml-window)
+target_link_libraries(ProjectRPG -lsfml-graphics -lsfml-system -lsfml-window -llua)
 endif(UNIX)
