@@ -13,11 +13,14 @@ add_executable(ProjectRPG
     Interface/InvUI.cpp
     Interface/StatUI.hpp
     Interface/StatUI.cpp
+    Interface/SettUI.hpp
+    Interface/SettUI.cpp
+    Interface/Hud.hpp
+    Interface/Hud.cpp
     World/Map.cpp
     Engine.cpp
     Graphics/TextureManager.cpp
     Main.cpp
-    Interface/Hud.cpp
     Entity/Player.cpp 
     Entity/Player.hpp 
     Entity/Actor.hpp 

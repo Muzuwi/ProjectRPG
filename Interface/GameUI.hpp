@@ -5,6 +5,7 @@
 #include "Hud.hpp"
 #include "StatUI.hpp"
 #include "InvUI.hpp"
+#include "SettUI.hpp"
 
 enum Scene {
 	NONE,
@@ -20,7 +21,9 @@ class GameUI {
 private:
 	Scene left;
 	Scene right;
+	Scene middle;
 
+	SettUI settings;
 	StatUI stats;
 	InvUI eq;
 	Hud hud;
