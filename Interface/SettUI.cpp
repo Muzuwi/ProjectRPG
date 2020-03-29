@@ -59,3 +59,9 @@ void SettUI::Call() {
 	if (focus == 3) cout << "* Someday you will go to Main Menu *" << endl; //Main menu
 	if (focus == 4) cout << "* Someday I will close window *" << endl; //Close window
 }
+
+void SettUI::ProcessKey(sf::Event::KeyEvent key) {
+	if (key.code == sf::Keyboard::W) Update(-1);
+	else if (key.code == sf::Keyboard::S) Update(1);
+	else if (key.code == sf::Keyboard::Space) Call();
+}

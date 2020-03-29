@@ -21,4 +21,5 @@ public:
 	void Update(int);	//Changing focus
 	void Call();
 	void draw(sf::RenderTarget&);
+	void ProcessKey(sf::Event::KeyEvent);
 };

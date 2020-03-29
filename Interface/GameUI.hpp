@@ -19,9 +19,7 @@ enum Scene {
 
 class GameUI {
 private:
-	Scene left;
-	Scene right;
-	Scene middle;
+	Scene current;
 
 	SettUI settings;
 	StatUI stats;
@@ -32,5 +30,8 @@ public:
 
 	void Init();
 	void DrawGUI(sf::RenderTarget&,const int&, const int&, const int&, const int&);
+	
 	void SetScene(sf::Event::KeyEvent);
+	void ProcessKey(sf::Event::KeyEvent);
+	bool IsSceneKey(sf::Event::KeyEvent);
 };

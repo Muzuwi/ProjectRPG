@@ -66,7 +66,7 @@ void Engine::ProcessInput() {
 				break;
 			}
 			case sf::Event::KeyPressed: {
-				GUI.SetScene(event.key);
+				GUI.ProcessKey(event.key);
 				if(event.key.code == sf::Keyboard::Space)
 					world.playerInteract();
 			}
