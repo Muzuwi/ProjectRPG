@@ -6,7 +6,7 @@ void InvUI::Init() {
 	UI = TextureManager::get()->getSpritesheet("right_panel").getSprite();
 	UI.setPosition(450, 0);
 
-	font.loadFromFile("GameContent/fonts/arial.ttf");
+	font.loadFromFile("GameContent/Fonts/arial.ttf");
 	title.setFont(font);
 
 	title.setString("Equipment");

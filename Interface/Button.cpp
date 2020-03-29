@@ -9,7 +9,7 @@ void Button::Init() {
 	button = TextureManager::get()->getSpritesheet(file_name).getSprite();
 	button.setPosition(x, y);
 
-	font.loadFromFile("GameContent/fonts/arial.ttf");
+	font.loadFromFile("GameContent/Fonts/arial.ttf");
 	text.setFont(font);
 
 	text.setString(text_name);

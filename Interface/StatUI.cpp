@@ -5,7 +5,7 @@ StatUI::StatUI() { }
 void StatUI::Init() {
 	UI = TextureManager::get()->getSpritesheet("left_panel").getSprite();
 
-	font.loadFromFile("GameContent/fonts/arial.ttf");
+	font.loadFromFile("GameContent/Fonts/arial.ttf");
 	title.setFont(font);
 
 	title.setString("Statistics");

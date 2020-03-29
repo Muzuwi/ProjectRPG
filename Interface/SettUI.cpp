@@ -6,7 +6,7 @@ void SettUI::Init() {
 	UI = TextureManager::get()->getSpritesheet("settings").getSprite();
 	UI.setPosition(sf::Vector2f(250.f, 100.f));
 
-	font.loadFromFile("GameContent/fonts/arial.ttf");
+	font.loadFromFile("GameContent/Fonts/arial.ttf");
 	title.setFont(font);
 
 	title.setString("Settings");
@@ -52,7 +52,7 @@ void SettUI::Update(int change) {
 }
 
 void SettUI::Call() {
-	//Obs≥uga PrzyciskÛw
+	//Obs≈Çuga Przycisk√≥w
 	if (focus == 0) cout << "* Audio Settings *" << endl; //Audio subwindow
 	if (focus == 1) cout << "* Video Settings *" << endl; //Music subwindow
 	if (focus == 2) cout << "* Credits: *" << endl << "-> Lukasz Kedziora" << endl << "-> Maciej Tomaszewski" << endl; //Credits scene
