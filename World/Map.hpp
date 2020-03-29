@@ -31,6 +31,7 @@ public:
 	~Map() = default;
 
 	static Map from_file(const std::string& path);
+	static Map make_empty(Vec2u size);
 
 	Tile& getTile(unsigned x, unsigned y) { return floorTiles[x][y]; }
 	Tile& getTile(Vec2u pos) { return floorTiles[pos.x][pos.y]; }
