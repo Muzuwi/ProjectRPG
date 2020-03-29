@@ -61,26 +61,35 @@ void Map::initializeVertexArrays() {
 
 	for(unsigned i = 0; i < size.x; i++) {
 		for(unsigned j = 0; j < size.y; j++) {
-			sf::Vertex* quad = &vertices[(i+j*100)*4];
-			quad[0].position = sf::Vector2f(i * Tile::dimensions(), j * Tile::dimensions());
-			quad[1].position = sf::Vector2f((i + 1) * Tile::dimensions(), j * Tile::dimensions());
-			quad[2].position = sf::Vector2f((i + 1) * Tile::dimensions(), (j + 1) * Tile::dimensions());
-			quad[3].position = sf::Vector2f(i * Tile::dimensions(), (j + 1) * Tile::dimensions());
-
-			auto& tile = floorTiles[i][j];
-			auto textureCoords = TextureManager::get()->getSpritesheet("Tileset").getTextureCoordinates(0, tile.getType());
-			quad[0].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top);
-			quad[1].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top);
-			quad[2].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top+textureCoords.height);
-			quad[3].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top+textureCoords.height);
+			this->updateVertexAt(Vec2u(i, j));
 
 			//  Zapisz wszystkie animowane kafle do osobnego wektora
+			auto& tile = floorTiles[i][j];
 			if(tile.isAnimated()) {
 				animatedTiles.push_back({i, j});
 			}
 		}
 	}
 }
+
+void Map::updateVertexAt(Vec2u pos) {
+	auto i = pos.x,
+		 j = pos.y;
+
+	sf::Vertex* quad = &vertices[(i+j*100)*4];
+	quad[0].position = sf::Vector2f(i * Tile::dimensions(), j * Tile::dimensions());
+	quad[1].position = sf::Vector2f((i + 1) * Tile::dimensions(), j * Tile::dimensions());
+	quad[2].position = sf::Vector2f((i + 1) * Tile::dimensions(), (j + 1) * Tile::dimensions());
+	quad[3].position = sf::Vector2f(i * Tile::dimensions(), (j + 1) * Tile::dimensions());
+
+	auto& tile = floorTiles[i][j];
+	auto textureCoords = TextureManager::get()->getSpritesheet("Tileset").getTextureCoordinates(0, tile.getType());
+	quad[0].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top);
+	quad[1].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top);
+	quad[2].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top+textureCoords.height);
+	quad[3].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top+textureCoords.height);
+}
+
 
 bool Map::checkCollision(unsigned x, unsigned y) {
 	assert(x < size.x && y < size.y);

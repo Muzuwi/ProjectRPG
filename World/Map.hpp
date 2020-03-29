@@ -27,6 +27,8 @@ class Map {
 	void drawTiles(sf::RenderTarget&);
 	void drawDecor(sf::RenderTarget&);
 	void drawEntities(sf::RenderTarget&, const Player& player);
+
+	void updateVertexAt(Vec2u pos);
 public:
 	~Map() = default;
 
