@@ -29,6 +29,17 @@ void GameUI::DrawGUI(sf::RenderTarget& target, const int& HP, const int& MP, con
 }
 
 void GameUI::SetScene(sf::Event::KeyEvent key) {
+	if (middle == SETTINGS) {
+		if (key.code == sf::Keyboard::W) {
+			settings.Update(-1);
+		}
+		if (key.code == sf::Keyboard::S) {
+			settings.Update(1);
+		}
+		if (key.code == sf::Keyboard::Space) {
+			settings.Call();
+		}
+	}
 	if (key.code == sf::Keyboard::Escape) {
 		if (middle == NONE) middle = SETTINGS;
 		else middle = NONE;

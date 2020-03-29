@@ -18,5 +18,7 @@ public:
 	SettUI();
 	void Init();
 	void SetButtons();
+	void Update(int);	//Changing focus
+	void Call();
 	void draw(sf::RenderTarget&);
 };
