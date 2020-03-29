@@ -17,6 +17,8 @@ add_executable(ProjectRPG
     Interface/SettUI.cpp
     Interface/Hud.hpp
     Interface/Hud.cpp
+    Interface/Button.hpp
+    Interface/Button.cpp
     World/Map.cpp
     Engine.cpp
     Graphics/TextureManager.cpp
