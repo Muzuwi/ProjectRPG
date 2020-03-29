@@ -31,3 +31,17 @@ sf::IntRect Spritesheet::getTextureCoordinates(unsigned animation, unsigned fram
 
 	return rect;
 }
+
+sf::IntRect Spritesheet::getTextureCoordinates(unsigned index) const {
+	unsigned anim = index / (m_texture.getSize().x / m_sprite_size.x);
+	unsigned frame = index % (m_texture.getSize().x / m_sprite_size.x);
+
+	return getTextureCoordinates(anim, frame);
+}
+
+sf::Sprite Spritesheet::getSprite(unsigned index) const {
+	unsigned anim = index / (m_texture.getSize().x / m_sprite_size.x);
+	unsigned frame = index % (m_texture.getSize().x / m_sprite_size.x);
+
+	return getSprite(anim, frame);
+}

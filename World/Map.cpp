@@ -83,7 +83,7 @@ void Map::updateVertexAt(Vec2u pos) {
 	quad[3].position = sf::Vector2f(i * Tile::dimensions(), (j + 1) * Tile::dimensions());
 
 	auto& tile = floorTiles[i][j];
-	auto textureCoords = TextureManager::get()->getSpritesheet("Tileset").getTextureCoordinates(0, tile.getType());
+	auto textureCoords = TextureManager::get()->getSpritesheet("Tileset").getTextureCoordinates(tile.getType());
 	quad[0].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top);
 	quad[1].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top);
 	quad[2].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top+textureCoords.height);
@@ -146,7 +146,7 @@ void Map::drawTiles(sf::RenderTarget &target) {
 		else
 			currentAnimationFrame = tile.getAnimationStart();
 
-		auto textureCoords = TextureManager::get()->getSpritesheet("Tileset").getTextureCoordinates(0, currentAnimationFrame);
+		auto textureCoords = TextureManager::get()->getSpritesheet("Tileset").getTextureCoordinates(currentAnimationFrame);
 		quad[0].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top);
 		quad[1].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top);
 		quad[2].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top+textureCoords.height);
@@ -178,7 +178,7 @@ void Map::drawDecor(sf::RenderTarget &target) {
 			tile.tickFrame();
 		}
 
-		auto sprite = tileset.getSprite(0, currentAnimationFrame);
+		auto sprite = tileset.getSprite(currentAnimationFrame);
 		sprite.setPosition(Vec2f(decoration.pos * Tile::dimensions()));
 		target.draw(sprite);
 	}

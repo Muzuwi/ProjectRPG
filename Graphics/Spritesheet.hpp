@@ -19,8 +19,10 @@ public:
 	Spritesheet() {}
 	Spritesheet(sf::Texture&& texture, Vec2u defaultDimensions);
 
-	sf::Sprite getSprite(unsigned animation = 0, unsigned frame = 0) const;
+	sf::Sprite getSprite(unsigned index=0) const;
+	sf::Sprite getSprite(unsigned animation, unsigned frame) const;
 	sf::IntRect getTextureCoordinates(unsigned animation, unsigned frame) const;
+	sf::IntRect getTextureCoordinates(unsigned index) const;
 	Vec2u getSpriteSize() const { return m_sprite_size; }
 	const sf::Texture& getTexture() const { return m_texture; }
 };
