@@ -4,7 +4,6 @@
 #include "Graphics/RenderableObject.hpp"
 #include "Graphics/Spritesheet.hpp"
 #include "Entity/Actor.hpp"
-#include "Entity/Script.hpp"
 
 class NPC : public Actor, public RenderableObject {
 	std::string scriptName;

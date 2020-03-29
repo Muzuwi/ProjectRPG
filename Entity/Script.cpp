@@ -23,15 +23,15 @@ Script::Script(const std::string &scriptName) {
 
 	std::ifstream file("GameContent/Script/" + scriptName + ".lua");
 	if(!file.good()) {
-		std::cout << "Error loading Lua script from file!\n";
-		std::cout << "Tried loading from path " << "GameContent/Script/"+scriptName+".lua" << "\n";
+		std::cerr << "Error loading Lua script from file!\n";
+		std::cerr << "Tried loading from path " << "GameContent/Script/"+scriptName+".lua" << "\n";
 		file.close();
 		return;
 	}
 	std::string script((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 	file.close();
 
-	m_lua_state.open_libraries(sol::lib::base, sol::lib::coroutine, sol::lib::string, sol::lib::io);
+	m_lua_state.open_libraries(sol::lib::base, sol::lib::coroutine, sol::lib::string, sol::lib::io, sol::lib::math);
 	m_lua_state.script(script);
 
 	this->initBindings();
