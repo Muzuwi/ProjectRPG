@@ -31,8 +31,8 @@ private:
 	void Update();
 
 public:
-	Engine();
-	~Engine();
+	Engine() {};
+	~Engine() {};
 
 	void Start();
 };

@@ -1,14 +1,6 @@
 #include <memory>
 #include "Engine.hpp"
 
-Engine::Engine() {
-
-}
-
-Engine::~Engine() {
-
-}
-
 bool Engine::Init() {
 	window = std::make_shared<sf::RenderWindow>(sf::VideoMode(windowWidth, windowHeight, 32), "Projekt");
 	if (!window) return false;
