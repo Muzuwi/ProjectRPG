@@ -26,5 +26,7 @@ public:
 	bool addSpritesheet(const std::string& resourcePath, bool useConfigSize=true);
 	const Spritesheet& getSpritesheet(const std::string& resource);
 
+	const std::unordered_map<std::string, Spritesheet>& getAllSpritesheets() const;
+
 	void autoload();
 };

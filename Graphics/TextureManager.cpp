@@ -76,3 +76,7 @@ void TextureManager::autoload() {
 		}
 	}
 }
+
+const std::unordered_map<std::string, Spritesheet>& TextureManager::getAllSpritesheets() const {
+	return this->spritesheets;
+}
