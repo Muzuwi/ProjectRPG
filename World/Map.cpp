@@ -214,14 +214,14 @@ void Map::drawEntities(sf::RenderTarget &target, const Player& player) {
  *  Tworzy pustą mapę o podanych rozmiarach
  *  Domyślny tileID to 0
  */
-Map Map::make_empty(Vec2u size) {
+Map Map::make_empty(Vec2u size, unsigned defType) {
 	Map newMap;
 	newMap.size = size;
 	newMap.floorTiles.resize(size.x, size.y);
 
 	for(unsigned i = 0; i < size.x; i++) {
 		for(unsigned j = 0; j < size.y; j++) {
-			newMap.floorTiles[i][j] = Tile(0, false);
+			newMap.floorTiles[i][j] = Tile(defType, false);
 		}
 	}
 
