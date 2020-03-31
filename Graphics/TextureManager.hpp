@@ -23,7 +23,7 @@ public:
 		return instance;
 	}
 
-	bool addSpritesheet(const std::string& resourcePath, bool useConfigSize=true);
+	bool addSpritesheet(const std::string& resourcePath, Vec2u (*partitioner)(Vec2u textureSize) = nullptr);
 	const Spritesheet& getSpritesheet(const std::string& resource);
 
 	const std::unordered_map<std::string, Spritesheet>& getAllSpritesheets() const;

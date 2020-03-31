@@ -17,7 +17,7 @@ class NPCCreator : public Tool {
 		if(ImGui::BeginCombo("Spritesheet", selectedSpritesheet.c_str())) {
 			for(const auto& key : TextureManager::get()->getAllSpritesheets() ) {
 				std::string name = key.first + " (" + std::to_string(key.second.getSpriteSize().x)
-				                   + "x" + std::to_string(key.second.getSpriteSize().x) + ")";
+				                   + "x" + std::to_string(key.second.getSpriteSize().y) + ")";
 				if(ImGui::Selectable(name.c_str()))
 					selectedSpritesheet = key.first;
 
