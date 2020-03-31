@@ -4,22 +4,22 @@
 #include "Graphics/TextureManager.hpp"
 #include "Graphics/Spritesheet.hpp"
 #include "Interface/Button.hpp"
+#include "Interface/Window.hpp"
 
-class SettUI {
+class SettUI : public Window {
 private:
-	sf::Sprite UI;
 	sf::Text title;
-	sf::Font font;
 
+	void DrawSelf(sf::RenderTarget&);
+	void SelfInit();
 	//Buttons
 	int focus; // Focus index
 	vector<Button> buttons;
 public:
 	SettUI();
-	void Init();
 	void SetButtons();
 	void Update(int);	//Changing focus
 	void Call();
-	void draw(sf::RenderTarget&);
+	void DrawButtons(sf::RenderTarget&);
 	void ProcessKey(sf::Event::KeyEvent);
 };

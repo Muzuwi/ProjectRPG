@@ -6,6 +6,7 @@
 #include "StatUI.hpp"
 #include "InvUI.hpp"
 #include "SettUI.hpp"
+#include "Window.hpp"
 
 enum Scene {
 	NONE,

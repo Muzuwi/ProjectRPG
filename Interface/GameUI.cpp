@@ -1,23 +1,21 @@
 #include "GameUI.hpp"
 
-GameUI::GameUI() { }
+GameUI::GameUI() { current = NONE; }
 
 void GameUI::Init() {
-	current = NONE;
-
-	settings.Init();
-	stats.Init();
-	eq.Init();
+	settings.Init(sf::Vector2f(250, 100), sf::Vector2f(300, 400));
+	stats.Init(sf::Vector2f(0, 0), sf::Vector2f(300, 600));
+	eq.Init(sf::Vector2f(500, 0), sf::Vector2f(300, 600));
 	hud.Init();
 }
 
 void GameUI::DrawGUI(sf::RenderTarget& target, const int& HP, const int& MP, const int& maxHP, const int& maxMP) {
 	if (current != NONE) {
-		if (current == SETTINGS) settings.draw(target);
-		else if (current == STATS) stats.draw(target);
-		else if (current == EQ) eq.draw(target);
+		if (current == SETTINGS) settings.Draw(target);
+		else if (current == STATS) stats.Draw(target);
+		else if (current == EQ) eq.Draw(target);
 	}
-	
+
 	hud.draw(target, HP, MP, maxHP, maxMP);
 }
 

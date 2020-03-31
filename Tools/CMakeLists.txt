@@ -18,7 +18,7 @@ find_library(OpenGL OpenGL GL)
 add_dependencies(RPGEditor RPGBase ImGui)
 
 if(MSVC)
-    target_link_libraries(RPGEditor OpenGL RPGBase ImGui sfml-graphics-d sfml-system-d sfml-window-d lua53)
+    target_link_libraries(RPGEditor opengl32 RPGBase ImGui sfml-graphics-d sfml-system-d sfml-window-d lua53)
 endif(MSVC)
 
 if(UNIX)

@@ -2,19 +2,19 @@
 
 SettUI::SettUI() { }
 
-void SettUI::Init() {
-	UI = TextureManager::get()->getSpritesheet("settings").getSprite();
-	UI.setPosition(sf::Vector2f(250.f, 100.f));
+void SettUI::SelfInit(){
+	SetButtons();
+}
 
-	font.loadFromFile("GameContent/Fonts/arial.ttf");
+void SettUI::DrawSelf(sf::RenderTarget& target) {
 	title.setFont(font);
-
 	title.setString("Settings");
 	title.setFillColor(sf::Color::Black);
 	title.setCharacterSize(24);
-	title.setPosition(sf::Vector2f(355.f, 130.f));
+	title.setPosition(sf::Vector2f(350.f, 115.f));
+	target.draw(title);
 
-	SetButtons();
+	DrawButtons(target);
 }
 
 void SettUI::SetButtons() {
@@ -35,9 +35,7 @@ void SettUI::SetButtons() {
 	buttons[focus].SetFocus();
 }
 
-void SettUI::draw(sf::RenderTarget& target) {
-	target.draw(UI);
-	target.draw(title);
+void SettUI::DrawButtons(sf::RenderTarget& target) {
 	for (int i = 0; i < buttons.size(); i++) {
 		buttons[i].draw(target);
 	}

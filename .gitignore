@@ -10,7 +10,7 @@ x64\
 *.otf
 *.ttf
 .vs\
-out\
+build/
 .idea/
 CMakeSettings.json
 cmake-build-debug/

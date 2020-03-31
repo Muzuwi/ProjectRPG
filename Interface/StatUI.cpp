@@ -2,19 +2,11 @@
 
 StatUI::StatUI() { }
 
-void StatUI::Init() {
-	UI = TextureManager::get()->getSpritesheet("left_panel").getSprite();
-
-	font.loadFromFile("GameContent/Fonts/arial.ttf");
+void StatUI::DrawSelf(sf::RenderTarget& target) {
 	title.setFont(font);
-
-	title.setString("Statistics");
+	title.setString("Character");
 	title.setFillColor(sf::Color::Black);
 	title.setCharacterSize(24);
-	title.setPosition(sf::Vector2f(75.f, 20.f));
-}
-
-void StatUI::draw(sf::RenderTarget& target) {
-	target.draw(UI);
+	title.setPosition(sf::Vector2f(90.f, 25.f));
 	target.draw(title);
 }
