@@ -54,4 +54,8 @@ public:
 
 	NPC* findNPC(Vec2u pos);
 	NPC* findNPC(unsigned x, unsigned y);
+
+	friend class EditWindow;
+	friend class NPCCreator;
+	friend class Brush;
 };

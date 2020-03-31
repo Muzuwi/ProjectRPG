@@ -14,5 +14,5 @@ out\
 .idea/
 CMakeSettings.json
 cmake-build-debug/
-Tools/
 imgui.ini
+Tools/imgui/

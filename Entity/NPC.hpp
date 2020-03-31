@@ -21,4 +21,5 @@ public:
 	void onStep() override;
 
 	friend class Script;
+	friend class NPCCreator;
 };
