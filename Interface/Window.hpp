@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Graphics/TextureManager.hpp"
 
 class Window {
 protected:

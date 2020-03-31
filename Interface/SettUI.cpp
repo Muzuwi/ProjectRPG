@@ -19,25 +19,34 @@ void SettUI::DrawSelf(sf::RenderTarget& target) {
 
 void SettUI::SetButtons() {
 	focus = 0;
-	Button b0("sett_button", "Audio", 330, 190);
-	Button b1("sett_button", "Video", 330, 230);
-	Button b2("sett_button", "Credits", 330, 270);
-	Button b3("sett_button", "Main Menu", 330, 310);
-	Button b4("sett_button", "Exit Game", 330, 350);
+
+	//Creating Buttons
+	sf::Vector2f size(150,30);
+	Button b0("Audio");
+	Button b1("Video");
+	Button b2("Credits");
+	Button b3("Main Menu");
+	Button b4("Exit Game");
+
+	//Remembering buttons
 	buttons.push_back(b0);
 	buttons.push_back(b1);
 	buttons.push_back(b2);
 	buttons.push_back(b3);
 	buttons.push_back(b4);
+
+	//Initializing
+	sf::Vector2f position(330, 190);
 	for (int i = 0; i < buttons.size(); i++) {
-		buttons[i].Init();
+		buttons[i].Init(position, size);
+		position += sf::Vector2f(0, 40);
 	}
 	buttons[focus].SetFocus();
 }
 
 void SettUI::DrawButtons(sf::RenderTarget& target) {
 	for (int i = 0; i < buttons.size(); i++) {
-		buttons[i].draw(target);
+		buttons[i].Draw(target);
 	}
 }
 

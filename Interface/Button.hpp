@@ -1,21 +1,24 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Graphics/TextureManager.hpp"
-#include "Graphics/Spritesheet.hpp"
 
 class Button {
-private:
-	string file_name, text_name;
-	int x, y;
-	bool focus;
-
-	sf::Sprite button;
+protected:
+	sf::Sprite final;
 	sf::Text text;
 	sf::Font font;
+	sf::Vector2f position, size;
+
+	string name;
+	bool focus;
 public:
-	Button(string, string, int, int);
-	void Init();
-	void draw(sf::RenderTarget&);
-	void SetFocus();
-	void RemoveFocus();
+	Button(string);
+	void Init(sf::Vector2f, sf::Vector2f);
+
+	void SetFocus() { focus = true; }
+	void RemoveFocus() { focus = false; }
+
+	void Draw(sf::RenderTarget&);
+	void DrawFrame(sf::RenderTarget&);
+	void DrawBackground(sf::RenderTarget&);
 };

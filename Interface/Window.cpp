@@ -1,5 +1,4 @@
 #include "Window.hpp"
-#include "Graphics/TextureManager.hpp"
 
 Window::Window(){
 	font.loadFromFile("GameContent/Fonts/arial.ttf");
@@ -12,7 +11,7 @@ Window::~Window() {
 void Window::Init(sf::Vector2f p, sf::Vector2f s){
 	position = p;
 	size = s;
-	final.setTexture(TextureManager::get()->getSpritesheet("windowskinv2").getTexture());
+	final.setTexture(TextureManager::get()->getSpritesheet("windowskinv3").getTexture());
 	this->SelfInit();
 }
 
@@ -39,35 +38,35 @@ void Window::DrawFrame(sf::RenderTarget& target) {
 	//Top Frame
 	final.setTextureRect(sf::IntRect(16, 0, 96, 16));
 	final.setScale((size.x - 32) / 96.0, 1.0);
-	final.setPosition(position.x + 16, position.y);
+	final.setPosition(position + sf::Vector2f(16, 0));
 	target.draw(final);
 	//Top - Right Corner
 	final.setScale(1.0, 1.0);
 	final.setTextureRect(sf::IntRect(112, 0, 16, 16));
-	final.setPosition(position.x + size.x - 16, position.y);
+	final.setPosition(position + sf::Vector2f(size.x - 16, 0));
 	target.draw(final);
 	//Left Frame
 	final.setTextureRect(sf::IntRect(0, 16, 16, 96));
 	final.setScale(1.0, (size.y - 32) / 96.0);
-	final.setPosition(position.x, position.y + 16);
+	final.setPosition(position + sf::Vector2f(0, 16));
 	target.draw(final);
 	//Right Frame
 	final.setTextureRect(sf::IntRect(112, 16, 16, 96));
-	final.setPosition(position.x + size.x - 16, position.y + 16);
+	final.setPosition(position + sf::Vector2f(size.x - 16, 16));
 	target.draw(final);
 	//Bottom - Left Corner
 	final.setScale(1.0, 1.0);
 	final.setTextureRect(sf::IntRect(0, 112, 16, 16));
-	final.setPosition(position.x, position.y + size.y - 16);
+	final.setPosition(position + sf::Vector2f(0, size.y -16));
 	target.draw(final);
 	//Bottom - Right Corner
 	final.setTextureRect(sf::IntRect(112, 112, 16, 16));
-	final.setPosition(position.x + size.x - 16, position.y + size.y - 16);
+	final.setPosition(position + size - sf::Vector2f(16, 16));
 	target.draw(final);
 	//Bottom Frame
 	final.setTextureRect(sf::IntRect(16, 112, 96, 16));
 	final.setScale((size.x - 32) / 96.0, 1.0);
-	final.setPosition(position.x + 16, position.y + size.y - 16);
+	final.setPosition(position + sf::Vector2f(16, size.y - 16));
 	target.draw(final);
 	//Draw exception staff
 	this->DrawSelf(target);
