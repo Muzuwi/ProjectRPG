@@ -13,7 +13,7 @@ bool WorldManager::moveActor(Actor &actor, Direction dir) {
 	                        (actorPos.y == currentMap.getHeight() - 1 && dir == Direction::Down);
 
 	if(!invalidMovements) {
-		if(!currentMap.checkCollision(Tile::offset(actorPos, dir))) {
+		if(!currentMap.checkCollision(Tile::offset(actorPos, dir), flipDirection(dir))) {
 			actor.move(dir);
 			return true;
 		}
@@ -42,12 +42,7 @@ bool WorldManager::playerInteract() {
 
 	auto* npc = currentMap.findNPC(interactionPos);
 	if(npc) {
-		Direction npcDir;
-		if(player.getDirection() == Direction::Down) npcDir = Direction::Up;
-		else if(player.getDirection() == Direction::Up) npcDir = Direction::Down;
-		else if(player.getDirection() == Direction::Left) npcDir = Direction::Right;
-		else if(player.getDirection() == Direction::Right) npcDir = Direction::Left;
-		npc->onInteract(npcDir);
+		npc->onInteract(flipDirection(player.getDirection()));
 		return true;
 	}
 
@@ -59,4 +54,15 @@ bool WorldManager::playerInteract() {
  */
 void WorldManager::draw(sf::RenderTarget &target) {
 	currentMap.draw(target, player);
+}
+
+Direction WorldManager::flipDirection(Direction dir) {
+	if(dir == Direction::Down)
+		return Direction::Up;
+	else if(dir == Direction::Up)
+		return Direction::Down;
+	else if(dir == Direction::Left)
+		return Direction::Right;
+	else
+		return Direction::Left;
 }

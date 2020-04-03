@@ -7,10 +7,10 @@
 #include <cstdint>
 
 enum class Direction {
-	Up,
-	Down,
-	Left,
-	Right
+	Down = 0,
+	Left = 1,
+	Right = 2,
+	Up = 3
 };
 
 typedef sf::Vector2<int> Vec2i;

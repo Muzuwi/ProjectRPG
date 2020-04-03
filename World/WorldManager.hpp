@@ -6,8 +6,10 @@ class WorldManager {
 	Map currentMap;
 	Player player;
 
+	static Direction flipDirection(Direction dir);
 public:
-	WorldManager() { }
+	WorldManager()
+	: currentMap(Map::make_empty({1,1},0)){ }
 
 	Map& getMap() { return currentMap; };
 	Player& getPlayer() { return player; };

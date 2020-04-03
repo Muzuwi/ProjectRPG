@@ -1,6 +1,6 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 #include "Types.hpp"
-
 
 /*
  *      Spritesheet - reprezentacja zbioru tekstur

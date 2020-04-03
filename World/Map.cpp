@@ -8,9 +8,8 @@
  *  Narazie mapa jest hardcodowana, ale ewentualnie będziemy tu ładować mapę z pliku.
  */
 Map Map::from_file(const std::string&) {
-	Map newMap;
-	newMap.size = {100 , 100};
-	newMap.floorTiles.resize(100, 100);
+	Map newMap {{100, 100}, "Tileset"};
+
 	for(size_t i = 0; i < 100; i++) {
 		for(size_t j = 0; j < 100; j++) {
 			unsigned type = 0;
@@ -19,71 +18,68 @@ Map Map::from_file(const std::string&) {
 			if(i == 10 && j == 10) type = 2;
 
 			if(i == 20 && j == 20)
-				newMap.floorTiles[i][j] = Tile(0, false, 4, 0, 3, true);
+				newMap.floorTiles[0][i][j] = 0;
 			else
-				newMap.floorTiles[i][j] = Tile(type, false);
+				newMap.floorTiles[0][i][j] = type;
 
 			if(!(rand() % 25))
-				newMap.tileDecors.push_back(Decor(Vec2u(i,j),Tile(4+(i%4), false)));
+				newMap.floorTiles[1][i][j] = 4+(i%4);
 		}
 	}
-
-	newMap.tileDecors.push_back(
-			Decor( Vec2u(5, 5),
-			       {
-					Tile(3, true, 4, 3, 4, true)
-			       }
-				)
-			);
 
 	newMap.npcs.push_back(NPC("jotaro", {10,10}, "testscript"));
 
 	return newMap;
 }
 
-Map::Map(const Map &map) {
+Map::Map(const Map &map)
+: tileset(TextureManager::get()->getSpritesheet("Tileset")) {
 	this->size = map.size;
-	this->floorTiles = map.floorTiles;
-	this->tileDecors = map.tileDecors;
+	for(unsigned layer = 0; layer < 3; layer++) {
+		this->floorTiles[layer] = map.floorTiles[layer];
+		this->animatedTiles[layer] = map.animatedTiles[layer];
+	}
 	this->vertices = map.vertices;
-	this->animatedTiles = map.animatedTiles;
 	this->npcs = map.npcs;
 }
 
 void Map::draw(sf::RenderTarget &target, const Player& player) {
 	this->drawTiles(target);
-	this->drawDecor(target);
 	this->drawEntities(target, player);
 }
 
 void Map::initializeVertexArrays() {
-	vertices = sf::VertexArray(sf::Quads, 100*100*4);
+	vertices = sf::VertexArray(sf::Quads, 3 * size.x*size.y*4);
 
-	for(unsigned i = 0; i < size.x; i++) {
-		for(unsigned j = 0; j < size.y; j++) {
-			this->updateVertexAt(Vec2u(i, j));
+	for(unsigned layer = 0; layer < 3; ++layer) {
+		for(unsigned i = 0; i < size.x; i++) {
+			for(unsigned j = 0; j < size.y; j++) {
+				this->updateVertexAt(Vec2u(i, j), layer);
 
-			//  Zapisz wszystkie animowane kafle do osobnego wektora
-			auto& tile = floorTiles[i][j];
-			if(tile.isAnimated()) {
-				animatedTiles.push_back({i, j});
+				//  Zapisz wszystkie animowane kafle do osobnego wektora
+				auto tile = tileset.getTile(floorTiles[layer][i][j]);
+				//  FIXME:
+//				if(tile.isAnimated()) {
+//					animatedTiles.push_back({i, j});
+//				}
 			}
 		}
 	}
 }
 
-void Map::updateVertexAt(Vec2u pos) {
+void Map::updateVertexAt(Vec2u pos, unsigned layer) {
+	assert(layer < 3);
 	auto i = pos.x,
 		 j = pos.y;
 
-	sf::Vertex* quad = &vertices[(i+j*100)*4];
+	sf::Vertex* quad = &vertices[(layer * size.x * size.y * 4) + (i+j*100)*4];
 	quad[0].position = sf::Vector2f(i * Tile::dimensions(), j * Tile::dimensions());
 	quad[1].position = sf::Vector2f((i + 1) * Tile::dimensions(), j * Tile::dimensions());
 	quad[2].position = sf::Vector2f((i + 1) * Tile::dimensions(), (j + 1) * Tile::dimensions());
 	quad[3].position = sf::Vector2f(i * Tile::dimensions(), (j + 1) * Tile::dimensions());
 
-	auto& tile = floorTiles[i][j];
-	auto textureCoords = TextureManager::get()->getSpritesheet("Tileset").getTextureCoordinates(tile.getType());
+	auto& tileType = floorTiles[layer][i][j];
+	auto textureCoords = tileset.getSpritesheet().getTextureCoordinates(tileType);
 	quad[0].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top);
 	quad[1].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top);
 	quad[2].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top+textureCoords.height);
@@ -91,29 +87,23 @@ void Map::updateVertexAt(Vec2u pos) {
 }
 
 
-bool Map::checkCollision(unsigned x, unsigned y) {
-	assert(x < size.x && y < size.y);
+bool Map::checkCollision(Vec2u pos, Direction dir) {
+	assert(pos.x < size.x && pos.y < size.y);
 
-	bool tileCollision = floorTiles[x][y].isCollidable();
+	bool tileCollision = false;
+	for(auto& layer : floorTiles)
+		tileCollision |= tileset.getTile(layer[pos.x][pos.y]).collisionCheck(dir);
+
 	if(tileCollision) return true;
 
-	for(auto& decor : tileDecors) {
-		if(decor.pos.x == x && decor.pos.y == y) {
-			return decor.decor.isCollidable();
-		}
-	}
-
 	for(auto& npc : npcs) {
-		if(npc.getWorldPosition().x == x && npc.getWorldPosition().y == y) {
+		//  TODO:  Może NPC powinny mieć hitboxy?
+		if(npc.getWorldPosition() == pos) {
 			return true;
 		}
 	}
 
 	return false;
-}
-
-bool Map::checkCollision(Vec2u pos) {
-	return this->checkCollision(pos.x, pos.y);
 }
 
 NPC* Map::findNPC(Vec2u pos) {
@@ -125,63 +115,20 @@ NPC* Map::findNPC(Vec2u pos) {
 	return nullptr;
 }
 
-NPC* Map::findNPC(unsigned x, unsigned y) {
-	return this->findNPC({x,y});
-}
-
 
 /*
  *  Rysowanie wszystkich kafli mapy
  */
 void Map::drawTiles(sf::RenderTarget &target) {
-	auto& tileset = TextureManager::get()->getSpritesheet("Tileset");
-
-	for(const auto& coords : animatedTiles) {
-		sf::Vertex* quad = &vertices[(coords.x+coords.y*100)*4];
-		auto& tile = floorTiles[coords.x][coords.y];
-
-		auto currentAnimationFrame = tile.getAnimationStart() + (tile.getFrame() / tile.getAnimationSpeed());
-		if(currentAnimationFrame > tile.getFrameCount() && tile.isAnimationRepeat())
-			currentAnimationFrame %= tile.getFrameCount();
-		else
-			currentAnimationFrame = tile.getAnimationStart();
-
-		auto textureCoords = TextureManager::get()->getSpritesheet("Tileset").getTextureCoordinates(currentAnimationFrame);
-		quad[0].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top);
-		quad[1].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top);
-		quad[2].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top+textureCoords.height);
-		quad[3].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top+textureCoords.height);
-
-		tile.tickFrame();
-	}
-
 	target.draw(vertices, &tileset.getTexture());
 }
 
-
 /*
- *  Rysowanie wszystkich dekoracji świata
+ *  Rysowanie kafli tylko podanej warstwy
  */
-void Map::drawDecor(sf::RenderTarget &target) {
-	auto& tileset = TextureManager::get()->getSpritesheet("Tileset");
-
-	for(auto& decoration : tileDecors) {
-		auto& tile = decoration.decor;
-
-		unsigned currentAnimationFrame = tile.getType();
-		if(tile.isAnimated()) {
-			currentAnimationFrame = tile.getAnimationStart() + (tile.getFrame() / tile.getAnimationSpeed());
-			if(currentAnimationFrame > tile.getFrameCount() && tile.isAnimationRepeat())
-				currentAnimationFrame = tile.getAnimationStart() + (currentAnimationFrame % tile.getFrameCount());
-			else
-				currentAnimationFrame = tile.getAnimationStart();
-			tile.tickFrame();
-		}
-
-		auto sprite = tileset.getSprite(currentAnimationFrame);
-		sprite.setPosition(Vec2f(decoration.pos * Tile::dimensions()));
-		target.draw(sprite);
-	}
+void Map::drawTiles(sf::RenderTarget &target, unsigned layer) {
+	assert(layer < 3);
+	target.draw(vertices, &tileset.getTexture());
 }
 
 
@@ -214,16 +161,26 @@ void Map::drawEntities(sf::RenderTarget &target, const Player& player) {
  *  Tworzy pustą mapę o podanych rozmiarach
  *  Domyślny tileID to 0
  */
-Map Map::make_empty(Vec2u size, unsigned defType) {
-	Map newMap;
-	newMap.size = size;
-	newMap.floorTiles.resize(size.x, size.y);
+Map Map::make_empty(Vec2u size, unsigned defType, const std::string& tilesetName) {
+	Map newMap {size, tilesetName};
 
-	for(unsigned i = 0; i < size.x; i++) {
-		for(unsigned j = 0; j < size.y; j++) {
-			newMap.floorTiles[i][j] = Tile(defType, false);
+	for(unsigned layer = 0; layer < 3; layer++) {
+		for(unsigned i = 0; i < size.x; i++) {
+			for(unsigned j = 0; j < size.y; j++) {
+				newMap.floorTiles[layer][i][j] = (layer == 0) ? defType : 0;
+			}
 		}
 	}
 
 	return newMap;
+}
+
+Map::Map(Vec2u size, const std::string &tileset)
+: tileset(TextureManager::get()->getSpritesheet(tileset)){
+	assert(size.x != 0 && size.y != 0);
+
+	this->size = size;
+
+	for(auto &layer : floorTiles)
+		layer.resize(size.x, size.y);
 }

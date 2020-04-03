@@ -1,59 +1,52 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <memory>
 #include <SFML/Graphics.hpp>
 #include <Entity/Player.hpp>
 #include "Tile.hpp"
 #include "Types.hpp"
 #include "Entity/NPC.hpp"
+#include "World/TileSet.hpp"
+#include "Graphics/TextureManager.hpp"
 
 class Map {
 	Vec2u size;
 
-	Array2D<Tile> floorTiles;
-
-	struct Decor {
-		Vec2u pos;
-		Tile decor;
-		Decor(Vec2u _pos, Tile _tile)
-		: pos(_pos), decor(_tile) { }
-	};
-	std::vector<Decor> tileDecors;
+	TileSet tileset;
+	Array2D<unsigned> floorTiles[3];
+	std::vector<Vec2u> animatedTiles[3];
 	std::vector<NPC>   npcs;
 
 	sf::VertexArray vertices;
-	std::vector<Vec2u> animatedTiles;
-
+protected:
 	void drawTiles(sf::RenderTarget&);
-	void drawDecor(sf::RenderTarget&);
+	void drawTiles(sf::RenderTarget&, unsigned);
 	void drawEntities(sf::RenderTarget&, const Player& player);
-
-	void updateVertexAt(Vec2u pos);
+	void updateVertexAt(Vec2u pos, unsigned layer);
+	Map(Vec2u size, const std::string& tileset);
 public:
+	Map(const Map&);
 	~Map() = default;
 
 	static Map from_file(const std::string& path);
-	static Map make_empty(Vec2u size, unsigned defType);
+	static Map make_empty(Vec2u size, unsigned defType, const std::string& tilesetName="Tileset");
 
-	Tile& getTile(unsigned x, unsigned y) { return floorTiles[x][y]; }
-	Tile& getTile(Vec2u pos) { return floorTiles[pos.x][pos.y]; }
+	unsigned& getType(Vec2u pos, unsigned layer) {
+		assert(layer < 3);
+		return floorTiles[layer][pos.x][pos.y];
+	}
 
 	unsigned getWidth() const { return size.x; }
 	unsigned getHeight() const { return size.y; }
 
 	//  FIXME:  Const
-	bool checkCollision(Vec2u pos);
-	bool checkCollision(unsigned x, unsigned y);
-
-	Map(const Map&);
-
-	Map() { }
+	bool checkCollision(Vec2u pos, Direction dir);
 
 	void draw(sf::RenderTarget&, const Player&);
 	void initializeVertexArrays();
 
 	NPC* findNPC(Vec2u pos);
-	NPC* findNPC(unsigned x, unsigned y);
 
 	friend class EditWindow;
 	friend class NPCCreator;

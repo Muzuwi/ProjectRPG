@@ -14,7 +14,8 @@ add_library(RPGBase
         Entity/Actor.cpp
         Entity/NPC.cpp
         Entity/Script.cpp
-         "Interface/Window.cpp")
+        World/TileSet.cpp
+        )
 
 
 add_executable(ProjectRPG
@@ -24,9 +25,10 @@ add_executable(ProjectRPG
     Interface/SettUI.cpp
     Interface/Hud.cpp
     Interface/Button.cpp
+    Interface/Window.cpp
     Engine.cpp
     Main.cpp
-         "Interface/Window.cpp")
+        )
 
 if(MSVC) 
 target_link_libraries(ProjectRPG RPGBase sfml-graphics-d sfml-system-d sfml-window-d lua53)
