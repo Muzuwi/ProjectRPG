@@ -52,7 +52,6 @@ NPC::NPC(const std::string &texture, Vec2u worldPos, const std::string& scrName)
 	scriptName = scrName;
 	actorScript = std::make_shared<Script>(scrName);
 	actorScript->set("npc", this);
-	std::cout << "this: " << this << "\n";
 }
 
 NPC::NPC(const NPC &npc)
@@ -61,7 +60,6 @@ NPC::NPC(const NPC &npc)
 	scriptName = npc.scriptName;
 	actorScript = npc.actorScript;
 	actorScript->set("npc", this);
-	std::cout << "(c) this: " << this << "\n";
 }
 
 
