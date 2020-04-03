@@ -17,8 +17,15 @@ public:
 
 	template<typename... Args>
 	void executeFunction(const std::string& name, Args&&... args) {
+		static bool errored = false;
 		sol::function func = m_lua_state[name];
-		func(std::forward<Args>(args)...);
+		try {
+			func(std::forward<Args>(args)...);
+		} catch(sol::error& err) {
+			std::cerr << "An error occured during call to Lua function '"
+					  << name << "' in script 'GameContent/Script/" << m_script_name << ".lua'\n";
+			throw std::runtime_error("Error in Lua script " + m_script_name);
+		}
 	}
 
 	template<typename... Args>
