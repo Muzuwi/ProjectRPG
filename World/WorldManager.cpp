@@ -13,7 +13,9 @@ bool WorldManager::moveActor(Actor &actor, Direction dir) {
 	                        (actorPos.y == currentMap.getHeight() - 1 && dir == Direction::Down);
 
 	if(!invalidMovements) {
-		if(!currentMap.checkCollision(Tile::offset(actorPos, dir), flipDirection(dir))) {
+		bool nextTileCollision = currentMap.checkCollision(Tile::offset(actorPos, dir), flipDirection(dir));
+		bool currTileCollision = currentMap.checkCollision(actorPos, dir);
+		if(!nextTileCollision && !currTileCollision) {
 			actor.move(dir);
 			return true;
 		}
