@@ -12,15 +12,17 @@ class TextureManager
 private:
 	//  Hashmapa spritesheetów, by móc odwoływać się do nich przez nazwy, np. 'player'
 	unordered_map<std::string, Spritesheet> spritesheets;
-	static TextureManager* instance;
 
 public:
-	TextureManager();
-	~TextureManager();
+	TextureManager() {
+		this->autoload();
+	}
+
+	~TextureManager() {}
 
 	static TextureManager* get() {
-		assert(instance);
-		return instance;
+		static TextureManager manager;
+		return &manager;
 	}
 
 	bool addSpritesheet(const std::string& resourcePath, Vec2u (*partitioner)(Vec2u textureSize) = nullptr);

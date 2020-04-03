@@ -1,16 +1,6 @@
 #include <filesystem>
 #include "TextureManager.hpp"
 
-TextureManager* TextureManager::instance = nullptr;
-
-TextureManager::TextureManager() {
-	instance = this;
-}
-
-TextureManager::~TextureManager() {
-
-}
-
 /*
  *  Importuje nową spritesheet z dysku
  *  Pobiera teksturę z pliku graficznego, i (ewentualnie) z dodatkowego pliku configu obok pliku graficznego, który mówi

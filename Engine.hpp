@@ -15,7 +15,6 @@ private:
 	std::shared_ptr<sf::RenderWindow> window;
 	sf::RenderTexture mapTexture;
 
-	TextureManager textureManager;
 	WorldManager world;
 
 	GameUI GUI;
@@ -25,7 +24,6 @@ private:
 
 	bool Init();
 	void MainLoop();
-	void LoadTextures();
 	void RenderFrame();
 	void ProcessInput();
 	void Update();

@@ -6,7 +6,6 @@ bool Engine::Init() {
 	if (!window) return false;
 	window->setFramerateLimit(60);
 
-	LoadTextures();
 	GUI.Init();
 	world.loadMap("");
 
@@ -14,10 +13,6 @@ bool Engine::Init() {
 		return false;
 
 	return true;
-}
-
-void Engine::LoadTextures() {
-	textureManager.autoload();
 }
 
 void Engine::RenderFrame() {
