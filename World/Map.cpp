@@ -12,14 +12,14 @@ Map Map::from_file(const std::string&) {
 
 	for(size_t i = 0; i < 100; i++) {
 		for(size_t j = 0; j < 100; j++) {
-			unsigned type = 0;
-			if(i == 0 || j == 0 || i == 99 || j == 99) type = 1;
-			if(i % 8 == 0) type = 1;
-			if(i == 10 && j == 10) type = 2;
+			unsigned type = 1;
+			if(i == 0 || j == 0 || i == 99 || j == 99) type = 2;
+			if(i % 8 == 0) type = 2;
+			if(i == 10 && j == 10) type = 3;
 			if(i == 15 && j == 15) type = 3;
 
 			if(i == 20 && j == 20)
-				newMap.floorTiles[0][i][j] = 0;
+				newMap.floorTiles[0][i][j] = 1;
 			else
 				newMap.floorTiles[0][i][j] = type;
 

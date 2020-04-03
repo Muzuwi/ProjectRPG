@@ -26,9 +26,10 @@ add_executable(ProjectRPG
     Interface/Hud.cpp
     Interface/Button.cpp
     Interface/Window.cpp
+    Interface/Frame.cpp
     Engine.cpp
     Main.cpp
-        )
+    )
 
 if(MSVC) 
 target_link_libraries(ProjectRPG RPGBase sfml-graphics-d sfml-system-d sfml-window-d lua53)

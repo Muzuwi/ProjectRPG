@@ -1,24 +1,16 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Graphics/TextureManager.hpp"
+#include "Interface/Frame.hpp"
 
-class Button {
+class Button : public Frame{
 protected:
-	sf::Sprite final;
 	sf::Text text;
 	sf::Font font;
-	sf::Vector2f position, size;
+	string content;
 
-	string name;
-	bool focus;
+	void SelfDraw(sf::RenderTarget&)override;
+	void SelfInit()override;
 public:
 	Button(string);
-	void Init(sf::Vector2f, sf::Vector2f);
-
-	void SetFocus() { focus = true; }
-	void RemoveFocus() { focus = false; }
-
-	void Draw(sf::RenderTarget&);
-	void DrawFrame(sf::RenderTarget&);
-	void DrawBackground(sf::RenderTarget&);
 };

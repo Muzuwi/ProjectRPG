@@ -1,66 +1,18 @@
 #include "Button.hpp"
 
-Button::Button(string title) : name(title), focus(false){ }
+Button::Button(string title) : content(title), Frame(){ }
 
-void Button::Init(sf::Vector2f p, sf::Vector2f s) {
-
-	position = p;
-	size = s;
-	final.setTexture(TextureManager::get()->getSpritesheet("windowskinv3").getTexture());
-
+void Button::SelfInit() {
 	font.loadFromFile("GameContent/Fonts/arial.ttf");
 	text.setFont(font);
 
-	text.setString(name);
+	text.setString(content);
 	text.setFillColor(sf::Color::Black);
 	text.setCharacterSize(20);
 	text.setPosition(position.x + 5, position.y + 5);	//to add responding shift based on size of button
 }
 
 
-void Button::Draw(sf::RenderTarget& target) {
-	DrawBackground(target);
-	DrawFrame(target);
+void Button::SelfDraw(sf::RenderTarget& target) {
 	target.draw(text);
-}
-
-void Button::DrawBackground(sf::RenderTarget& target) {
-	//Background
-	int x;
-	if (focus == true) x = 161;
-	else x = 129;
-
-	final.setTextureRect(sf::IntRect(x, 65, 30, 30));
-	final.setPosition(position);
-	final.setScale(size.x / 30.0, size.y / 30.0);
-	target.draw(final);
-	final.setScale(1.0, 1.0);
-}
-
-void Button::DrawFrame(sf::RenderTarget& target) {
-	int x;
-	if (focus == true) x = 160;
-	else x = 128;
-
-	//Top Frame
-	final.setTextureRect(sf::IntRect(x, 64, 32, 1));
-	final.setScale(size.x / 32.0, 1.0);
-	final.setPosition(position);
-	target.draw(final);
-	//Bottom Frame
-	final.setTextureRect(sf::IntRect(x, 64, 32, 1));
-	final.setScale(size.x / 32.0, 1.0);
-	final.setPosition(position + sf::Vector2f(0, size.y));
-	target.draw(final);
-	//Left Frame
-	final.setTextureRect(sf::IntRect(x, 64, 1, 32));
-	final.setScale(1.0, (size.y + 1) / 32.0);
-	final.setPosition(position);
-	target.draw(final);
-	//Right Frame
-	final.setTextureRect(sf::IntRect(x, 64, 1, 32));
-	final.setScale(1.0, (size.y + 1) / 32.0);
-	final.setPosition(position + sf::Vector2f(size.x, 0));
-	target.draw(final);
-
 }
