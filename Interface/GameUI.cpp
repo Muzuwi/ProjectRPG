@@ -27,6 +27,7 @@ void GameUI::ProcessKey(sf::Event::KeyEvent key) {
 		break;
 	case EQ:
 		if (IsSceneKey(key)) SetScene(key);
+		eq.ProcessKey(key);
 		break;
 	case STATS:
 		if (IsSceneKey(key)) SetScene(key);

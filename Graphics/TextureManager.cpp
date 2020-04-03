@@ -51,7 +51,7 @@ const Spritesheet &TextureManager::getSpritesheet(const std::string &resource) {
  */
 void TextureManager::autoload() {
 	namespace fs = std::filesystem;
-
+	sf::Context context;
 	for(const auto& entry : fs::directory_iterator("GameContent/Tilesets/")) {
 		if(entry.is_regular_file() ) {
 			std::cout << "TextureManager::autoload()/ Adding tileset " << entry.path().filename() << "\n";

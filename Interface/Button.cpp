@@ -1,6 +1,6 @@
 #include "Button.hpp"
 
-Button::Button(string title) : name(title){ }
+Button::Button(string title) : name(title), focus(false){ }
 
 void Button::Init(sf::Vector2f p, sf::Vector2f s) {
 

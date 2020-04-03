@@ -17,7 +17,7 @@ bool Engine::Init() {
 
 void Engine::RenderFrame() {
 	window->clear();
-
+	mapTexture.clear(sf::Color::Black);
 	RenderWorld(mapTexture);
 
 	mapTexture.display();
