@@ -10,7 +10,7 @@ public:
 	: map(m) { }
 
 	virtual void drawToolWindow(Vec2u hoverCoords, sf::RenderTarget&) = 0;
-	virtual bool onToolUse(Vec2u coords, Array2D<unsigned>& tiles) = 0;
+	virtual bool onToolUse(Vec2u coords, Array2D<unsigned>& tiles, unsigned layer) = 0;
 	virtual bool toolRepeats() = 0;
 	virtual bool handleKbMouse(sf::Event& event) = 0;
 };

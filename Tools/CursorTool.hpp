@@ -17,7 +17,7 @@ public:
 		target.draw(hover);
 	}
 	
-	bool onToolUse(Vec2u coords, Array2D<unsigned> &tiles) override { return true; }
+	bool onToolUse(Vec2u coords, Array2D<unsigned> &tiles, unsigned) override { return true; }
 	bool toolRepeats() override { return true; }
 	bool handleKbMouse(sf::Event &event) override { return true; }
 };

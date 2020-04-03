@@ -114,7 +114,7 @@ public:
 		ImGui::End();
 	}
 
-	bool onToolUse(Vec2u coords, Array2D<unsigned> &tiles) override {
+	bool onToolUse(Vec2u coords, Array2D<unsigned> &tiles, unsigned) override {
 		selectedNPC = pointingAtNPC;
 
 		if(pickingLocation) {

@@ -10,7 +10,6 @@ void EditWindow::start() {
 	editorWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), "RPGEditor");
 	editorWindow->setFramerateLimit(60);
 	ImGui::SFML::Init(*editorWindow);
-	textureManager.autoload();
 
 	sf::Clock deltaClock;
 	while(editorWindow->isOpen()) {
@@ -72,6 +71,7 @@ void EditWindow::frameLoop() {
 
 	sf::View view(Vec2f(pos) + (Vec2f(width, height) / 2.0f), Vec2f(width, height));
 	editorWindow->setView(view);
+
 	EditingMap.mapData.draw(*editorWindow, fakePlayer);
 
 	MouseMovement.hoverCoordinates = (pos + sf::Mouse::getPosition(*editorWindow)) / (int)Tile::dimensions();
@@ -123,7 +123,7 @@ void EditWindow::eventPoll() {
 
 void EditWindow::leftClickHandler() {
 	if(EditingMap.isLoaded) {
-		if(currentTool) currentTool->onToolUse(Vec2u(MouseMovement.hoverCoordinates), picker.getSelection());
+		if(currentTool) currentTool->onToolUse(Vec2u(MouseMovement.hoverCoordinates), picker.getSelection(), EditingMap.editingLayer);
 	}
 }
 
@@ -152,6 +152,16 @@ void EditWindow::drawMenuBar() {
 		TOOL_BUTTON(Tools.cursor,"Cursor")
 		TOOL_BUTTON(Tools.brush, "Brush")
 		TOOL_BUTTON(Tools.creator, "NPC Tool")
+
+		if(ImGui::Button("Layer 0")) {
+			EditingMap.editingLayer = 0;
+		}
+		if(ImGui::Button("Layer 1")) {
+			EditingMap.editingLayer = 1;
+		}
+		if(ImGui::Button("Layer 2")) {
+			EditingMap.editingLayer = 2;
+		}
 
 		ImGui::TextColored(ImVec4(255, 255, 0,255),"Coords: %ix%i", MouseMovement.hoverCoordinates.x, MouseMovement.hoverCoordinates.y);
 

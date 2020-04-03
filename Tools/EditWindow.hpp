@@ -18,7 +18,8 @@ class EditWindow {
 		bool isLoaded = false;
 		int width, height;
 		std::string fname;
-		Map mapData;
+		Map mapData = Map({100,100}, "Tileset");
+		unsigned editingLayer = 0;
 	} EditingMap;
 
 	struct {
@@ -33,8 +34,6 @@ class EditWindow {
 		std::shared_ptr<CursorTool> cursor;
 		std::shared_ptr<NPCCreator> creator;
 	} Tools;
-
-	TextureManager textureManager;
 
 	std::shared_ptr<Tool> currentTool;
 
