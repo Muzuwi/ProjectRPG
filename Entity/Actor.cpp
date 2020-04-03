@@ -55,3 +55,40 @@ void Actor::update() {
 
 	this->onUpdate();
 }
+
+/*
+ *  Dodaje do kolejki ruchow prosbe o przesuniecie aktora w dany kierunek
+ */
+void Actor::enqueueMove(Direction dir) {
+	movementQueue.push(dir);
+}
+
+/*
+ *  Czy kolejka ruchów aktora jest pusta?
+ */
+bool Actor::wantsToMove() const {
+	return movementQueue.size() != 0;
+}
+
+/*
+ *  Zwraca pierwszy ruch z kolejki aktora
+ */
+Direction Actor::popMovement() {
+	Direction ret = movementQueue.front();
+	movementQueue.pop();
+	return ret;
+}
+
+/*
+ *  Funkcja pomocnicza do zamiany kierunków na przeciwne
+ */
+Direction Actor::flipDirection(Direction dir) {
+	if(dir == Direction::Down)
+		return Direction::Up;
+	else if(dir == Direction::Up)
+		return Direction::Down;
+	else if(dir == Direction::Left)
+		return Direction::Right;
+	else
+		return Direction::Left;
+}

@@ -1,4 +1,5 @@
 #pragma once
+#include <queue>
 #include "Types.hpp"
 #include "World/Tile.hpp"
 
@@ -19,6 +20,9 @@ protected:
 	Direction facing;
 	bool isMoving;
 	unsigned frameCounter;
+
+	std::queue<Direction> movementQueue;
+	void enqueueMove(Direction dir);
 public:
 	Actor(unsigned type, unsigned moveSpeed)
 	: entityType(type), movementSpeed(moveSpeed), facing(Direction::Down), isMoving(false), frameCounter(0) { }
@@ -30,6 +34,8 @@ public:
 		spritePosition = Vec2f(worldPos * Tile::dimensions());
 	}
 
+	static Direction flipDirection(Direction);
+
 	Vec2u getWorldPosition()  const { return worldPosition; }
 	Vec2f getSpritePosition() const { return spritePosition; }
 	Direction getDirection()  const { return facing; }
@@ -38,6 +44,9 @@ public:
 
 	void move(Direction dir);
 	void update();
+
+	bool wantsToMove() const;
+	Direction popMovement();
 
 	virtual void onMove(Direction dir) = 0;
 	virtual void onUpdate() = 0;
