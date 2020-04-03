@@ -41,12 +41,14 @@ public:
 	unsigned getHeight() const { return size.y; }
 
 	//  FIXME:  Const
-	bool checkCollision(Vec2u pos, Direction dir);
+	bool checkCollision(Vec2u pos, Direction dir, Actor& ref);
 
 	void draw(sf::RenderTarget&, const Player&);
 	void initializeVertexArrays();
 
 	void updateActors();
+
+	bool moveActor(Actor &actor, Direction dir);
 
 	NPC* findNPC(Vec2u pos);
 

@@ -6,7 +6,6 @@ class WorldManager {
 	Map currentMap;
 	Player player;
 
-	static Direction flipDirection(Direction dir);
 public:
 	WorldManager()
 	: currentMap(Map::make_empty({1,1},0)){ }
@@ -16,12 +15,9 @@ public:
 
 	void loadMap(const std::string& mapName);
 
-	bool moveActor(Actor &actor, Direction dir);
 	bool movePlayer(Direction dir);
-
 	bool playerInteract();
 
 	void draw(sf::RenderTarget&);
-
 	void updateWorld();
 };

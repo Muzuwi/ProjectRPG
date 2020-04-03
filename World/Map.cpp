@@ -88,7 +88,7 @@ void Map::updateVertexAt(Vec2u pos, unsigned layer) {
 }
 
 
-bool Map::checkCollision(Vec2u pos, Direction dir) {
+bool Map::checkCollision(Vec2u pos, Direction dir, Actor& ref) {
 	assert(pos.x < size.x && pos.y < size.y);
 
 	bool tileCollision = false;
@@ -99,7 +99,7 @@ bool Map::checkCollision(Vec2u pos, Direction dir) {
 
 	for(auto& npc : npcs) {
 		//  TODO:  Może NPC powinny mieć hitboxy?
-		if(npc.getWorldPosition() == pos) {
+		if(npc.getWorldPosition() == pos && ref.getWorldPosition() != npc.getWorldPosition()) {
 			return true;
 		}
 	}
@@ -189,6 +189,33 @@ Map::Map(Vec2u size, const std::string &tileset)
  */
 void Map::updateActors() {
 	for(auto& npc : npcs) {
+		while(npc.wantsToMove()) {
+			moveActor(npc, npc.popMovement());
+		}
 		npc.update();
 	}
+}
+
+/*
+ *  Sprawdza czy aktor może poruszyć się ze swojej obecnej pozycji w danym kierunku,
+ *  i przesuwa go gdy to możliwe
+ */
+bool Map::moveActor(Actor &actor, Direction dir) {
+	auto actorPos = actor.getWorldPosition();
+	bool invalidMovements = (actorPos.x == 0 && dir == Direction::Left) ||
+	                        (actorPos.y == 0 && dir == Direction::Up) ||
+	                        (actorPos.x == getWidth() - 1 && dir == Direction::Right) ||
+	                        (actorPos.y == getHeight() - 1 && dir == Direction::Down);
+
+	if(!invalidMovements) {
+		bool nextTileCollision = checkCollision(Tile::offset(actorPos, dir), Actor::flipDirection(dir), actor);
+		bool currTileCollision = checkCollision(actorPos, dir, actor);
+		if(!nextTileCollision && !currTileCollision) {
+			actor.move(dir);
+			return true;
+		}
+	}
+
+	actor.setFacing(dir);
+	return false;
 }
