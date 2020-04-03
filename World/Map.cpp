@@ -151,8 +151,6 @@ void Map::drawEntities(sf::RenderTarget &target, const Player& player) {
 		}
 
 		npc.draw(target);
-		npc.update();
-		npc.frameTick();
 	}
 
 	if(!playerDrawn) player.draw(target);
@@ -184,4 +182,13 @@ Map::Map(Vec2u size, const std::string &tileset)
 
 	for(auto &layer : floorTiles)
 		layer.resize(size.x, size.y);
+}
+
+/*
+ *  Aktualizuje wszystkie NPC na mapie
+ */
+void Map::updateActors() {
+	for(auto& npc : npcs) {
+		npc.update();
+	}
 }

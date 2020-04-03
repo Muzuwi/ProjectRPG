@@ -5,3 +5,15 @@ function onInteract(direction)
     log("Direction is " .. tostring(direction));
     log(tostring(math.random(1, 5)));
 end
+
+function onMove()
+    log("I was moved!");
+end
+
+function onStep()
+    log("I was stepped on!");
+end
+
+function onUpdate()
+    --log("I was updated!");
+end

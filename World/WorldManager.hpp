@@ -22,4 +22,6 @@ public:
 	bool playerInteract();
 
 	void draw(sf::RenderTarget&);
+
+	void updateWorld();
 };

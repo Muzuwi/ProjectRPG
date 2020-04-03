@@ -46,6 +46,8 @@ public:
 	void draw(sf::RenderTarget&, const Player&);
 	void initializeVertexArrays();
 
+	void updateActors();
+
 	NPC* findNPC(Vec2u pos);
 
 	friend class EditWindow;

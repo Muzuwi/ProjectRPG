@@ -68,3 +68,8 @@ Direction WorldManager::flipDirection(Direction dir) {
 	else
 		return Direction::Left;
 }
+
+void WorldManager::updateWorld() {
+	player.update();
+	currentMap.updateActors();
+}

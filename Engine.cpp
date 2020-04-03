@@ -69,7 +69,7 @@ void Engine::ProcessInput() {
 }
 
 void Engine::Update() {
-	world.getPlayer().update();
+	world.updateWorld();
 }
 
 void Engine::MainLoop() {
