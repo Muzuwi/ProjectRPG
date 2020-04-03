@@ -12,6 +12,8 @@ void Actor::move(Direction dir) {
 		default: break;
 	}
 
+	this->onMove(dir);
+
 	facing = dir;
 }
 

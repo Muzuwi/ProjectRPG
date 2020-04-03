@@ -13,7 +13,6 @@ void NPC::onUpdate() {
 
 void NPC::onInteract(Direction dir) {
 	actorScript->executeFunction("onInteract", dir);
-	facing = dir;
 }
 
 void NPC::onStep() {
@@ -52,6 +51,17 @@ NPC::NPC(const std::string &texture, Vec2u worldPos, const std::string& scrName)
 {
 	scriptName = scrName;
 	actorScript = std::make_shared<Script>(scrName);
-	actorScript->set("npc", *this);
-	spritesheet = TextureManager::get()->getSpritesheet(texture);
+	actorScript->set("npc", this);
+	std::cout << "this: " << this << "\n";
 }
+
+NPC::NPC(const NPC &npc)
+: Actor(1,5, npc.worldPosition), spritesheet(npc.spritesheet)
+{
+	scriptName = npc.scriptName;
+	actorScript = npc.actorScript;
+	actorScript->set("npc", this);
+	std::cout << "(c) this: " << this << "\n";
+}
+
+

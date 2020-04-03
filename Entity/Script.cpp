@@ -15,7 +15,10 @@ void Script::initBindings() {
 	m_lua_state.new_usertype<NPC>("NPC", "direction", &NPC::facing,
 	                                            "worldPos", &NPC::worldPosition,
 	                                            "spritePos", &NPC::spritePosition,
-	                                            "moveSpeed", &NPC::movementSpeed);
+	                                            "moveSpeed", &NPC::movementSpeed,
+	                                            "move", &NPC::enqueueMove,
+	                                            "moving", &NPC::isMoving
+	                                            );
 }
 
 Script::Script(const std::string &scriptName) {

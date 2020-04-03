@@ -10,13 +10,15 @@ class NPC : public Actor, public RenderableObject {
 	std::string scriptName;
 	std::shared_ptr<Script> actorScript;
 	std::reference_wrapper<const Spritesheet> spritesheet;
+
 public:
 	NPC(const std::string& texture, Vec2u worldPos, const std::string& scriptName);
-
+	NPC(const NPC& npc);
 	void draw(sf::RenderTarget &target) const override;
-	Vec2u getDimensions() const override;
 
+	Vec2u getDimensions() const override;
 	void onMove(Direction dir) override;
+
 	void onUpdate() override;
 	void onInteract(Direction dir) override;
 	void onStep() override;
