@@ -139,9 +139,10 @@ void Map::drawTiles(sf::RenderTarget &target, unsigned layer) {
  *  W przeciwnym wypadku tekstury mogą na siebie nachodzić w złych momentach
  */
 void Map::drawEntities(sf::RenderTarget &target, const Player& player) {
-	std::sort(npcs.begin(), npcs.end(), [](const NPC& one, const NPC& two) {
-		return one.getSpritePosition().y < two.getSpritePosition().y;
-	});
+	//  FIXME: 
+//	std::sort(npcs.begin(), npcs.end(), [](const NPC& one, const NPC& two) {
+//		return one.getSpritePosition().y < two.getSpritePosition().y;
+//	});
 
 	bool playerDrawn = false;
 	for(auto& npc : npcs) {
