@@ -22,7 +22,6 @@ public:
 	Vec2u getDimensions() const override;
 
 protected:
-	void frameTick() override {};
 	void onInteract(Direction dir) override {};
 	void onStep() override {};
 	void onMove(Direction) override {}

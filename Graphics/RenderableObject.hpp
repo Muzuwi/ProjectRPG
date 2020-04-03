@@ -11,5 +11,4 @@ public:
 	virtual void draw(sf::RenderTarget& target) const = 0;
 
 	virtual Vec2u getDimensions() const = 0;
-	virtual void frameTick() = 0;
 };
