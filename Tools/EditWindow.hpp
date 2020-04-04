@@ -30,6 +30,11 @@ class EditWindow {
 	} MouseMovement;
 
 	struct {
+		std::string text;
+		bool open = false;
+	} ErrorWindow;
+
+	struct {
 		std::shared_ptr<Brush> brush;
 		std::shared_ptr<CursorTool> cursor;
 		std::shared_ptr<NPCCreator> creator;
@@ -41,6 +46,7 @@ class EditWindow {
 
 	Vec2i mapPosition;
 
+	void drawErrorBox();
 	bool drawCommonWindows();
 	void drawMenuBar();
 	void leftClickHandler();

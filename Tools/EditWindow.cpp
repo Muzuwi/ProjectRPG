@@ -31,37 +31,9 @@ void EditWindow::start() {
 
 void EditWindow::frameLoop() {
 	this->drawMenuBar();
+	this->drawCommonWindows();
 
-	if(!EditingMap.isLoaded) {
-		static char buf[128];
-		static int width = 100, height = 100, type = 0;
-
-		ImGui::OpenPopup("Enter map details");
-		if (ImGui::BeginPopupModal("Enter map details", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-			ImGui::InputText("Filename", buf, 128);
-			ImGui::InputInt("Width", &width);
-			ImGui::InputInt("Height", &height);
-			ImGui::InputInt("Default Tile", &type);
-
-			ImGui::Dummy(ImVec2(ImGui::GetWindowWidth()-30, 0));
-			if(ImGui::Button("Create") && width > 0 && height > 0) {
-				EditingMap.width = width;
-				EditingMap.height = height;
-				EditingMap.fname = std::string(buf);
-				EditingMap.mapData = Map::make_empty(Vec2u(width, height),type);
-				EditingMap.mapData.initializeVertexArrays();
-				EditingMap.isLoaded = true;
-				picker.init();
-
-				Tools.brush = std::make_shared<Brush>(EditingMap.mapData);
-				Tools.cursor = std::make_shared<CursorTool>(EditingMap.mapData);
-				Tools.creator = std::make_shared<NPCCreator>(EditingMap.mapData);
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::EndPopup();
-		}
-		return;
-	}
+	if(!EditingMap.isLoaded) return;
 
 	Player fakePlayer;
 
@@ -128,6 +100,81 @@ void EditWindow::leftClickHandler() {
 }
 
 bool EditWindow::drawCommonWindows() {
+	if(EditingMap.isLoaded && ErrorWindow.open) this->drawErrorBox();
+
+	if(!EditingMap.isLoaded) {
+		static char buf[128];
+		static char existingBuf[32];
+		static std::string selectedSpritesheet { };
+		static int width = 100, height = 100, type = 0;
+
+		ImGui::OpenPopup("Enter map details");
+		if (ImGui::BeginPopupModal("Enter map details", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+			ImGui::InputText("Filename", buf, 128);
+			ImGui::InputInt("Width", &width);
+			ImGui::InputInt("Height", &height);
+			ImGui::InputInt("Default Tile", &type);
+			if(ImGui::BeginCombo("Spritesheet", selectedSpritesheet.c_str())) {
+				for(const auto& key : TextureManager::get()->getAllSpritesheets() ) {
+					std::string name = key.first + " (" + std::to_string(key.second.getSpriteSize().x)
+					                   + "x" + std::to_string(key.second.getSpriteSize().y) + ")";
+					if(ImGui::Selectable(name.c_str()))
+						selectedSpritesheet = key.first;
+
+					if(key.first == selectedSpritesheet)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+
+
+			ImGui::Dummy(ImVec2(ImGui::GetWindowWidth()-30, 0));
+			if(ImGui::Button("Create") && width > 0 && height > 0) {
+				EditingMap.width = width;
+				EditingMap.height = height;
+				EditingMap.fname = std::string(buf);
+				EditingMap.mapData = Map::make_empty(Vec2u(width, height),type, selectedSpritesheet);
+				EditingMap.mapData.initializeVertexArrays();
+				EditingMap.isLoaded = true;
+				picker.init();
+
+				Tools.brush = std::make_shared<Brush>(EditingMap.mapData);
+				Tools.cursor = std::make_shared<CursorTool>(EditingMap.mapData);
+				Tools.creator = std::make_shared<NPCCreator>(EditingMap.mapData);
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::Separator();
+			ImGui::Text("...or enter an existing filename here");
+			ImGui::InputText("Filename##1", existingBuf, 32);
+			std::string fname = std::string(existingBuf);
+			if(ImGui::Button("Open") && !fname.empty()) {
+				try {
+					EditingMap.mapData = Map::from_file(fname);
+					EditingMap.mapData.initializeVertexArrays();
+					EditingMap.width = EditingMap.mapData.size.x;
+					EditingMap.height = EditingMap.mapData.size.y;
+					EditingMap.fname = fname;
+					EditingMap.isLoaded = true;
+
+					picker.init();
+
+					Tools.brush = std::make_shared<Brush>(EditingMap.mapData);
+					Tools.cursor = std::make_shared<CursorTool>(EditingMap.mapData);
+					Tools.creator = std::make_shared<NPCCreator>(EditingMap.mapData);
+				} catch (std::exception& ex) {
+					EditingMap.isLoaded = false;
+					ErrorWindow.open = true;
+					ErrorWindow.text = "Map load failed!\nDetails: " + std::string(ex.what());
+				}
+			}
+
+			if(ErrorWindow.open) this->drawErrorBox();
+
+			ImGui::EndPopup();
+		}
+	}
+
 	return false;
 }
 
@@ -137,6 +184,14 @@ void EditWindow::drawMenuBar() {
 		if(ImGui::BeginMenu("File")) {
 			if(ImGui::MenuItem("New Map...")) {
 				EditingMap.isLoaded = false;
+			}
+			if(ImGui::MenuItem("Save to file")) {
+				try {
+					EditingMap.mapData.serializeToFile(EditingMap.fname);
+				} catch (std::exception& ex) {
+					ErrorWindow.open = true;
+					ErrorWindow.text = "Saving map failed!\nDetails: " + std::string(ex.what()) + "\n";
+				}
 			}
 			ImGui::EndMenu();
 		}
@@ -166,5 +221,14 @@ void EditWindow::drawMenuBar() {
 		ImGui::TextColored(ImVec4(255, 255, 0,255),"Coords: %ix%i", MouseMovement.hoverCoordinates.x, MouseMovement.hoverCoordinates.y);
 
 		ImGui::EndMainMenuBar();
+	}
+}
+
+void EditWindow::drawErrorBox() {
+	ImGui::OpenPopup("Error");
+	if(ImGui::BeginPopupModal("Error")) {
+		ImGui::Text("%s", ErrorWindow.text.c_str());
+		if(ImGui::Button("OK")) ErrorWindow.open = false;
+		ImGui::EndPopup();
 	}
 }
