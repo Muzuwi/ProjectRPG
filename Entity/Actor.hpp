@@ -39,6 +39,7 @@ public:
 	Vec2u getWorldPosition()  const { return worldPosition; }
 	Vec2f getSpritePosition() const { return spritePosition; }
 	Direction getDirection()  const { return facing; }
+	unsigned getMoveSpeed()   const { return movementSpeed; }
 
 	void setFacing(Direction dir) { facing = dir; }
 

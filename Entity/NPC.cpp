@@ -49,6 +49,7 @@ Vec2u NPC::getDimensions() const {
 NPC::NPC(const std::string &texture, Vec2u worldPos, const std::string& scrName)
 : Actor(1, 5, worldPos), spritesheet(TextureManager::get()->getSpritesheet(texture))
 {
+	spritesheetName = texture;
 	scriptName = scrName;
 	actorScript = std::make_shared<Script>(scrName);
 	actorScript->set("npc", this);

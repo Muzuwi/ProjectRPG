@@ -9,6 +9,7 @@
 class NPC : public Actor, public RenderableObject {
 	std::string scriptName;
 	std::shared_ptr<Script> actorScript;
+	std::string spritesheetName;
 	std::reference_wrapper<const Spritesheet> spritesheet;
 
 public:
@@ -16,6 +17,8 @@ public:
 	NPC(const NPC& npc) = delete;
 	void draw(sf::RenderTarget &target) const override;
 
+	std::string getScriptName() const { return scriptName; }
+	std::string getSpritesheetName() const { return spritesheetName; }
 	Vec2u getDimensions() const override;
 	void onMove(Direction dir) override;
 
