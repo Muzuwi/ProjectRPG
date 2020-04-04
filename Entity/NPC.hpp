@@ -13,7 +13,7 @@ class NPC : public Actor, public RenderableObject {
 
 public:
 	NPC(const std::string& texture, Vec2u worldPos, const std::string& scriptName);
-	NPC(const NPC& npc);
+	NPC(const NPC& npc) = delete;
 	void draw(sf::RenderTarget &target) const override;
 
 	Vec2u getDimensions() const override;
