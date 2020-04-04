@@ -43,8 +43,8 @@ class NPCCreator : public Tool {
 		if(selectedNPC) {
 			ImGui::SameLine();
 			if(ImGui::Button("Delete")) {
-				auto res = std::find_if(map.npcs.begin(), map.npcs.end(), [=](const NPC& npc){
-					return &npc == selectedNPC;
+				auto res = std::find_if(map.npcs.begin(), map.npcs.end(), [=](const std::shared_ptr<NPC>& npc){
+					return npc.get() == selectedNPC;
 				});
 
 				map.npcs.erase(res);
@@ -118,7 +118,7 @@ public:
 		selectedNPC = pointingAtNPC;
 
 		if(pickingLocation) {
-			map.npcs.push_back({selectedSpritesheet, coords, scriptFilename});
+			map.npcs.push_back(std::make_shared<NPC>(selectedSpritesheet, coords, scriptFilename));
 			pickingLocation = false;
 		}
 

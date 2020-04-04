@@ -1,4 +1,5 @@
 #include <fstream>
+#include <memory>
 #include "Graphics/TextureManager.hpp"
 #include "Map.hpp"
 
@@ -28,7 +29,7 @@ Map Map::from_file(const std::string&) {
 		}
 	}
 
-	newMap.npcs.push_back(NPC("jotaro", {10,10}, "testscript"));
+	newMap.npcs.push_back(std::make_shared<NPC>("jotaro", Vec2u{10,10}, "testscript"));
 
 	return newMap;
 }
@@ -99,7 +100,7 @@ bool Map::checkCollision(Vec2u pos, Direction dir, Actor& ref) {
 
 	for(auto& npc : npcs) {
 		//  TODO:  Może NPC powinny mieć hitboxy?
-		if(npc.getWorldPosition() == pos && ref.getWorldPosition() != npc.getWorldPosition()) {
+		if(npc->getWorldPosition() == pos && ref.getWorldPosition() != npc->getWorldPosition()) {
 			return true;
 		}
 	}
@@ -109,8 +110,8 @@ bool Map::checkCollision(Vec2u pos, Direction dir, Actor& ref) {
 
 NPC* Map::findNPC(Vec2u pos) {
 	for(auto& npc : npcs) {
-		if(npc.getWorldPosition() == pos)
-			return &npc;
+		if(npc->getWorldPosition() == pos)
+			return npc.get();
 	}
 
 	return nullptr;
@@ -139,19 +140,18 @@ void Map::drawTiles(sf::RenderTarget &target, unsigned layer) {
  *  W przeciwnym wypadku tekstury mogą na siebie nachodzić w złych momentach
  */
 void Map::drawEntities(sf::RenderTarget &target, const Player& player) {
-	//  FIXME: 
-//	std::sort(npcs.begin(), npcs.end(), [](const NPC& one, const NPC& two) {
-//		return one.getSpritePosition().y < two.getSpritePosition().y;
-//	});
+	std::sort(npcs.begin(), npcs.end(), [](const std::shared_ptr<const NPC>& one, const std::shared_ptr<const NPC>& two) {
+		return one->getSpritePosition().y < two->getSpritePosition().y;
+	});
 
 	bool playerDrawn = false;
 	for(auto& npc : npcs) {
-		if(npc.getSpritePosition().y > player.getSpritePosition().y && !playerDrawn) {
+		if(npc->getSpritePosition().y > player.getSpritePosition().y && !playerDrawn) {
 			player.draw(target);
 			playerDrawn = true;
 		}
 
-		npc.draw(target);
+		npc->draw(target);
 	}
 
 	if(!playerDrawn) player.draw(target);
@@ -190,10 +190,10 @@ Map::Map(Vec2u size, const std::string &tileset)
  */
 void Map::updateActors() {
 	for(auto& npc : npcs) {
-		while(npc.wantsToMove()) {
-			moveActor(npc, npc.popMovement());
+		while(npc->wantsToMove()) {
+			moveActor(*npc, npc->popMovement());
 		}
-		npc.update();
+		npc->update();
 	}
 }
 

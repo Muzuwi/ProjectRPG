@@ -16,7 +16,7 @@ class Map {
 	TileSet tileset;
 	Array2D<unsigned> floorTiles[3];
 	std::vector<Vec2u> animatedTiles[3];
-	std::vector<NPC>   npcs;
+	std::vector<std::shared_ptr<NPC>>   npcs;
 
 	sf::VertexArray vertices;
 protected:
