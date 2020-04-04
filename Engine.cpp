@@ -7,7 +7,7 @@ bool Engine::Init() {
 	window->setFramerateLimit(60);
 
 	GUI.Init();
-	world.loadMap("");
+	world.loadMap("default");
 
 	if(!mapTexture.create(world.getMap().getWidth() * Tile::dimensions(), world.getMap().getHeight() * Tile::dimensions()))
 		return false;

@@ -27,6 +27,8 @@ protected:
 	void drawEntities(sf::RenderTarget&, const Player& player);
 	void updateVertexAt(Vec2u pos, unsigned layer);
 	Map(Vec2u size, const std::string& tileset);
+
+	void serializeToFile(const std::string& file);
 public:
 	Map(const Map&);
 	~Map() = default;

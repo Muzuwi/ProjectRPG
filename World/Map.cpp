@@ -2,37 +2,105 @@
 #include <memory>
 #include "Graphics/TextureManager.hpp"
 #include "Map.hpp"
+#include "Tools/json.hpp"
+#include "JsonOverloads.hpp"
 
 /*
  *  Ładuje mapę z pliku i zwraca go w obiekcie klasy Map
  *
  *  Narazie mapa jest hardcodowana, ale ewentualnie będziemy tu ładować mapę z pliku.
  */
-Map Map::from_file(const std::string&) {
-	Map newMap {{100, 100}, "Tileset"};
+Map Map::from_file(const std::string& mapName) {
+	//  Ładowanie z pliku
+	std::ifstream file;
+	file.open("GameContent/Map/"+mapName+".json");
+	if(!file.good())
+		throw std::runtime_error("Could not load map '" + mapName + "' from file. Is the map present in your GameContent/Maps folder?");
+	std::string mapJson((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	file.close();
 
-	for(size_t i = 0; i < 100; i++) {
-		for(size_t j = 0; j < 100; j++) {
-			unsigned type = 1;
-			if(i == 0 || j == 0 || i == 99 || j == 99) type = 2;
-			if(i % 8 == 0) type = 2;
-			if(i == 10 && j == 10) type = 3;
-			if(i == 15 && j == 15) type = 3;
+	//  Parsowanie danych json
+	json js = json::parse(mapJson);
+	auto size = js["mapConfig"]["size"].get<Vec2u>();
+	std::string tilesetName = js["mapConfig"]["tileset"];
+	if(tilesetName.empty())
+		throw std::runtime_error("Map does not specify Tileset to use");
+	Map newMap {{size.x, size.y}, tilesetName};
 
-			if(i == 20 && j == 20)
-				newMap.floorTiles[0][i][j] = 1;
-			else
-				newMap.floorTiles[0][i][j] = type;
-
-			if(!(rand() % 25))
-				newMap.floorTiles[1][i][j] = 4+(i%4);
+	auto npcData = js["mapData"]["npcs"];
+	if(!npcData.is_null()) {
+		auto data = npcData.get<std::vector<NPCData>>();
+		for(auto& v : data) {
+			newMap.npcs.push_back(std::make_shared<NPC>(v.spritesheetName, Vec2u{v.worldPosition.x, v.worldPosition.y}, v.scriptName));
 		}
 	}
 
-	newMap.npcs.push_back(std::make_shared<NPC>("jotaro", Vec2u{10,10}, "testscript"));
+	//  3 warstwy - każda x na y
+	std::vector<std::vector<std::vector<unsigned>>> tileData = js["mapData"]["tile"];
+
+	//  Za mało warstw
+	if(tileData.size() != 3)
+		throw std::runtime_error("Tried loading malformed map! Expected 3 layers, got " + std::to_string(tileData.size()));
+
+	for(unsigned layer = 0; layer < 3; ++layer) {
+		//  Zla ilosc x
+		if(tileData[layer].size() != size.x) {
+			throw std::runtime_error("Tried loading malformed map! Expected tileData size.x of "
+							+ std::to_string(size.x) + ", got " + std::to_string(tileData[layer].size()));
+		}
+
+		for(unsigned x = 0; x < size.x; ++x) {
+			//  Zla ilosc y
+			if(tileData[layer][x].size() != size.y) {
+				throw std::runtime_error("Tried loading malformed map! Expected tileData size.y of "
+				                         + std::to_string(size.y) + ", got " + std::to_string(tileData[layer][x].size()));
+			}
+
+			for(unsigned y = 0; y < size.y; ++y) {
+				newMap.floorTiles[layer][x][y] = tileData[layer][x][y];
+			}
+		}
+	}
 
 	return newMap;
 }
+
+/*
+ *  Dokonuje zapisu mapy do wskazanego pliku w folderze 'GameContent/Map/'
+ */
+void Map::serializeToFile(const std::string &filename) {
+	//  Otwieranie pliku
+	std::ofstream file;
+	file.open("GameContent/Map/"+filename+".json");
+	if(!file.good())
+		throw std::runtime_error("Failed to serialize map. Could not open file " + filename + " for writing");
+
+	json j;
+	j["mapConfig"]["size"] = this->size;
+	j["mapConfig"]["tileset"] = this->tilesetName;
+
+	unsigned i = 0;
+	for(auto& npc : npcs) {
+		NPCData data;
+		data.worldPosition = npc->getWorldPosition();
+		data.scriptName = npc->getScriptName();
+		data.spritesheetName = npc->getSpritesheetName();
+		data.movementSpeed = npc->getMoveSpeed();
+		j["mapData"]["npcs"][i++] = data;
+	}
+
+	for(unsigned layer = 0; layer < 3; ++layer) {
+		for(unsigned x = 0; x < size.x; ++x) {
+			for(unsigned y = 0; y < size.y; ++y) {
+				j["mapData"]["tile"][layer][x][y] = floorTiles[layer][x][y];
+			}
+		}
+	}
+
+	file << j.dump(1, '\t');
+	file.close();
+}
+
 
 Map::Map(const Map &map)
 : tileset(TextureManager::get()->getSpritesheet("Tileset")) {
