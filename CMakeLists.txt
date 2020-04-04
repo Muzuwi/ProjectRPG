@@ -15,6 +15,7 @@ add_library(RPGBase
         Entity/NPC.cpp
         Entity/Script.cpp
         World/TileSet.cpp
+        JsonOverloads.cpp
         )
 
 
