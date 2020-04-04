@@ -36,6 +36,7 @@ Map Map::from_file(const std::string&) {
 
 Map::Map(const Map &map)
 : tileset(TextureManager::get()->getSpritesheet("Tileset")) {
+	this->tilesetName = map.tilesetName;
 	this->size = map.size;
 	for(unsigned layer = 0; layer < 3; layer++) {
 		this->floorTiles[layer] = map.floorTiles[layer];
@@ -164,6 +165,7 @@ void Map::drawEntities(sf::RenderTarget &target, const Player& player) {
 Map Map::make_empty(Vec2u size, unsigned defType, const std::string& tilesetName) {
 	Map newMap {size, tilesetName};
 
+	newMap.tilesetName = tilesetName;
 	for(unsigned layer = 0; layer < 3; layer++) {
 		for(unsigned i = 0; i < size.x; i++) {
 			for(unsigned j = 0; j < size.y; j++) {

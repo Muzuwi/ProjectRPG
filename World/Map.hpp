@@ -11,6 +11,8 @@
 #include "Graphics/TextureManager.hpp"
 
 class Map {
+	std::string tilesetName;
+
 	Vec2u size;
 
 	TileSet tileset;
