@@ -3,6 +3,7 @@
 void WorldManager::loadMap(const std::string &mapName) {
 	currentMap = Map::from_file(mapName);
 	currentMap.initializeVertexArrays();
+	currentMap.bindPlayer(player);
 }
 
 bool WorldManager::movePlayer(Direction dir) {
@@ -34,7 +35,7 @@ bool WorldManager::playerInteract() {
  *  Ogólna funkcja do wyrenderowania całej mapy do danego targetu
  */
 void WorldManager::draw(sf::RenderTarget &target) {
-	currentMap.draw(target, player);
+	currentMap.draw(target);
 }
 
 /*

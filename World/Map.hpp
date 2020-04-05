@@ -20,11 +20,13 @@ class Map {
 	std::vector<Vec2u> animatedTiles[3];
 	std::vector<std::shared_ptr<NPC>>   npcs;
 
+	const Player* player;
+
 	sf::VertexArray vertices;
 protected:
 	void drawTiles(sf::RenderTarget&);
 	void drawTiles(sf::RenderTarget&, unsigned);
-	void drawEntities(sf::RenderTarget&, const Player& player);
+	void drawEntities(sf::RenderTarget&);
 	void updateVertexAt(Vec2u pos, unsigned layer);
 	Map(Vec2u size, const std::string& tileset);
 
@@ -47,7 +49,7 @@ public:
 	//  FIXME:  Const
 	bool checkCollision(Vec2u pos, Direction dir, Actor& ref);
 
-	void draw(sf::RenderTarget&, const Player&);
+	void draw(sf::RenderTarget&);
 	void initializeVertexArrays();
 
 	void updateActors();
@@ -59,4 +61,8 @@ public:
 	friend class EditWindow;
 	friend class NPCCreator;
 	friend class Brush;
+
+	void bindPlayer(const Player& _player) {
+		player = &_player;
+	}
 };

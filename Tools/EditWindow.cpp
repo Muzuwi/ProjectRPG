@@ -35,8 +35,6 @@ void EditWindow::frameLoop() {
 
 	if(!EditingMap.isLoaded) return;
 
-	Player fakePlayer;
-
 	Vec2i pos = mapPosition;
 	if(MouseMovement.isMoving)
 		pos = mapPosition + sf::Mouse::getPosition(*editorWindow) - MouseMovement.mouseStart;
@@ -44,7 +42,7 @@ void EditWindow::frameLoop() {
 	sf::View view(Vec2f(pos) + (Vec2f(width, height) / 2.0f), Vec2f(width, height));
 	editorWindow->setView(view);
 
-	EditingMap.mapData.draw(*editorWindow, fakePlayer);
+	EditingMap.mapData.draw(*editorWindow);
 
 	MouseMovement.hoverCoordinates = (pos + sf::Mouse::getPosition(*editorWindow)) / (int)Tile::dimensions();
 	MouseMovement.hoverCoordinates.x = std::clamp(MouseMovement.hoverCoordinates.x, 0, EditingMap.width-1);
@@ -135,6 +133,7 @@ bool EditWindow::drawCommonWindows() {
 				EditingMap.fname = std::string(buf);
 				EditingMap.mapData = Map::make_empty(Vec2u(width, height),type, selectedSpritesheet);
 				EditingMap.mapData.initializeVertexArrays();
+				EditingMap.mapData.bindPlayer(EditingMap.fakePlayer);
 				EditingMap.isLoaded = true;
 				picker.init(selectedSpritesheet);
 
@@ -152,12 +151,12 @@ bool EditWindow::drawCommonWindows() {
 				try {
 					EditingMap.mapData = Map::from_file(fname);
 					EditingMap.mapData.initializeVertexArrays();
+					EditingMap.mapData.bindPlayer(EditingMap.fakePlayer);
 					EditingMap.width = EditingMap.mapData.size.x;
 					EditingMap.height = EditingMap.mapData.size.y;
 					EditingMap.fname = fname;
 					EditingMap.isLoaded = true;
-
-					picker.init(selectedSpritesheet);
+					picker.init(EditingMap.mapData.tilesetName);
 
 					Tools.brush = std::make_shared<Brush>(EditingMap.mapData);
 					Tools.cursor = std::make_shared<CursorTool>(EditingMap.mapData);

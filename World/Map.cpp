@@ -103,7 +103,8 @@ void Map::serializeToFile(const std::string &filename) {
 
 
 Map::Map(const Map &map)
-: tileset(TextureManager::get()->getSpritesheet("Tileset")) {
+: tileset(TextureManager::get()->getSpritesheet(map.tilesetName)) {
+	this->player = nullptr;
 	this->tilesetName = map.tilesetName;
 	this->size = map.size;
 	for(unsigned layer = 0; layer < 3; layer++) {
@@ -114,9 +115,9 @@ Map::Map(const Map &map)
 	this->npcs = map.npcs;
 }
 
-void Map::draw(sf::RenderTarget &target, const Player& player) {
+void Map::draw(sf::RenderTarget &target) {
 	this->drawTiles(target);
-	this->drawEntities(target, player);
+	this->drawEntities(target);
 }
 
 void Map::initializeVertexArrays() {
@@ -174,6 +175,8 @@ bool Map::checkCollision(Vec2u pos, Direction dir, Actor& ref) {
 		}
 	}
 
+	if((player != &ref) && player->getWorldPosition() == pos) return true;
+
 	return false;
 }
 
@@ -208,22 +211,22 @@ void Map::drawTiles(sf::RenderTarget &target, unsigned layer) {
  *  Konieczne jest przekazanie tu gracza, by rysować wszystkie tekstury w prawidłowej kolejności
  *  W przeciwnym wypadku tekstury mogą na siebie nachodzić w złych momentach
  */
-void Map::drawEntities(sf::RenderTarget &target, const Player& player) {
+void Map::drawEntities(sf::RenderTarget &target) {
 	std::sort(npcs.begin(), npcs.end(), [](const std::shared_ptr<const NPC>& one, const std::shared_ptr<const NPC>& two) {
 		return one->getSpritePosition().y < two->getSpritePosition().y;
 	});
 
 	bool playerDrawn = false;
 	for(auto& npc : npcs) {
-		if(npc->getSpritePosition().y > player.getSpritePosition().y && !playerDrawn) {
-			player.draw(target);
+		if(npc->getSpritePosition().y > player->getSpritePosition().y && !playerDrawn) {
+			player->draw(target);
 			playerDrawn = true;
 		}
 
 		npc->draw(target);
 	}
 
-	if(!playerDrawn) player.draw(target);
+	if(!playerDrawn) player->draw(target);
 }
 
 /*
@@ -245,11 +248,12 @@ Map Map::make_empty(Vec2u size, unsigned defType, const std::string& tilesetName
 	return newMap;
 }
 
-Map::Map(Vec2u size, const std::string &tileset)
-: tileset(TextureManager::get()->getSpritesheet(tileset)){
+Map::Map(Vec2u size, const std::string &tilesetz)
+: tileset(TextureManager::get()->getSpritesheet(tilesetz)){
 	assert(size.x != 0 && size.y != 0);
-
+	this->player = nullptr;
 	this->size = size;
+	this->tilesetName = tilesetz;
 
 	for(auto &layer : floorTiles)
 		layer.resize(size.x, size.y);

@@ -20,6 +20,7 @@ class EditWindow {
 		std::string fname;
 		Map mapData = Map({100,100}, "Tileset");
 		unsigned editingLayer = 0;
+		Player fakePlayer;
 	} EditingMap;
 
 	struct {
