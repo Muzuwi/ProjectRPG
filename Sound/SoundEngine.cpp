@@ -42,3 +42,9 @@ void SoundEngine::update() {
 		++it;
 	}
 }
+
+void SoundEngine::playMusic(const std::string &name, bool looping) {
+	currentBGM.openFromFile("GameContent/BGM/"+name+".ogg");
+	currentBGM.setLoop(looping);
+	currentBGM.play();
+}

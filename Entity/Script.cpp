@@ -20,7 +20,9 @@ void Script::initBindings() {
 	                                            "move", &NPC::enqueueMove,
 	                                            "moving", &NPC::isMoving
 	                                            );
-	m_lua_state.new_usertype<SoundEngine>("SoundEngine", "playSound", &SoundEngine::playSound);
+	m_lua_state.new_usertype<SoundEngine>("SoundEngine",
+			"playSound", &SoundEngine::playSound,
+			"playMusic", &SoundEngine::playMusic);
 	m_lua_state.set("sound", SoundEngine::instance);
 }
 
