@@ -5,6 +5,7 @@
 #include "Graphics/TextureManager.hpp"
 #include "Interface/Hud.hpp"
 #include "Interface/GameUI.hpp"
+#include "Sound/SoundEngine.hpp"
 
 class Engine
 {
@@ -16,7 +17,7 @@ private:
 	sf::RenderTexture mapTexture;
 
 	WorldManager world;
-
+	SoundEngine soundEngine;
 	GameUI GUI;
 
 	void RenderWorld(sf::RenderTarget&);

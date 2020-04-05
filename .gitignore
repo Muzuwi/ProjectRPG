@@ -16,3 +16,5 @@ CMakeSettings.json
 cmake-build-debug/
 imgui.ini
 Tools/imgui/
+*.wav
+*.json

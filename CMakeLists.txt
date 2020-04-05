@@ -16,6 +16,7 @@ add_library(RPGBase
         Entity/Script.cpp
         World/TileSet.cpp
         JsonOverloads.cpp
+        Sound/SoundEngine.cpp
         )
 
 
@@ -33,11 +34,11 @@ add_executable(ProjectRPG
     )
 
 if(MSVC) 
-target_link_libraries(ProjectRPG RPGBase sfml-graphics-d sfml-system-d sfml-window-d lua53)
+target_link_libraries(ProjectRPG RPGBase sfml-audio-d sfml-graphics-d sfml-system-d sfml-window-d lua53)
 endif(MSVC)
 
 if(UNIX) 
-target_link_libraries(ProjectRPG RPGBase -lsfml-graphics -lsfml-system -lsfml-window -llua)
+target_link_libraries(ProjectRPG RPGBase -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-window -llua)
 endif(UNIX)
 
 add_subdirectory(Tools/)

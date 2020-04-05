@@ -70,6 +70,7 @@ void Engine::ProcessInput() {
 
 void Engine::Update() {
 	world.updateWorld();
+	soundEngine.update();
 }
 
 void Engine::MainLoop() {
