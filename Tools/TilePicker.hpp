@@ -18,7 +18,8 @@ public:
 		types[0][0] = 0;
 	}
 
-	void init() {
+	void init(const std::string& palette) {
+		palettename = palette;
 		spritesheet = &TextureManager::get()->getSpritesheet(palettename);
 		auto* texture = spritesheet->getSprite().getTexture();
 		tilesetCountX = (texture->getSize().x / spritesheet->getSpriteSize().x);

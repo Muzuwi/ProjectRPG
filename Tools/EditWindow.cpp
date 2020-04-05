@@ -136,7 +136,7 @@ bool EditWindow::drawCommonWindows() {
 				EditingMap.mapData = Map::make_empty(Vec2u(width, height),type, selectedSpritesheet);
 				EditingMap.mapData.initializeVertexArrays();
 				EditingMap.isLoaded = true;
-				picker.init();
+				picker.init(selectedSpritesheet);
 
 				Tools.brush = std::make_shared<Brush>(EditingMap.mapData);
 				Tools.cursor = std::make_shared<CursorTool>(EditingMap.mapData);
@@ -157,7 +157,7 @@ bool EditWindow::drawCommonWindows() {
 					EditingMap.fname = fname;
 					EditingMap.isLoaded = true;
 
-					picker.init();
+					picker.init(selectedSpritesheet);
 
 					Tools.brush = std::make_shared<Brush>(EditingMap.mapData);
 					Tools.cursor = std::make_shared<CursorTool>(EditingMap.mapData);
