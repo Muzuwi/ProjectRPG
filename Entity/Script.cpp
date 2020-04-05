@@ -1,4 +1,5 @@
 #include <fstream>
+#include "Sound/SoundEngine.hpp"
 #include "Entity/NPC.hpp"
 #include "Types.hpp"
 #include "Script.hpp"
@@ -19,6 +20,8 @@ void Script::initBindings() {
 	                                            "move", &NPC::enqueueMove,
 	                                            "moving", &NPC::isMoving
 	                                            );
+	m_lua_state.new_usertype<SoundEngine>("SoundEngine", "playSound", &SoundEngine::playSound);
+	m_lua_state.set("sound", SoundEngine::instance);
 }
 
 Script::Script(const std::string &scriptName) {
