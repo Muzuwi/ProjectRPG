@@ -7,6 +7,13 @@
 #include "Interface/GameUI.hpp"
 #include "Sound/SoundEngine.hpp"
 
+enum Focus{
+	INGAME = 0,
+	INTERFACE = 1,
+	BATTLE = 2,
+	MAINMENU = 3
+};
+
 class Engine
 {
 private:
@@ -15,6 +22,8 @@ private:
 
 	std::shared_ptr<sf::RenderWindow> window;
 	sf::RenderTexture mapTexture;
+
+	Focus scene;
 
 	WorldManager world;
 	SoundEngine soundEngine;

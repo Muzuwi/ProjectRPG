@@ -5,7 +5,8 @@ bool Engine::Init() {
 	window = std::make_shared<sf::RenderWindow>(sf::VideoMode(windowWidth, windowHeight, 32), "Projekt");
 	if (!window) return false;
 	window->setFramerateLimit(60);
-
+	
+	scene = INGAME;
 	GUI.Init();
 	world.loadMap("default");
 
@@ -53,19 +54,30 @@ void Engine::ProcessInput() {
 				break;
 			}
 			case sf::Event::KeyPressed: {
-				GUI.ProcessKey(event.key);
-				if(event.key.code == sf::Keyboard::Space)
-					world.playerInteract();
-			}
+				if (scene == INGAME) {
+					if (event.key.code == sf::Keyboard::Space) world.playerInteract();
 
+					if (event.key.code == sf::Keyboard::C ||
+						event.key.code == sf::Keyboard::I ||
+						event.key.code == sf::Keyboard::Escape) {
+							scene = INTERFACE;
+							GUI.ProcessKey(event.key);
+					}
+				}
+				else if (scene == INTERFACE) {
+					GUI.ProcessKey(event.key);
+					if (!GUI.IsActive()) scene = INGAME;
+				}
+			}
 			default: break;
 		}
 	}
-
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) world.movePlayer(Direction::Up);
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) world.movePlayer(Direction::Down);
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) world.movePlayer(Direction::Left);
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) world.movePlayer(Direction::Right);
+	if (scene == INGAME) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) world.movePlayer(Direction::Up);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) world.movePlayer(Direction::Down);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) world.movePlayer(Direction::Left);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) world.movePlayer(Direction::Right);
+	}
 }
 
 void Engine::Update() {

@@ -14,8 +14,7 @@ enum Scene {
 	STATS,
 	JOURNAL,
 	SETTINGS,
-	MAP,
-	MAINMENU
+	MAP
 };
 
 class GameUI {
@@ -35,4 +34,5 @@ public:
 	void SetScene(sf::Event::KeyEvent);
 	void ProcessKey(sf::Event::KeyEvent);
 	bool IsSceneKey(sf::Event::KeyEvent);
+	bool IsActive();
 };

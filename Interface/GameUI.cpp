@@ -65,3 +65,8 @@ void GameUI::SetScene(sf::Event::KeyEvent key) {
 		break;
 	}
 }
+
+bool GameUI::IsActive() {
+	if (current == NONE) return false;
+	return true;
+}
