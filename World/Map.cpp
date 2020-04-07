@@ -113,6 +113,7 @@ Map::Map(const Map &map)
 	}
 	this->vertices = map.vertices;
 	this->npcs = map.npcs;
+	this->buffer = map.buffer;
 }
 
 void Map::draw(sf::RenderTarget &target) {
@@ -121,22 +122,26 @@ void Map::draw(sf::RenderTarget &target) {
 }
 
 void Map::initializeVertexArrays() {
-	vertices = sf::VertexArray(sf::Quads, 3 * size.x*size.y*4);
+	unsigned vertexCount = 3 * size.x * size.y * 4;
+	vertices = sf::VertexArray(sf::Quads, vertexCount);
 
 	for(unsigned layer = 0; layer < 3; ++layer) {
 		for(unsigned i = 0; i < size.x; i++) {
 			for(unsigned j = 0; j < size.y; j++) {
 				this->updateVertexAt(Vec2u(i, j), layer);
-
-				//  Zapisz wszystkie animowane kafle do osobnego wektora
-				auto tile = tileset.getTile(floorTiles[layer][i][j]);
-				//  FIXME:
-//				if(tile.isAnimated()) {
-//					animatedTiles.push_back({i, j});
-//				}
 			}
 		}
 	}
+
+	if(!buffer.create(vertexCount)) {
+		if(!sf::VertexBuffer::isAvailable())
+			throw std::runtime_error("Your system does not support Vertex Buffers, which are required tu run the engine");
+		else
+			throw std::runtime_error("Vertex Buffer object creation for map failed");
+	}
+
+	buffer.setPrimitiveType(sf::Quads);
+	buffer.update(&vertices[0], 3*size.x*size.y*4, 0);
 }
 
 void Map::updateVertexAt(Vec2u pos, unsigned layer) {
@@ -144,7 +149,10 @@ void Map::updateVertexAt(Vec2u pos, unsigned layer) {
 	auto i = pos.x,
 		 j = pos.y;
 
-	sf::Vertex* quad = &vertices[(layer * size.x * size.y * 4) + (i+j*100)*4];
+	unsigned first = layer * size.x * size.y * 4;
+	unsigned offset = first + (i + j*size.x) * 4;
+
+	sf::Vertex* quad = &vertices[offset];
 	quad[0].position = sf::Vector2f(i * Tile::dimensions(), j * Tile::dimensions());
 	quad[1].position = sf::Vector2f((i + 1) * Tile::dimensions(), j * Tile::dimensions());
 	quad[2].position = sf::Vector2f((i + 1) * Tile::dimensions(), (j + 1) * Tile::dimensions());
@@ -156,6 +164,8 @@ void Map::updateVertexAt(Vec2u pos, unsigned layer) {
 	quad[1].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top);
 	quad[2].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top+textureCoords.height);
 	quad[3].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top+textureCoords.height);
+
+	buffer.update(quad, 4, offset);
 }
 
 
@@ -194,7 +204,7 @@ NPC* Map::findNPC(Vec2u pos) {
  *  Rysowanie wszystkich kafli mapy
  */
 void Map::drawTiles(sf::RenderTarget &target) {
-	target.draw(vertices, &tileset.getTexture());
+	target.draw(buffer, &tileset.getTexture());
 }
 
 /*
@@ -202,7 +212,9 @@ void Map::drawTiles(sf::RenderTarget &target) {
  */
 void Map::drawTiles(sf::RenderTarget &target, unsigned layer) {
 	assert(layer < 3);
-	target.draw(vertices, &tileset.getTexture());
+
+	unsigned vertexCount = size.x * size.y * 4;
+	target.draw(buffer, vertexCount * layer, vertexCount, &tileset.getTexture());
 }
 
 

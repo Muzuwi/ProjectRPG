@@ -23,6 +23,7 @@ class Map {
 	const Player* player;
 
 	sf::VertexArray vertices;
+	sf::VertexBuffer buffer;
 protected:
 	void drawTiles(sf::RenderTarget&);
 	void drawTiles(sf::RenderTarget&, unsigned);
