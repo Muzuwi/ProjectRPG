@@ -2,13 +2,14 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "Interface/Window.hpp"
-#include "Interface/Button.hpp"
+#include "Interface/Cell.hpp"
 
 class InvUI : public Window{
 protected:
 	sf::Text title;
-	vector<Button> backpack;
+	vector<Cell> backpack;
 	int focus;
+	bool sub;
 
 	void DrawSelf(sf::RenderTarget&)override;
 	void SelfInit();

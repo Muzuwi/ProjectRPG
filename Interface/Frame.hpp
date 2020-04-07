@@ -18,6 +18,8 @@ public:
 	void DrawFrame(sf::RenderTarget&);
 	void DrawBackground(sf::RenderTarget&);
 
+	sf::Vector2f GetPosition() { return position; };
+
 	void SetFocus() { focus = true; }
 	void RemoveFocus() { focus = false; }
 };

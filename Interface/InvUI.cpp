@@ -5,6 +5,11 @@ InvUI::InvUI() { }
 void InvUI::DrawSelf(sf::RenderTarget& target) {
 	target.draw(title);
 	DrawButtons(target);
+	if (sub) {
+		Window subWin;
+		subWin.Init(backpack[focus].GetPosition() + sf::Vector2f(-90, 25), sf::Vector2f(95, 50));
+		subWin.Draw(target);
+	}
 }
 
 void InvUI::SelfInit() {
@@ -14,6 +19,7 @@ void InvUI::SelfInit() {
 	title.setCharacterSize(24);
 	title.setPosition(sf::Vector2f(600.f, 25.f));
 	SetButtons();
+	sub = false;
 }
 
 void InvUI::SetButtons() {
@@ -22,7 +28,9 @@ void InvUI::SetButtons() {
 	sf::Vector2f position(520, 100);
 
 	for (int i = 0; i < 64; i++) {
-		Button acc("");
+		string temp_name = "Item ";
+		temp_name = temp_name + std::to_string(i+1);
+		Cell acc(temp_name);
 		backpack.push_back(acc);
 	}
 	for (int i = 0; i < 64; i++) {
@@ -47,7 +55,9 @@ void InvUI::Update(int change) {
 
 void InvUI::Call() {
 	//Obs³uga Przycisków
-	cout << "Calling " << focus << " cell in inventory." << endl;
+	//cout << "Calling " << focus << " cell in inventory." << endl;
+	if (sub) sub = false;
+	else sub = true;
 }
 
 void InvUI::ProcessKey(sf::Event::KeyEvent key) {
