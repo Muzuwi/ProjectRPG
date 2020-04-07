@@ -43,10 +43,13 @@ class EditWindow {
 
 	std::shared_ptr<Tool> currentTool;
 
+	sf::RenderTexture mapTexture;
+
 	TilePicker picker;
 
 	Vec2i mapPosition;
 
+	void doMapLoadTasks();
 	void drawErrorBox();
 	bool drawCommonWindows();
 	void drawMenuBar();

@@ -42,7 +42,38 @@ void EditWindow::frameLoop() {
 	sf::View view(Vec2f(pos) + (Vec2f(width, height) / 2.0f), Vec2f(width, height));
 	editorWindow->setView(view);
 
-	EditingMap.mapData.draw(*editorWindow);
+	mapTexture.clear(sf::Color::Transparent);
+	sf::Sprite spr;
+	spr.setTexture(mapTexture.getTexture());
+	spr.setColor(sf::Color(255, 255, 255, 96));
+
+	//  Przyciemniamy warstwy które nie są aktywne w edytorze
+	if (EditingMap.editingLayer == 0) {
+		EditingMap.mapData.drawTiles(*editorWindow, 0);
+		EditingMap.mapData.drawTiles(mapTexture, 1);
+		EditingMap.mapData.drawTiles(mapTexture, 2);
+		mapTexture.display();
+		editorWindow->draw(spr);
+	} else if(EditingMap.editingLayer == 1) {
+		EditingMap.mapData.drawTiles(mapTexture, 0);
+		mapTexture.display();
+		editorWindow->draw(spr);
+
+		EditingMap.mapData.drawTiles(*editorWindow, 1);
+
+		mapTexture.clear(sf::Color::Transparent);
+		EditingMap.mapData.drawTiles(mapTexture, 2);
+		mapTexture.display();
+		editorWindow->draw(spr);
+	} else {
+		EditingMap.mapData.drawTiles(mapTexture, 0);
+		EditingMap.mapData.drawTiles(mapTexture, 1);
+		mapTexture.display();
+		editorWindow->draw(spr);
+		EditingMap.mapData.drawTiles(*editorWindow, 2);
+	}
+	EditingMap.mapData.drawEntities(*editorWindow);
+
 
 	MouseMovement.hoverCoordinates = (pos + sf::Mouse::getPosition(*editorWindow)) / (int)Tile::dimensions();
 	MouseMovement.hoverCoordinates.x = std::clamp(MouseMovement.hoverCoordinates.x, 0, EditingMap.width-1);
@@ -128,18 +159,9 @@ bool EditWindow::drawCommonWindows() {
 
 			ImGui::Dummy(ImVec2(ImGui::GetWindowWidth()-30, 0));
 			if(ImGui::Button("Create") && width > 0 && height > 0) {
-				EditingMap.width = width;
-				EditingMap.height = height;
 				EditingMap.fname = std::string(buf);
-				EditingMap.mapData = Map::make_empty(Vec2u(width, height),type, selectedSpritesheet);
-				EditingMap.mapData.initializeVertexArrays();
-				EditingMap.mapData.bindPlayer(EditingMap.fakePlayer);
-				EditingMap.isLoaded = true;
-				picker.init(selectedSpritesheet);
-
-				Tools.brush = std::make_shared<Brush>(EditingMap.mapData);
-				Tools.cursor = std::make_shared<CursorTool>(EditingMap.mapData);
-				Tools.creator = std::make_shared<NPCCreator>(EditingMap.mapData);
+				EditingMap.mapData = Map::make_empty(Vec2u(width, height), type, selectedSpritesheet);
+				this->doMapLoadTasks();
 				ImGui::CloseCurrentPopup();
 			}
 
@@ -149,18 +171,9 @@ bool EditWindow::drawCommonWindows() {
 			std::string fname = std::string(existingBuf);
 			if(ImGui::Button("Open") && !fname.empty()) {
 				try {
-					EditingMap.mapData = Map::from_file(fname);
-					EditingMap.mapData.initializeVertexArrays();
-					EditingMap.mapData.bindPlayer(EditingMap.fakePlayer);
-					EditingMap.width = EditingMap.mapData.size.x;
-					EditingMap.height = EditingMap.mapData.size.y;
 					EditingMap.fname = fname;
-					EditingMap.isLoaded = true;
-					picker.init(EditingMap.mapData.tilesetName);
-
-					Tools.brush = std::make_shared<Brush>(EditingMap.mapData);
-					Tools.cursor = std::make_shared<CursorTool>(EditingMap.mapData);
-					Tools.creator = std::make_shared<NPCCreator>(EditingMap.mapData);
+					EditingMap.mapData = Map::from_file(fname);
+					this->doMapLoadTasks();
 				} catch (std::exception& ex) {
 					EditingMap.isLoaded = false;
 					ErrorWindow.open = true;
@@ -230,4 +243,19 @@ void EditWindow::drawErrorBox() {
 		if(ImGui::Button("OK")) ErrorWindow.open = false;
 		ImGui::EndPopup();
 	}
+}
+
+void EditWindow::doMapLoadTasks() {
+	EditingMap.mapData.initializeVertexArrays();
+	EditingMap.mapData.bindPlayer(EditingMap.fakePlayer);
+	EditingMap.width = EditingMap.mapData.size.x;
+	EditingMap.height = EditingMap.mapData.size.y;
+	EditingMap.isLoaded = true;
+	picker.init(EditingMap.mapData.tilesetName);
+
+	Tools.brush = std::make_shared<Brush>(EditingMap.mapData);
+	Tools.cursor = std::make_shared<CursorTool>(EditingMap.mapData);
+	Tools.creator = std::make_shared<NPCCreator>(EditingMap.mapData);
+
+	assert(mapTexture.create(EditingMap.width * Tile::dimensions(), EditingMap.height*Tile::dimensions()));
 }
