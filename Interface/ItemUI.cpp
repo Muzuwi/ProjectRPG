@@ -68,20 +68,28 @@ void ItemUI::DrawSelf(sf::RenderTarget& target) {
 	target.draw(val);
 	*/
 	target.draw(value);
-
+	sf::CircleShape coin;
+	coin.setFillColor(sf::Color(230, 181, 60));
+	coin.setRadius(7);
+	coin.setPosition(position + sf::Vector2f(size.x - 24, size.y - 24));
+	target.draw(coin);
 }
 
 void ItemUI::SelfInit() {
 	item.Init("sword");
 
 	//CONTENT
-	font.loadFromFile("GameContent/Fonts/arial.ttf");
+	font.loadFromFile("GameContent/Fonts/ConnectionSerif.otf");
 
 	//Quality
 	quality.setFont(font);
 	quality.setString(item.quality);
-	quality.setFillColor(sf::Color::Black);
-	quality.setCharacterSize(15);
+	if(item.quality == "Legendarny") quality.setFillColor(sf::Color::Red);
+	else if(item.quality == "Unikat") quality.setFillColor(sf::Color::Green);
+	else if(item.quality == "Rzadki") quality.setFillColor(sf::Color::Yellow);
+	else if(item.quality == "Magiczny") quality.setFillColor(sf::Color::Blue);
+	else if(item.quality == "Pospolite") quality.setFillColor(sf::Color::White);
+	quality.setCharacterSize(16);
 
 	//Name
 	name.setFont(font);
@@ -92,7 +100,7 @@ void ItemUI::SelfInit() {
 	//Stat
 	stats.setFont(font);
 	stats.setString(item.stats);
-	stats.setFillColor(sf::Color::Black);
+	stats.setFillColor(sf::Color::White);
 	stats.setCharacterSize(15);
 
 	//Descr
@@ -126,5 +134,5 @@ void ItemUI::SelfInit() {
 	stats.setPosition(position + sf::Vector2f(10, 46));
 	description.setPosition(position + sf::Vector2f(10, 46 + statW));
 	type.setPosition(position + sf::Vector2f(10, size.y - 26));
-	value.setPosition(position + sf::Vector2f(size.x - 50, size.y - 26));
+	value.setPosition(position + sf::Vector2f(size.x - 65, size.y - 26));
 }

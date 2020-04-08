@@ -25,7 +25,7 @@ void InvUI::SelfInit() {
 		"Legendarny",
 		"One-Handed",
 		"6900",
-		"Attack: 3 - 5\nLightning: 1- 2\nParry: 20%",
+		"Attack: 3 - 5\nLightning: 1 - 2\nParry: 20%",
 		"To legendarne ostrze\nzostalo wykute w\nniebianskiej kuzni\n600 lat temu.");
 	backpack[0].setItem(item);
 	backpack[0].getItem().Init("sword");
