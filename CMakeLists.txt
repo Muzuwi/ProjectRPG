@@ -17,6 +17,7 @@ add_library(RPGBase
         World/TileSet.cpp
         JsonOverloads.cpp
         Sound/SoundEngine.cpp
+        Item.cpp
         )
 
 
