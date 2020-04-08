@@ -1,6 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Interface/Window.hpp"
+#include "Interface/Frame.hpp"
+#include "Interface/Cell.hpp"
+#include "Item.hpp"
 
 class ItemUI : public Window {
 protected:
@@ -9,19 +12,13 @@ protected:
 	sf::Text type;
 	sf::Text value;
 	sf::Text quality;
-	sf::Text stat;
-	sf::Text descript;
+	sf::Text stats;
+	sf::Text description;
 	sf::Font font;
 
-	string name_ = "Ostrze burzy";
-	string type_ = "One-Handed";
-	string value_ = "6900";
-	string quality_ = "Legendarny";
-	int statLines = 3, descLines = 4;
-	vector<string> stats;
-	vector<string> description;
+	Item item;
 public:
-	ItemUI();
+	ItemUI(Item);
 	void DrawSelf(sf::RenderTarget&);
 	void SelfInit();
 };

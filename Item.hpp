@@ -8,14 +8,15 @@ protected:
 	string type;
 	string value;
 	string quality;
-	int statLines, descLines;
-	vector<string> stats;
-	vector<string> description;
+	string stats;
+	string description;
+
 	sf::Sprite sprite;
 public:
-	Item(string, string, string, string, vector<string>, vector<string>);
+	Item(string, string, string, string, string, string);
+	Item() {}
 	void Init(string);
-	void Draw(sf::Vector2f, sf::RenderWindow&);
+	void Draw(sf::Vector2f, sf::RenderTarget&);
 
 	friend class ItemUI;
 };

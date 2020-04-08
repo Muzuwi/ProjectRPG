@@ -2,15 +2,19 @@
 #include <SFML/Graphics.hpp>
 #include "Graphics/TextureManager.hpp"
 #include "Interface/Frame.hpp"
+#include "Item.hpp"
 
 class Cell : public Frame {
 protected:
-	//Item* item;
-	string temporary;
+	Item item;
+	bool empty;
 
 	void SelfDraw(sf::RenderTarget&)override;
 	void SelfInit()override;
 public:
-	Cell(string /*Item*/ );
-	string Info() { return temporary; }	//'Return Item info to subwindow'
+	Cell();
+	void setItem(Item);
+	Item& getItem() { return item; };
+	bool isEmpty() { return empty; };
+	//string Info() { return temporary; }	//'Return Item info to subwindow'
 };

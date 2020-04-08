@@ -6,7 +6,7 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 	target.draw(title);
 	DrawButtons(target);
 	if (sub) {
-		ItemUI subWin;
+		ItemUI subWin(backpack[focus].getItem());
 		subWin.Init(backpack[focus].GetPosition(), sf::Vector2f(0, 0));
 		subWin.Draw(target);
 	}
@@ -20,6 +20,15 @@ void InvUI::SelfInit() {
 	title.setPosition(sf::Vector2f(600.f, 15.f));
 	SetButtons();
 	sub = false;
+
+	Item item("Ostrze burzy",
+		"Legendarny",
+		"One-Handed",
+		"6900",
+		"Attack: 3 - 5\nLightning: 1- 2\nParry: 20%",
+		"To legendarne ostrze\nzostalo wykute w\nniebianskiej kuzni\n600 lat temu.");
+	backpack[0].setItem(item);
+	backpack[0].getItem().Init("sword");
 }
 
 void InvUI::SetButtons() {
@@ -28,9 +37,7 @@ void InvUI::SetButtons() {
 	sf::Vector2f position(520, 50);
 
 	for (int i = 0; i < 64; i++) {
-		string temp_name = "Item ";
-		temp_name = temp_name + std::to_string(i+1);
-		Cell acc(temp_name);
+		Cell acc;
 		backpack.push_back(acc);
 	}
 	for (int i = 0; i < 64; i++) {
@@ -42,6 +49,7 @@ void InvUI::SetButtons() {
 void InvUI::DrawButtons(sf::RenderTarget& target) {
 	for (int i = 0; i < backpack.size(); i++) {
 		backpack[i].Draw(target);
+		backpack[i].getItem().Draw(backpack[i].GetPosition(),target);
 	}
 }
 
@@ -55,8 +63,7 @@ void InvUI::Update(int change) {
 
 void InvUI::Call() {
 	//Obs³uga Przycisków
-	//cout << "Calling " << focus << " cell in inventory." << endl;
-	if (sub) sub = false;
+	if (backpack[focus].isEmpty() || sub) sub = false;
 	else sub = true;
 }
 
