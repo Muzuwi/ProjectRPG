@@ -3,6 +3,7 @@
 #include <vector>
 #include "Interface/Window.hpp"
 #include "Interface/Cell.hpp"
+#include "Interface/ItemUI.hpp"
 
 class InvUI : public Window{
 protected:

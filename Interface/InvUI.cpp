@@ -6,8 +6,8 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 	target.draw(title);
 	DrawButtons(target);
 	if (sub) {
-		Window subWin;
-		subWin.Init(backpack[focus].GetPosition() + sf::Vector2f(-90, 25), sf::Vector2f(95, 50));
+		ItemUI subWin;
+		subWin.Init(backpack[focus].GetPosition(), sf::Vector2f(0, 0));
 		subWin.Draw(target);
 	}
 }
@@ -17,7 +17,7 @@ void InvUI::SelfInit() {
 	title.setString("Inventory");
 	title.setFillColor(sf::Color::Black);
 	title.setCharacterSize(24);
-	title.setPosition(sf::Vector2f(600.f, 25.f));
+	title.setPosition(sf::Vector2f(600.f, 15.f));
 	SetButtons();
 	sub = false;
 }
@@ -25,7 +25,7 @@ void InvUI::SelfInit() {
 void InvUI::SetButtons() {
 	focus = 0;
 	sf::Vector2f size(32, 32);
-	sf::Vector2f position(520, 100);
+	sf::Vector2f position(520, 50);
 
 	for (int i = 0; i < 64; i++) {
 		string temp_name = "Item ";
@@ -61,9 +61,14 @@ void InvUI::Call() {
 }
 
 void InvUI::ProcessKey(sf::Event::KeyEvent key) {
-	if (key.code == sf::Keyboard::W) Update(-8);
-	else if (key.code == sf::Keyboard::S) Update(8);
-	else if (key.code == sf::Keyboard::A) Update(-1);
-	else if (key.code == sf::Keyboard::D) Update(1);
-	else if (key.code == sf::Keyboard::Space) Call();
+	if (!sub) {
+		if (key.code == sf::Keyboard::W) Update(-8);
+		else if (key.code == sf::Keyboard::S) Update(8);
+		else if (key.code == sf::Keyboard::A) Update(-1);
+		else if (key.code == sf::Keyboard::D) Update(1);
+		if (key.code == sf::Keyboard::Space) Call();
+	}
+	else{
+		if (key.code == sf::Keyboard::Space) Call();
+	}
 }

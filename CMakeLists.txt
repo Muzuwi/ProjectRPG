@@ -17,7 +17,7 @@ add_library(RPGBase
         World/TileSet.cpp
         JsonOverloads.cpp
         Sound/SoundEngine.cpp
-         "Interface/Cell.cpp")
+        )
 
 
 add_executable(ProjectRPG
@@ -29,9 +29,11 @@ add_executable(ProjectRPG
     Interface/Button.cpp
     Interface/Window.cpp
     Interface/Frame.cpp
+    Interface/Cell.cpp
+    Interface/ItemUI.cpp
     Engine.cpp
     Main.cpp
-     "Interface/Cell.cpp")
+    )
 
 if(MSVC) 
 target_link_libraries(ProjectRPG RPGBase sfml-audio-d sfml-graphics-d sfml-system-d sfml-window-d lua53)
