@@ -81,6 +81,12 @@ void EditWindow::frameLoop() {
 
 	picker.drawWindow();
 
+	if(picker.getSelection().getX() == 1 && picker.getSelection().getY() == 1)
+		tilesEditor.updateEditing(picker.getSelection()[0][0]);
+
+	tilesEditor.drawWindow();
+
+
 	if(currentTool) currentTool->drawToolWindow(Vec2u(MouseMovement.hoverCoordinates),*editorWindow);
 }
 
@@ -169,6 +175,7 @@ bool EditWindow::drawCommonWindows() {
 			ImGui::Text("...or enter an existing filename here");
 			ImGui::InputText("Filename##1", existingBuf, 32);
 			std::string fname = std::string(existingBuf);
+			if(fname.empty()) fname = "default";
 			if(ImGui::Button("Open") && !fname.empty()) {
 				try {
 					EditingMap.fname = fname;
@@ -252,6 +259,7 @@ void EditWindow::doMapLoadTasks() {
 	EditingMap.height = EditingMap.mapData.size.y;
 	EditingMap.isLoaded = true;
 	picker.init(EditingMap.mapData.tilesetName);
+	tilesEditor.init(EditingMap.mapData.tilesetName, EditingMap.mapData.tileset);
 
 	Tools.brush = std::make_shared<Brush>(EditingMap.mapData);
 	Tools.cursor = std::make_shared<CursorTool>(EditingMap.mapData);

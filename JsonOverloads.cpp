@@ -1,4 +1,5 @@
 #include "Entity/NPC.hpp"
+#include "World/Tile.hpp"
 #include "JsonOverloads.hpp"
 
 /*
@@ -19,6 +20,23 @@ void from_json(const json &j, NPCData& npc) {
 	j.at("worldPos").get_to(npc.worldPosition);
 	j.at("moveSpeed").get_to(npc.movementSpeed);
 	j.at("spritesheet").get_to(npc.spritesheetName);
+}
+
+void to_json(json &j, const Tile &tile) {
+	j = json {
+		tile.getPriority(),
+		tile.getCollisionBitmap()
+	};
+}
+
+void from_json(const json &j, Tile &tile) {
+	unsigned bitmap = 0;
+	unsigned priority = 0;
+
+	j.at(0).get_to(priority);
+	j.at(1).get_to(bitmap);
+
+	tile = Tile(bitmap, priority);
 }
 
 /*

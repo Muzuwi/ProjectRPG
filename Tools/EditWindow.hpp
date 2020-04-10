@@ -8,6 +8,7 @@
 #include "TilePicker.hpp"
 #include "CursorTool.hpp"
 #include "NPCCreator.hpp"
+#include "TilesetEditor.hpp"
 
 class EditWindow {
 	unsigned width, height;
@@ -46,6 +47,7 @@ class EditWindow {
 	sf::RenderTexture mapTexture;
 
 	TilePicker picker;
+	TilesetEditor tilesEditor;
 
 	Vec2i mapPosition;
 

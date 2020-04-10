@@ -15,6 +15,10 @@ using json = nlohmann::json;
 void to_json(json& j, const NPCData& npc);
 void from_json(const json& j, NPCData& npc);
 
+class Tile;
+void to_json(json& j, const Tile& tile);
+void from_json(const json& j, Tile& tile);
+
 namespace sf {
 	void to_json(json& j, const Vec2u& vec);
 	void from_json(const json& j, Vec2u& vec);
