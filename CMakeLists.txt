@@ -18,6 +18,7 @@ add_library(RPGBase
         JsonOverloads.cpp
         Sound/SoundEngine.cpp
         Item.cpp
+        Interface/DialogEngine.cpp
         )
 
 

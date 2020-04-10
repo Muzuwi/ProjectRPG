@@ -6,12 +6,14 @@
 #include "Interface/Hud.hpp"
 #include "Interface/GameUI.hpp"
 #include "Sound/SoundEngine.hpp"
+#include "Interface/DialogEngine.hpp"
 
 enum Focus{
 	INGAME = 0,
 	INTERFACE = 1,
 	BATTLE = 2,
-	MAINMENU = 3
+	MAINMENU = 3,
+	DIALOG = 4
 };
 
 class Engine
@@ -27,6 +29,7 @@ private:
 
 	WorldManager world;
 	SoundEngine soundEngine;
+	DialogEngine dialogEngine;
 	GameUI GUI;
 
 	void RenderWorld(sf::RenderTarget&);

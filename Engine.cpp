@@ -42,6 +42,8 @@ void Engine::RenderFrame() {
 	window->setView(window->getDefaultView());
 	RenderHud(*window);
 
+	dialogEngine.draw(*window);
+
 	window->display();
 }
 
@@ -55,7 +57,10 @@ void Engine::ProcessInput() {
 			}
 			case sf::Event::KeyPressed: {
 				if (scene == INGAME) {
-					if (event.key.code == sf::Keyboard::Space) world.playerInteract();
+					if (event.key.code == sf::Keyboard::Space) {
+						world.playerInteract();
+						if(dialogEngine.isDialogPresent())  scene = DIALOG;
+					}
 
 					if (event.key.code == sf::Keyboard::C ||
 						event.key.code == sf::Keyboard::I ||
@@ -67,6 +72,9 @@ void Engine::ProcessInput() {
 				else if (scene == INTERFACE) {
 					GUI.ProcessKey(event.key);
 					if (!GUI.IsActive()) scene = INGAME;
+				} else if (scene == DIALOG) {
+					dialogEngine.handleKeyEvent(event.key);
+					if(!dialogEngine.isDialogPresent()) scene = INGAME;
 				}
 			}
 			default: break;
@@ -83,6 +91,7 @@ void Engine::ProcessInput() {
 void Engine::Update() {
 	world.updateWorld();
 	soundEngine.update();
+	dialogEngine.update();
 }
 
 void Engine::MainLoop() {

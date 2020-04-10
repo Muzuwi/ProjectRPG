@@ -3,6 +3,7 @@
 #include "Entity/NPC.hpp"
 #include "Types.hpp"
 #include "Script.hpp"
+#include "Interface/DialogEngine.hpp"
 
 void Script::initBindings() {
 	m_lua_state.set_function("log", [this](const std::string& str) {
@@ -23,11 +24,34 @@ void Script::initBindings() {
 	m_lua_state.new_usertype<SoundEngine>("SoundEngine",
 			"playSound", &SoundEngine::playSound,
 			"playMusic", &SoundEngine::playMusic);
+
+	m_lua_state.new_usertype<DialogEngine>("DialogEngine",
+			"say", sol::yielding(
+					[this](DialogEngine& engine, const std::string& text) {
+						Dialog dialog{text, this};
+						engine.spawnDialog(dialog);
+						this->m_scheduler = CoroutineScheduler::DialogEngine;
+					} ),
+			"ask", sol::yielding(
+					[this](DialogEngine& engine, const std::string& text, sol::table t) {
+						std::vector<std::string> selections;
+						for(unsigned i = 1; i <= t.size(); i++)
+							selections.push_back(t[i].get<std::string>());
+
+						Dialog dialog{text, selections, this};
+						engine.spawnDialog(dialog);
+						this->m_scheduler = CoroutineScheduler::DialogEngine;
+					} ),
+			"choice", &DialogEngine::selection );
+
 	m_lua_state.set("sound", SoundEngine::instance);
+	m_lua_state.set("dialog", DialogEngine::instance);
 }
 
 Script::Script(const std::string &scriptName) {
 	m_script_name = scriptName;
+	m_is_yielding = false;
+	m_scheduler = CoroutineScheduler::None;
 
 	std::ifstream file("GameContent/Script/" + scriptName + ".lua");
 	if(!file.good()) {
@@ -40,7 +64,7 @@ Script::Script(const std::string &scriptName) {
 	file.close();
 
 	m_lua_state.open_libraries(sol::lib::base, sol::lib::coroutine, sol::lib::string, sol::lib::io, sol::lib::math);
-	m_lua_state.script(script);
 
 	this->initBindings();
+	m_lua_state.script(script);
 }
