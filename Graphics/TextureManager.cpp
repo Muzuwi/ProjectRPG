@@ -53,7 +53,7 @@ void TextureManager::autoload() {
 	namespace fs = std::filesystem;
 	sf::Context context;
 	for(const auto& entry : fs::directory_iterator("GameContent/Tilesets/")) {
-		if(entry.is_regular_file() ) {
+		if(entry.is_regular_file() && entry.path().extension() == ".png") {
 			std::cout << "TextureManager::autoload()/ Adding tileset " << entry.path().filename() << "\n";
 			addSpritesheet(entry.path().string(), [](Vec2u) -> Vec2u{
 				return Vec2u{32, 32};
@@ -62,7 +62,7 @@ void TextureManager::autoload() {
 	}
 
 	for(const auto& entry : fs::directory_iterator("GameContent/Characters/")) {
-		if(entry.is_regular_file() ) {
+		if(entry.is_regular_file() && entry.path().extension() == ".png") {
 			std::cout << "TextureManager::autoload()/ Adding character " << entry.path().filename() << "\n";
 			addSpritesheet(entry.path().string(), [](Vec2u textureSize) -> Vec2u{
 				return textureSize/4u;
@@ -71,7 +71,7 @@ void TextureManager::autoload() {
 	}
 
 	for(const auto& entry : fs::directory_iterator("GameContent/UI/")) {
-		if(entry.is_regular_file() ) {
+		if(entry.is_regular_file() && entry.path().extension() == ".png") {
 			std::cout << "TextureManager::autoload()/ Adding UI element " << entry.path().filename() << "\n";
 			addSpritesheet(entry.path().string());
 		}
