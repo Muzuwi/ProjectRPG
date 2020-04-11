@@ -260,11 +260,11 @@ Map Map::make_empty(Vec2u size, unsigned defType, const std::string& tilesetName
 	return newMap;
 }
 
-Map::Map(Vec2u size, const std::string &tilesetz)
+Map::Map(Vec2u _size, const std::string &tilesetz)
 : tileset(AssetManager::getTileset(tilesetz), tilesetz){
-	assert(size.x != 0 && size.y != 0);
+	assert(_size.x != 0 && _size.y != 0);
 	this->player = nullptr;
-	this->size = size;
+	this->size = _size;
 	this->tilesetName = tilesetz;
 
 	for(auto &layer : floorTiles)
