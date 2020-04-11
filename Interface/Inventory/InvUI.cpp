@@ -47,6 +47,28 @@ void InvUI::DrawButtons(sf::RenderTarget& target) {
 			item->draw(target, itemCell.GetPosition());
 		}
 
+		if(item != nullptr && item->getMaxStack() != 1){
+			unsigned counterSize = 10;
+			auto offset = Vec2f {2.0, 2.0};
+
+			auto& font = AssetManager::getFont("ConnectionSerif");
+			std::string count = std::to_string(item->getStack());
+
+			sf::Text itemCount;
+			itemCount.setFont(font);
+			itemCount.setString(count);
+			itemCount.setFillColor(sf::Color::White);
+			itemCount.setOutlineColor(sf::Color::Black);
+			itemCount.setOutlineThickness(1.2);
+			itemCount.setCharacterSize(counterSize);
+
+			auto endPos = itemCount.findCharacterPos(count.size());
+			Vec2f textPos = itemCell.GetPosition() + itemCell.GetSize() - Vec2f{endPos.x,(float)counterSize} - offset;
+			itemCount.setPosition(textPos);
+
+			target.draw(itemCount);
+		}
+
 		++i;
 	}
 

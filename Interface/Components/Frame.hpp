@@ -19,6 +19,7 @@ public:
 	void DrawBackground(sf::RenderTarget&);
 
 	sf::Vector2f GetPosition() { return position; };
+	sf::Vector2f GetSize()     { return size; }
 
 	void SetFocus() { focus = true; }
 	void RemoveFocus() { focus = false; }
