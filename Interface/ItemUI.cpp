@@ -1,6 +1,6 @@
 #include "Interface/ItemUI.hpp"
 
-ItemUI::ItemUI(Item toDisp) : item(toDisp) { }
+ItemUI::ItemUI(Item toDisp) : item(toDisp), active(false) { }
 
 void ItemUI::DrawSelf(sf::RenderTarget& target) {
 	/*DRAW ICON
@@ -73,6 +73,9 @@ void ItemUI::DrawSelf(sf::RenderTarget& target) {
 	coin.setRadius(7);
 	coin.setPosition(position + sf::Vector2f(size.x - 24, size.y - 24));
 	target.draw(coin);
+
+	//Draw buttons
+	DrawButtons(target);
 }
 
 void ItemUI::SelfInit() {
@@ -123,8 +126,8 @@ void ItemUI::SelfInit() {
 
 	//SIZE AND POSITION
 	double w = 200, h;
-	double statW = (stats.findCharacterPos(item.stats.size()) - stats.findCharacterPos(0)).y + 14 + 8;
-	double descW = (description.findCharacterPos(item.description.size()) - description.findCharacterPos(0)).y + 14 + 8;
+	statW = (stats.findCharacterPos(item.stats.size()) - stats.findCharacterPos(0)).y + 14 + 8;
+	descW = (description.findCharacterPos(item.description.size()) - description.findCharacterPos(0)).y + 14 + 8;
 	h = 158 + statW + descW;
 	size += sf::Vector2f(w, h);
 	position += sf::Vector2f(-(size.x - 5), 30);
@@ -135,4 +138,68 @@ void ItemUI::SelfInit() {
 	description.setPosition(position + sf::Vector2f(10, 46 + statW));
 	type.setPosition(position + sf::Vector2f(10, size.y - 26));
 	value.setPosition(position + sf::Vector2f(size.x - 65, size.y - 26));
+
+	//Buttons
+	SetButtons();
+}
+
+void ItemUI::SetButtons() {
+	focus = 0;
+
+	//Creating Buttons
+	sf::Vector2f size(35, 35);
+	Button b0("leave");	//leave
+	Button b1("move");	//move
+	Button b2("use");	//use
+	Button b3("del");	//delete
+
+	//Remembering buttons
+	buttons.push_back(b0);
+	buttons.push_back(b1);
+	buttons.push_back(b2);
+	buttons.push_back(b3);
+
+	//Initializing
+	sf::Vector2f position(position + sf::Vector2f(10, statW + descW + 52));
+	for (int i = 0; i < buttons.size(); i++) {
+		buttons[i].Init(position, size);
+		position += sf::Vector2f(40, 0);
+	}
+	buttons[focus].SetFocus();
+}
+
+void ItemUI::ProcessKey(sf::Event::KeyEvent key) {
+	if (key.code == sf::Keyboard::Space) Call();
+	else {
+		if (key.code == sf::Keyboard::D) Update(1);
+		else if (key.code == sf::Keyboard::A) Update(-1);
+	}
+}
+
+void ItemUI::Update(int change) {
+	buttons[focus].RemoveFocus();
+	focus = focus + change;
+	if (focus < 0) focus = buttons.size() + focus;
+	else focus = focus % buttons.size();
+	buttons[focus].SetFocus();
+}
+
+void ItemUI::Call() {
+	switch (focus) {
+	case 0:	//leave
+		active = !active;
+		break;
+	case 1:	//move
+		break;
+	case 2:	//use
+		break;
+	case 3:	//delete
+		break;
+	}
+}
+
+void ItemUI::DrawButtons(sf::RenderTarget& target) {
+	for (int i = 0; i < buttons.size(); i++) {
+		buttons[i].Draw(target);
+	}
 }

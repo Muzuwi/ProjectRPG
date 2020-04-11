@@ -12,6 +12,7 @@ protected:
 	std::vector<Cell> backpack;
 	int focus;
 	bool sub;
+	ItemUI subWin;
 
 	void DrawSelf(sf::RenderTarget&)override;
 	void SelfInit();
@@ -19,7 +20,6 @@ public:
 	InvUI();
 	void SetButtons();
 	void DrawButtons(sf::RenderTarget&);	//Basicly its eq KAPPA
-	void Call();
 	void ProcessKey(sf::Event::KeyEvent);
 	void Update(int);
 };

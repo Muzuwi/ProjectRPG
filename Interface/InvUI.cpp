@@ -5,9 +5,7 @@ InvUI::InvUI() { }
 void InvUI::DrawSelf(sf::RenderTarget& target) {
 	target.draw(title);
 	DrawButtons(target);
-	if (sub) {
-		ItemUI subWin(backpack[focus].getItem());
-		subWin.Init(backpack[focus].GetPosition(), sf::Vector2f(0, 0));
+	if (subWin.isActive()) {
 		subWin.Draw(target);
 	}
 }
@@ -61,21 +59,21 @@ void InvUI::Update(int change) {
 	backpack[focus].SetFocus();
 }
 
-void InvUI::Call() {
-	//Obs³uga Przycisków
-	if (backpack[focus].isEmpty() || sub) sub = false;
-	else sub = true;
-}
-
 void InvUI::ProcessKey(sf::Event::KeyEvent key) {
-	if (!sub) {
+	if (!subWin.isActive()) {
 		if (key.code == sf::Keyboard::W) Update(-8);
 		else if (key.code == sf::Keyboard::S) Update(8);
 		else if (key.code == sf::Keyboard::A) Update(-1);
 		else if (key.code == sf::Keyboard::D) Update(1);
-		if (key.code == sf::Keyboard::Space) Call();
+		if (key.code == sf::Keyboard::Space) {
+			if (!backpack[focus].isEmpty()) {
+				subWin = backpack[focus].getItem();
+				subWin.Init(backpack[focus].GetPosition(), sf::Vector2f(0, 0));
+				subWin.ProcessKey(key);
+			}
+		}
 	}
 	else{
-		if (key.code == sf::Keyboard::Space) Call();
+		subWin.ProcessKey(key);
 	}
 }
