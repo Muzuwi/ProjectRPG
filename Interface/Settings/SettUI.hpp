@@ -3,8 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include "AssetManager.hpp"
 #include "Graphics/Spritesheet.hpp"
-#include "Interface/Button.hpp"
-#include "Interface/Window.hpp"
+#include "Interface/Components/Button.hpp"
+#include "Interface/Components/Window.hpp"
 
 class SettUI : public Window {
 private:

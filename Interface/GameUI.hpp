@@ -2,11 +2,11 @@
 #include <SFML/Graphics.hpp>
 #include "AssetManager.hpp"
 #include "Graphics/Spritesheet.hpp"
-#include "Hud.hpp"
-#include "StatUI.hpp"
-#include "InvUI.hpp"
-#include "SettUI.hpp"
-#include "Window.hpp"
+#include "Interface/Hud.hpp"
+#include "Interface/Statistics/StatUI.hpp"
+#include "Interface/Inventory/InvUI.hpp"
+#include "Interface/Settings/SettUI.hpp"
+#include "Interface/Components/Window.hpp"
 
 enum Scene {
 	NONE,

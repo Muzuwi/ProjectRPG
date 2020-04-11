@@ -2,7 +2,7 @@
 #include <string>
 #include <deque>
 #include <SFML/Graphics.hpp>
-#include "Interface/Window.hpp"
+#include "Interface/Components/Window.hpp"
 #include "Dialog.hpp"
 #include <sol/forward.hpp>
 

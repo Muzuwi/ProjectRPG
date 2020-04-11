@@ -1,4 +1,4 @@
-#include "Interface/ItemUI.hpp"
+#include "Interface/Inventory/ItemUI.hpp"
 
 ItemUI::ItemUI(Item toDisp) : item(toDisp), active(false) { }
 

@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "AssetManager.hpp"
-#include "Interface/Frame.hpp"
+#include "Interface/Components/Frame.hpp"
 
 class Button : public Frame{
 protected:

@@ -18,22 +18,22 @@ add_library(RPGBase
         Sound/SoundEngine.cpp
         Item.cpp
         Interface/DialogEngine.cpp
-        Interface/Window.cpp
+        "Interface/Components/Window.cpp"
         AssetManager.cpp
         )
 
 
 add_executable(ProjectRPG
     Interface/GameUI.cpp
-    Interface/InvUI.cpp
-    Interface/StatUI.cpp
-    Interface/SettUI.cpp
+    "Interface/Inventory/InvUI.cpp"
+    "Interface/Statistics/StatUI.cpp"
+    "Interface/Settings/SettUI.cpp"
     Interface/Hud.cpp
-    Interface/Button.cpp
-    Interface/Window.cpp
-    Interface/Frame.cpp
-    Interface/Cell.cpp
-    Interface/ItemUI.cpp
+    "Interface/Components/Button.cpp"
+    "Interface/Components/Window.cpp"
+    "Interface/Components/Frame.cpp"
+    "Interface/Inventory/Cell.cpp"
+    "Interface/Inventory/ItemUI.cpp"
     Engine.cpp
     Main.cpp
     )

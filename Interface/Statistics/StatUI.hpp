@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "AssetManager.hpp"
 #include "Graphics/Spritesheet.hpp"
-#include "Interface/Window.hpp"
+#include "Interface/Components/Window.hpp"
 
 class StatUI : public Window {
 private:

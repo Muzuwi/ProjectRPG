@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "AssetManager.hpp"
-#include "Interface/Frame.hpp"
+#include "Interface/Components/Frame.hpp"
 #include "Item.hpp"
 
 class Cell : public Frame {

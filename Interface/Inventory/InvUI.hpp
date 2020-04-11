@@ -1,9 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "Interface/Window.hpp"
-#include "Interface/Cell.hpp"
-#include "Interface/ItemUI.hpp"
+#include "Interface/Components/Window.hpp"
+#include "Interface/Inventory/Cell.hpp"
+#include "Interface/Inventory/ItemUI.hpp"
 #include "Item.hpp"
 
 class InvUI : public Window{
