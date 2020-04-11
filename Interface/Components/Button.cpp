@@ -1,16 +1,15 @@
 #include "Button.hpp"
 
-Button::Button(std::string s) : type(TEXT), source(s), Frame(){ 
+Button::Button(std::string s) : type(TEXT), source(s), font(AssetManager::getFont("ConnectionSerif")), Frame(){
 	
 }
 
-Button::Button(std::string s, unsigned int index) : type(ICON), source(s), icon_index(index), Frame() {
+Button::Button(std::string s, unsigned int index) : type(ICON), source(s), icon_index(index), font(AssetManager::getFont("ConnectionSerif")), Frame() {
 
 }
 
 void Button::SelfInit() {
 	if (type == TEXT) {
-		font.loadFromFile("GameContent/Fonts/arial.ttf");
 		text.setFont(font);
 		text.setString(source);
 		text.setFillColor(sf::Color::Black);

@@ -69,7 +69,7 @@ void InvUI::ProcessKey(sf::Event::KeyEvent key) {
 				subWin = std::make_shared<ItemUI>(*inventory.getItem(focus));
 
 				sf::Vector2f offset(520, 50);
-				Vec2f windowPos (position + sf::Vector2f((focus % 8 * 32), (focus / 8 * 32)));
+				Vec2f windowPos (offset + sf::Vector2f((focus % 8 * 32), (focus / 8 * 32)));
 				subWin->Init(windowPos, sf::Vector2f(0, 0));
 				subWin->ProcessKey(key);
 			}

@@ -19,7 +19,7 @@ protected:
 
 	//Other
 	unsigned int icon_index;	//icon index in graphic
-	sf::Font font;				//font for text
+	const sf::Font& font;				//font for text
 	std::string source;			//name of file or string
 
 	void SelfDraw(sf::RenderTarget&)override;

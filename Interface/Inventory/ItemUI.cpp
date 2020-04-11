@@ -123,17 +123,19 @@ void ItemUI::SelfInit() {
 	value.setCharacterSize(15);
 
 	//SIZE AND POSITION
-	double w = 200, h;
-	statW = (stats.findCharacterPos(item.getStats().size()) - stats.findCharacterPos(0)).y + 14 + 8;
-	descW = (description.findCharacterPos(item.getDescription().size()) - description.findCharacterPos(0)).y + 14 + 8;
-	h = 158 + statW + descW;
-	size += sf::Vector2f(w, h);
-	position += sf::Vector2f(-(size.x - 5), 30);
+	double window_width = 200, window_height;
+	stats_height = (stats.findCharacterPos(item.getStats().size()) - stats.findCharacterPos(0)).y;
+	stats_height += 16;
+	descript_height = (description.findCharacterPos(item.getDescription().size()) - description.findCharacterPos(0)).y;
+	descript_height += 16;
+	window_height = 158 + stats_height + descript_height;
+	size += sf::Vector2f(window_width, window_height);
+	position += sf::Vector2f(-(size.x - 5), 24);
 
 	quality.setPosition(position + sf::Vector2f(48, 8));
 	name.setPosition(position + sf::Vector2f(48, 26));
 	stats.setPosition(position + sf::Vector2f(10, 46));
-	description.setPosition(position + sf::Vector2f(10, 46 + statW));
+	description.setPosition(position + sf::Vector2f(10, 46 + stats_height));
 	type.setPosition(position + sf::Vector2f(10, size.y - 26));
 	value.setPosition(position + sf::Vector2f(size.x - 65, size.y - 26));
 
@@ -158,7 +160,7 @@ void ItemUI::SetButtons() {
 	buttons.push_back(b3);
 
 	//Initializing
-	sf::Vector2f newPos(position + sf::Vector2f(10, statW + descW + 52));
+	sf::Vector2f newPos(position + sf::Vector2f(10, stats_height + descript_height + 52));
 	for (int i = 0; i < buttons.size(); i++) {
 		buttons[i].Init(newPos, size);
 		newPos += sf::Vector2f(48, 0);
@@ -168,6 +170,7 @@ void ItemUI::SetButtons() {
 
 void ItemUI::ProcessKey(sf::Event::KeyEvent key) {
 	if (key.code == sf::Keyboard::Space) Call();
+	if (key.code == sf::Keyboard::Escape) active = !active;
 	else {
 		if (key.code == sf::Keyboard::D) Update(1);
 		else if (key.code == sf::Keyboard::A) Update(-1);

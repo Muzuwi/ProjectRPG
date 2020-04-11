@@ -19,8 +19,8 @@ protected:
 	sf::Text description;
 
 	//Dynamic Height of Statistics and Description
-	double statW;
-	double descW;
+	double stats_height;
+	double descript_height;
 
 	//IsActive Flag
 	bool active;

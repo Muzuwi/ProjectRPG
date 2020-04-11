@@ -20,7 +20,7 @@ protected:
 public:
 	InvUI(PlayerInventory& inventory);
 	void SetButtons();
-	void DrawButtons(sf::RenderTarget&);	//Basicly its eq KAPPA
+	void DrawButtons(sf::RenderTarget&);	//draw eq cells
 	void ProcessKey(sf::Event::KeyEvent);
 	void Update(int);
 };
