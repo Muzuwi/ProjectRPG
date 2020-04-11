@@ -2,6 +2,7 @@
 #include "SFML/Window/Keyboard.hpp"
 #include "Entity/Actor.hpp"
 #include "Graphics/RenderableObject.hpp"
+#include "Entity/PlayerInventory.hpp"
 
 class Player final : public Actor, protected RenderableObject {
 	int maxHP = 100;
@@ -9,6 +10,8 @@ class Player final : public Actor, protected RenderableObject {
 
 	int HP = 89;
 	int	MP = 65;
+
+	PlayerInventory inventory;
 public:
 	Player()
 	: Actor(0, 7) {}
@@ -21,6 +24,7 @@ public:
 	int getMaxMP() const { return maxMP; }
 	Vec2u getDimensions() const override;
 
+	PlayerInventory& getInventory() { return inventory; }
 protected:
 	void onInteract(Direction dir) override {};
 	void onStep() override {};

@@ -20,6 +20,7 @@ add_library(RPGBase
         Interface/DialogEngine.cpp
         "Interface/Components/Window.cpp"
         AssetManager.cpp
+        World/Item.cpp
         )
 
 
