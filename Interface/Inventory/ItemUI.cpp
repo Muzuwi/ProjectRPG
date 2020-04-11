@@ -7,71 +7,28 @@ ItemUI::ItemUI(const Item& toDisp)
 }
 
 void ItemUI::DrawSelf(sf::RenderTarget& target) {
-	/*DRAW ICON
-	sf::RectangleShape icon;
-	icon.setFillColor(sf::Color::White);
-	icon.setPosition(position + sf::Vector2f(10, 10));
-	icon.setSize(sf::Vector2f(32,32));
-	target.draw(icon);
-	*/
+	//Drawing Icon
 	Frame iconBack;
 	iconBack.Init(position + sf::Vector2f(10, 10), sf::Vector2f(32, 32));
 	iconBack.Draw(target);
-
 	item.draw(target, position + sf::Vector2f(10, 10));
 
-	/* DRAW QUALITY
-	sf::RectangleShape qual;
-	qual.setFillColor(sf::Color::White);
-	qual.setPosition(position + sf::Vector2f(48, 10));
-	qual.setSize(quality.findCharacterPos(item.quality.size()) - quality.findCharacterPos(0) + sf::Vector2f(0,14));
-	target.draw(qual);
-	*/
+	//Draw Rarity
 	target.draw(quality);
 
-	/* DRAW NAME
-	sf::RectangleShape obName;
-	obName.setFillColor(sf::Color::White);
-	obName.setPosition(position + sf::Vector2f(48, 28));
-	obName.setSize(name.findCharacterPos(item.name.size()) - name.findCharacterPos(0) + sf::Vector2f(0,14));
-	target.draw(obName);
-	*/
+	//Draw Name
 	target.draw(name);
 
-	/* DRAW Stats
-	sf::RectangleShape st;
-	st.setFillColor(sf::Color::White);
-	st.setPosition(position + sf::Vector2f(10, 48));
-	st.setSize(stats.findCharacterPos(item.stats.size()) - stats.findCharacterPos(0) + sf::Vector2f(0, 14));
-	target.draw(st);
-	*/
+	//Draw Stats
 	target.draw(stats);
 
-	/* DRAW Description
-	sf::RectangleShape ds;
-	ds.setFillColor(sf::Color::White);
-	ds.setPosition(position + sf::Vector2f(10, 48 + st.getSize().y + 8));
-	ds.setSize(description.findCharacterPos(item.description.size()) - description.findCharacterPos(0) + sf::Vector2f(0, 14));
-	target.draw(ds);
-	*/
+	//Draw Description
 	target.draw(description);
 
-	/* DRAW TYPE
-	sf::RectangleShape typed;
-	typed.setFillColor(sf::Color::White);
-	typed.setPosition(position + sf::Vector2f(10, size.y - 24));
-	typed.setSize(type.findCharacterPos(item.type.size()) - type.findCharacterPos(0) + sf::Vector2f(0, 14));
-	target.draw(typed);
-	*/
+	//Draw Type
 	target.draw(type);
 
-	/* DRAW VALUE
-	sf::RectangleShape val;
-	val.setFillColor(sf::Color::White);
-	val.setPosition(position + sf::Vector2f(size.x - 50, size.y - 24));
-	val.setSize(value.findCharacterPos(item.value.size()) - value.findCharacterPos(0) + sf::Vector2f(0, 14));
-	target.draw(val);
-	*/
+	//Draw Value
 	target.draw(value);
 	sf::CircleShape coin;
 	coin.setFillColor(sf::Color(230, 181, 60));
@@ -81,6 +38,51 @@ void ItemUI::DrawSelf(sf::RenderTarget& target) {
 
 	//Draw buttons
 	DrawButtons(target);
+
+/* Control Shapes
+	//DRAW ICON
+	sf::RectangleShape icon;
+	icon.setFillColor(sf::Color::White);
+	icon.setPosition(position + sf::Vector2f(10, 10));
+	icon.setSize(sf::Vector2f(32,32));
+	target.draw(icon);
+	// DRAW QUALITY
+	sf::RectangleShape qual;
+	qual.setFillColor(sf::Color::White);
+	qual.setPosition(position + sf::Vector2f(48, 10));
+	qual.setSize(quality.findCharacterPos(item.quality.size()) - quality.findCharacterPos(0) + sf::Vector2f(0,14));
+	target.draw(qual);
+	//DRAW NAME
+	sf::RectangleShape obName;
+	obName.setFillColor(sf::Color::White);
+	obName.setPosition(position + sf::Vector2f(48, 28));
+	obName.setSize(name.findCharacterPos(item.name.size()) - name.findCharacterPos(0) + sf::Vector2f(0,14));
+	target.draw(obName);
+	// DRAW Stats
+	sf::RectangleShape st;
+	st.setFillColor(sf::Color::White);
+	st.setPosition(position + sf::Vector2f(10, 48));
+	st.setSize(stats.findCharacterPos(item.stats.size()) - stats.findCharacterPos(0) + sf::Vector2f(0, 14));
+	target.draw(st);
+	// DRAW Description
+	sf::RectangleShape ds;
+	ds.setFillColor(sf::Color::White);
+	ds.setPosition(position + sf::Vector2f(10, 48 + st.getSize().y + 8));
+	ds.setSize(description.findCharacterPos(item.description.size()) - description.findCharacterPos(0) + sf::Vector2f(0, 14));
+	target.draw(ds);
+	// DRAW TYPE
+	sf::RectangleShape typed;
+	typed.setFillColor(sf::Color::White);
+	typed.setPosition(position + sf::Vector2f(10, size.y - 24));
+	typed.setSize(type.findCharacterPos(item.type.size()) - type.findCharacterPos(0) + sf::Vector2f(0, 14));
+	target.draw(typed);
+	// DRAW VALUE
+	sf::RectangleShape val;
+	val.setFillColor(sf::Color::White);
+	val.setPosition(position + sf::Vector2f(size.x - 50, size.y - 24));
+	val.setSize(value.findCharacterPos(item.value.size()) - value.findCharacterPos(0) + sf::Vector2f(0, 14));
+	target.draw(val);
+*/
 }
 
 void ItemUI::SelfInit() {
@@ -144,10 +146,10 @@ void ItemUI::SetButtons() {
 
 	//Creating Buttons
 	sf::Vector2f size(35, 35);
-	Button b0("leave");	//leave
-	Button b1("move");	//move
-	Button b2("use");	//use
-	Button b3("del");	//delete
+	Button b0("inv_icons", 0);	//leave
+	Button b1("inv_icons", 1);	//move
+	Button b2("inv_icons", 2);	//use
+	Button b3("inv_icons", 3);	//delete
 
 	//Remembering buttons
 	buttons.push_back(b0);
@@ -159,7 +161,7 @@ void ItemUI::SetButtons() {
 	sf::Vector2f newPos(position + sf::Vector2f(10, statW + descW + 52));
 	for (int i = 0; i < buttons.size(); i++) {
 		buttons[i].Init(newPos, size);
-		newPos += sf::Vector2f(40, 0);
+		newPos += sf::Vector2f(48, 0);
 	}
 	buttons[focus].SetFocus();
 }

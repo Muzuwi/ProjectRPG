@@ -9,6 +9,8 @@
 class ItemUI : public Window {
 protected:
 	const sf::Font& font;
+
+	//Content to display
 	sf::Text name;
 	sf::Text type;
 	sf::Text value;
@@ -16,12 +18,20 @@ protected:
 	sf::Text stats;
 	sf::Text description;
 
+	//Dynamic Height of Statistics and Description
 	double statW;
 	double descW;
+
+	//IsActive Flag
 	bool active;
 
+	//Source of Content
 	const Item& item;
+
+	//Managing Buttons
 	std::vector<Button> buttons;
+
+	//Index of current focus
 	unsigned int focus;
 public:
 	ItemUI(const Item&);
