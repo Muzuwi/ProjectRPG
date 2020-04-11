@@ -2,7 +2,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "World/Map.hpp"
-#include "Graphics/TextureManager.hpp"
+#include "AssetManager.hpp"
 #include "Tool.hpp"
 #include "Brush.hpp"
 #include "TilePicker.hpp"

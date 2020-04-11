@@ -2,7 +2,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "World/WorldManager.hpp"
-#include "Graphics/TextureManager.hpp"
+#include "AssetManager.hpp"
 #include "Interface/Hud.hpp"
 #include "Interface/GameUI.hpp"
 #include "Sound/SoundEngine.hpp"

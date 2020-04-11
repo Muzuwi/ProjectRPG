@@ -2,7 +2,7 @@
 #include "Tool.hpp"
 #include "imgui.h"
 #include "imgui/imgui-SFML.h"
-#include "Graphics/TextureManager.hpp"
+#include "AssetManager.hpp"
 
 class Brush : public Tool {
 	bool collision;

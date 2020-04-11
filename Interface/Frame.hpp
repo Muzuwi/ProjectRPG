@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Graphics/TextureManager.hpp"
+#include "AssetManager.hpp"
 
 class Frame {
 protected:

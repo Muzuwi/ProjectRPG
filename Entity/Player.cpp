@@ -1,21 +1,21 @@
 #include "World/Tile.hpp"
-#include "Graphics/TextureManager.hpp"
+#include "AssetManager.hpp"
 #include "Player.hpp"
 
 void Player::draw(sf::RenderTarget &target) const {
 	sf::Sprite sprite;
 	switch(facing) {
 		case Direction::Up:
-			sprite = TextureManager::get()->getSpritesheet("playersprite").getSprite(3, isMoving ? (frameCounter / movementSpeed) % 4 : 0 );
+			sprite = AssetManager::getCharacter("playersprite").getSprite(3, isMoving ? (frameCounter / movementSpeed) % 4 : 0 );
 			break;
 		case Direction::Down:
-			sprite = TextureManager::get()->getSpritesheet("playersprite").getSprite(0, isMoving ? (frameCounter / movementSpeed) % 4: 0 );
+			sprite = AssetManager::getCharacter("playersprite").getSprite(0, isMoving ? (frameCounter / movementSpeed) % 4: 0 );
 			break;
 		case Direction::Left:
-			sprite = TextureManager::get()->getSpritesheet("playersprite").getSprite(1, isMoving ? (frameCounter / movementSpeed) %4: 0 );
+			sprite = AssetManager::getCharacter("playersprite").getSprite(1, isMoving ? (frameCounter / movementSpeed) %4: 0 );
 			break;
 		case Direction::Right:
-			sprite = TextureManager::get()->getSpritesheet("playersprite").getSprite(2, isMoving ? (frameCounter / movementSpeed) %4: 0 );
+			sprite = AssetManager::getCharacter("playersprite").getSprite(2, isMoving ? (frameCounter / movementSpeed) %4: 0 );
 			break;
 		default: break;
 	}

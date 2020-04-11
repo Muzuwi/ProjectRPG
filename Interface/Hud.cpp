@@ -3,11 +3,11 @@
 Hud::Hud() { }
 
 void Hud::Init() {
-	hp = TextureManager::get()->getSpritesheet("hp_fill").getSprite();
-	mp = TextureManager::get()->getSpritesheet("mp_fill").getSprite();
-	base = TextureManager::get()->getSpritesheet("hud_empty").getSprite();
-	cricleL = TextureManager::get()->getSpritesheet("hud_cricle").getSprite();
-	cricleR = TextureManager::get()->getSpritesheet("hud_cricle").getSprite();
+	hp = AssetManager::getUI("hp_fill").getSprite();
+	mp = AssetManager::getUI("mp_fill").getSprite();
+	base = AssetManager::getUI("hud_empty").getSprite();
+	cricleL = AssetManager::getUI("hud_cricle").getSprite();
+	cricleR = AssetManager::getUI("hud_cricle").getSprite();
 
 	base.setPosition(Vec2f(0.f, 300.f));
 	hp.setPosition(Vec2f(1.f, 466.f));

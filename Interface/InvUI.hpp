@@ -9,7 +9,7 @@
 class InvUI : public Window{
 protected:
 	sf::Text title;
-	vector<Cell> backpack;
+	std::vector<Cell> backpack;
 	int focus;
 	bool sub;
 

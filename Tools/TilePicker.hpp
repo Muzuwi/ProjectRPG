@@ -1,7 +1,7 @@
 #pragma once
 #include "imgui/imgui-SFML.h"
 #include "imgui/imgui.h"
-#include "Graphics/TextureManager.hpp"
+#include "AssetManager.hpp"
 #include "World/Tile.hpp"
 #include "Types.hpp"
 
@@ -20,7 +20,7 @@ public:
 
 	void init(const std::string& palette) {
 		palettename = palette;
-		spritesheet = &TextureManager::get()->getSpritesheet(palettename);
+		spritesheet = &AssetManager::getTileset(palettename);
 		auto* texture = spritesheet->getSprite().getTexture();
 		tilesetCountX = (texture->getSize().x / spritesheet->getSpriteSize().x);
 		tilesetCountY = (texture->getSize().y / spritesheet->getSpriteSize().y);

@@ -11,7 +11,7 @@ Window::~Window() {
 void Window::Init(sf::Vector2f p, sf::Vector2f s){
 	position = p;
 	size = s;
-	final.setTexture(TextureManager::get()->getSpritesheet("windowskinv3").getTexture());
+	final.setTexture(AssetManager::getUI("windowskinv3").getTexture());
 	this->SelfInit();
 }
 

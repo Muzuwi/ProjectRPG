@@ -3,7 +3,7 @@
 #include "Tool.hpp"
 #include "imgui.h"
 #include "imgui/imgui-SFML.h"
-#include "Graphics/TextureManager.hpp"
+#include "AssetManager.hpp"
 #include "Entity/NPC.hpp"
 
 class NPCCreator : public Tool {
@@ -15,7 +15,7 @@ class NPCCreator : public Tool {
 
 	void drawCreatorUI(Vec2u hoverCoords, sf::RenderTarget &target) {
 		if(ImGui::BeginCombo("Spritesheet", selectedSpritesheet.c_str())) {
-			for(const auto& key : TextureManager::get()->getAllSpritesheets() ) {
+			for(const auto& key : AssetManager::getAllCharacters() ) {
 				std::string name = key.first + " (" + std::to_string(key.second.getSpriteSize().x)
 				                   + "x" + std::to_string(key.second.getSpriteSize().y) + ")";
 				if(ImGui::Selectable(name.c_str()))
@@ -34,7 +34,7 @@ class NPCCreator : public Tool {
 			scriptFilename = std::string(scriptFname);
 			if(!selectedSpritesheet.empty() && !scriptFilename.empty()) {
 				if(selectedNPC) {
-					selectedNPC->spritesheet = TextureManager::get()->getSpritesheet(selectedSpritesheet);
+					selectedNPC->spritesheet = AssetManager::getTileset(selectedSpritesheet);
 					selectedNPC->scriptName = scriptFilename;
 				}
 				else pickingLocation = true;

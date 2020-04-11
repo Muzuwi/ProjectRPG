@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "Graphics/TextureManager.hpp"
+#include "AssetManager.hpp"
 #include "Graphics/Spritesheet.hpp"
 #include "Interface/Button.hpp"
 #include "Interface/Window.hpp"
@@ -14,7 +14,7 @@ private:
 	void SelfInit();
 	//Buttons
 	int focus; // Focus index
-	vector<Button> buttons;
+	std::vector<Button> buttons;
 public:
 	SettUI();
 	void SetButtons();

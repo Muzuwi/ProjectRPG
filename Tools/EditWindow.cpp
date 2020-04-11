@@ -150,7 +150,7 @@ bool EditWindow::drawCommonWindows() {
 			ImGui::InputInt("Height", &height);
 			ImGui::InputInt("Default Tile", &type);
 			if(ImGui::BeginCombo("Spritesheet", selectedSpritesheet.c_str())) {
-				for(const auto& key : TextureManager::get()->getAllSpritesheets() ) {
+				for(const auto& key : AssetManager::getAllTilesets() ) {
 					std::string name = key.first + " (" + std::to_string(key.second.getSpriteSize().x)
 					                   + "x" + std::to_string(key.second.getSpriteSize().y) + ")";
 					if(ImGui::Selectable(name.c_str()))

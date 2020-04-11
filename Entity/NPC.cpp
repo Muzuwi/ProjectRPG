@@ -1,5 +1,5 @@
 #include "World/Tile.hpp"
-#include "Graphics/TextureManager.hpp"
+#include "AssetManager.hpp"
 #include "NPC.hpp"
 #include "Script.hpp"
 
@@ -47,7 +47,7 @@ Vec2u NPC::getDimensions() const {
 }
 
 NPC::NPC(const std::string &texture, Vec2u worldPos, const std::string& scrName)
-: Actor(1, 5, worldPos), spritesheet(TextureManager::get()->getSpritesheet(texture))
+: Actor(1, 5, worldPos), spritesheet(AssetManager::getCharacter(texture))
 {
 	spritesheetName = texture;
 	scriptName = scrName;

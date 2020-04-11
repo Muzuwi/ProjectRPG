@@ -60,11 +60,11 @@ void SettUI::Update(int change) {
 
 void SettUI::Call() {
 	//Obsługa Przycisków
-	if (focus == 0) cout << "* Audio Settings *" << endl; //Audio subwindow
-	if (focus == 1) cout << "* Video Settings *" << endl; //Music subwindow
-	if (focus == 2) cout << "* Credits: *" << endl << "-> Lukasz Kedziora" << endl << "-> Maciej Tomaszewski" << endl; //Credits scene
-	if (focus == 3) cout << "* Someday you will go to Main Menu *" << endl; //Main menu
-	if (focus == 4) cout << "* Someday I will close window *" << endl; //Close window
+	if (focus == 0) std::cout << "* Audio Settings *" << std::endl; //Audio subwindow
+	if (focus == 1) std::cout << "* Video Settings *" << std::endl; //Music subwindow
+	if (focus == 2) std::cout << "* Credits: *" << std::endl << "-> Lukasz Kedziora" << std::endl << "-> Maciej Tomaszewski" << std::endl; //Credits scene
+	if (focus == 3) std::cout << "* Someday you will go to Main Menu *" << std::endl; //Main menu
+	if (focus == 4) std::cout << "* Someday I will close window *" << std::endl; //Close window
 }
 
 void SettUI::ProcessKey(sf::Event::KeyEvent key) {

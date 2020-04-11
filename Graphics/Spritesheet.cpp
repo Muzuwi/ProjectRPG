@@ -7,8 +7,6 @@ Spritesheet::Spritesheet(sf::Texture &&texture, Vec2u defaultDimensions) {
 	m_sprite_size = defaultDimensions;
 	m_animations = texture.getSize().y / defaultDimensions.y;
 	m_frames = texture.getSize().x / defaultDimensions.x;
-	std::cout << "Created spritesheet: texture size " << m_sprite_size.x << "x" << m_sprite_size.y << ", "
-	          << "animations: " << m_animations << ", frames: " << m_frames << "\n";
 }
 
 /*

@@ -21,7 +21,7 @@ public:
 	void init(const std::string &palette, TileSet& _tileset) {
 		tileset = &_tileset;
 		palettename = palette;
-		spritesheet = &TextureManager::get()->getSpritesheet(palettename);
+		spritesheet = &AssetManager::getTileset(palettename);
 		auto *texture = spritesheet->getSprite().getTexture();
 		tilesetCountX = (texture->getSize().x / spritesheet->getSpriteSize().x);
 		tilesetCountY = (texture->getSize().y / spritesheet->getSpriteSize().y);

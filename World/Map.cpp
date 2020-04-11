@@ -1,6 +1,6 @@
 #include <fstream>
 #include <memory>
-#include "Graphics/TextureManager.hpp"
+#include "AssetManager.hpp"
 #include "Map.hpp"
 #include "Tools/json.hpp"
 #include "JsonOverloads.hpp"
@@ -103,7 +103,7 @@ void Map::serializeToFile(const std::string &filename) {
 
 
 Map::Map(const Map &map)
-: tileset(TextureManager::get()->getSpritesheet(map.tilesetName), map.tilesetName) {
+: tileset(AssetManager::getTileset(map.tilesetName), map.tilesetName) {
 	this->player = nullptr;
 	this->tilesetName = map.tilesetName;
 	this->size = map.size;
@@ -261,7 +261,7 @@ Map Map::make_empty(Vec2u size, unsigned defType, const std::string& tilesetName
 }
 
 Map::Map(Vec2u size, const std::string &tilesetz)
-: tileset(TextureManager::get()->getSpritesheet(tilesetz), tilesetz){
+: tileset(AssetManager::getTileset(tilesetz), tilesetz){
 	assert(size.x != 0 && size.y != 0);
 	this->player = nullptr;
 	this->size = size;

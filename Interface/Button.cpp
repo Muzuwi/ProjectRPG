@@ -1,6 +1,6 @@
 #include "Button.hpp"
 
-Button::Button(string title) : content(title), Frame(){ }
+Button::Button(std::string title) : content(title), Frame(){ }
 
 void Button::SelfInit() {
 	font.loadFromFile("GameContent/Fonts/arial.ttf");

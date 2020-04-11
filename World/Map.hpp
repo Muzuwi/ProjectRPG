@@ -8,7 +8,7 @@
 #include "Types.hpp"
 #include "Entity/NPC.hpp"
 #include "World/TileSet.hpp"
-#include "Graphics/TextureManager.hpp"
+#include "AssetManager.hpp"
 
 class Map {
 	std::string tilesetName;

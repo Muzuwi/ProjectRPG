@@ -7,7 +7,6 @@ include_directories(.)
 
 add_library(RPGBase
         World/Map.cpp
-        Graphics/TextureManager.cpp
         Entity/Player.cpp
         Graphics/Spritesheet.cpp
         World/WorldManager.cpp
@@ -19,6 +18,8 @@ add_library(RPGBase
         Sound/SoundEngine.cpp
         Item.cpp
         Interface/DialogEngine.cpp
+        Interface/Window.cpp
+        AssetManager.cpp
         )
 
 
