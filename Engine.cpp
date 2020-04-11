@@ -1,5 +1,6 @@
 #include <memory>
 #include "Engine.hpp"
+#include "World/Item.hpp"
 
 bool Engine::Init() {
 	window = std::make_shared<sf::RenderWindow>(sf::VideoMode(windowWidth, windowHeight, 32), "Projekt");
@@ -12,6 +13,16 @@ bool Engine::Init() {
 
 	if(!mapTexture.create(world.getMap().getWidth() * Tile::dimensions(), world.getMap().getHeight() * Tile::dimensions()))
 		return false;
+
+	Item item {"sword", 1};
+
+	world.getPlayer().getInventory().addItem(item);
+	world.getPlayer().getInventory().addItem(item);
+	world.getPlayer().getInventory().addItem({"coin", 40});
+	world.getPlayer().getInventory().addItem({"coin", 40});
+	world.getPlayer().getInventory().addItem({"coin", 40});
+	world.getPlayer().getInventory().addItem({"coin", 40});
+	world.getPlayer().getInventory().addItem({"coin", 40});
 
 	return true;
 }
