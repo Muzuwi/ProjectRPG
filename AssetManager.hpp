@@ -12,9 +12,11 @@ private:
 	std::unordered_map<std::string, Spritesheet> tilesets;
 	std::unordered_map<std::string, Spritesheet> characters;
 	std::unordered_map<std::string, nlohmann::json> config;
+	std::unordered_map<std::string, sf::Font> fonts;
 
 	bool addSpritesheet(const std::string& resourcePath, std::unordered_map<std::string, Spritesheet>& map, Vec2u (*partitioner)(Vec2u textureSize) = nullptr);
 	bool addJsonFile(const std::string& resourcePath);
+	bool addFont(const std::string& resourcePath);
 
 	static std::string getFilenameFromPath(const std::string& path);
 public:
@@ -57,6 +59,15 @@ public:
 		}
 
 		return get().config[name];
+	}
+
+	static const sf::Font& getFont(const std::string& name) {
+		if(get().fonts.find(name) == get().fonts.end()) {
+			std::cerr << "Font '" << name << "' does not exist!\n";
+			throw std::runtime_error("Requested non-existant font '" + name + "'");
+		}
+
+		return get().fonts[name];
 	}
 
 

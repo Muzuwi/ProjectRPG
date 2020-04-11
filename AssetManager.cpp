@@ -57,6 +57,18 @@ bool AssetManager::addJsonFile(const std::string &resourcePath) {
 }
 
 
+bool AssetManager::addFont(const std::string &resourcePath) {
+	sf::Font font;
+	if(!font.loadFromFile(resourcePath))
+		return false;
+
+	std::string name = AssetManager::getFilenameFromPath(resourcePath);
+	fonts[name] = font;
+
+	return true;
+}
+
+
 /*
  *  Automatycznie ładuje z folderu GameContent wszystkie możliwe tekstury
  */
@@ -96,7 +108,18 @@ void AssetManager::autoload() {
 			addSpritesheet(entry.path().string(), UI);
 		}
 	}
+
+	//  Ładowanie czcionek
+	for(const auto& entry : fs::directory_iterator("GameContent/Fonts/")) {
+		if(entry.is_regular_file()) {
+			std::cout << "AssetManager::autoload()/ Adding font " << entry.path().filename() << "\n";
+			addFont(entry.path().string());
+		}
+	}
+
+	addJsonFile("GameContent/ItemList.json");
 }
+
 
 std::string AssetManager::getFilenameFromPath(const std::string &path) {
 	std::string name = path;
