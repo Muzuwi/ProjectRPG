@@ -25,8 +25,9 @@ private:
 	StatUI stats;
 	InvUI eq;
 	Hud hud;
+	Player& player;
 public:
-	GameUI();
+	GameUI(Player& player);
 
 	void Init();
 	void DrawGUI(sf::RenderTarget&,const int&, const int&, const int&, const int&);

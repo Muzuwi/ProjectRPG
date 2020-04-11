@@ -1,6 +1,10 @@
 #include "Interface/Inventory/ItemUI.hpp"
 
-ItemUI::ItemUI(Item toDisp) : item(toDisp), active(false) { }
+ItemUI::ItemUI(const Item& toDisp)
+: item(toDisp), font(AssetManager::getFont("ConnectionSerif")), active(false)
+{
+
+}
 
 void ItemUI::DrawSelf(sf::RenderTarget& target) {
 	/*DRAW ICON
@@ -13,7 +17,8 @@ void ItemUI::DrawSelf(sf::RenderTarget& target) {
 	Frame iconBack;
 	iconBack.Init(position + sf::Vector2f(10, 10), sf::Vector2f(32, 32));
 	iconBack.Draw(target);
-	item.Draw(position + sf::Vector2f(10, 10), target);
+
+	item.draw(target, position + sf::Vector2f(10, 10));
 
 	/* DRAW QUALITY
 	sf::RectangleShape qual;
@@ -79,55 +84,46 @@ void ItemUI::DrawSelf(sf::RenderTarget& target) {
 }
 
 void ItemUI::SelfInit() {
-	item.Init("sword");
-
-	//CONTENT
-	font.loadFromFile("GameContent/Fonts/ConnectionSerif.otf");
-
 	//Quality
 	quality.setFont(font);
-	quality.setString(item.quality);
-	if(item.quality == "Legendarny") quality.setFillColor(sf::Color::Red);
-	else if(item.quality == "Unikat") quality.setFillColor(sf::Color::Green);
-	else if(item.quality == "Rzadki") quality.setFillColor(sf::Color::Yellow);
-	else if(item.quality == "Magiczny") quality.setFillColor(sf::Color::Blue);
-	else if(item.quality == "Pospolite") quality.setFillColor(sf::Color::White);
+	quality.setString(Item::getRarityString(item.getRarity()));
+	quality.setFillColor(Item::getRarityColor(item.getRarity()));
 	quality.setCharacterSize(16);
 
 	//Name
 	name.setFont(font);
-	name.setString(item.name);
+	name.setString(item.getName());
 	name.setFillColor(sf::Color::Black);
 	name.setCharacterSize(15);
 
 	//Stat
 	stats.setFont(font);
-	stats.setString(item.stats);
+	stats.setString(item.getStats());
 	stats.setFillColor(sf::Color::White);
 	stats.setCharacterSize(15);
 
 	//Descr
 	description.setFont(font);
-	description.setString(item.description);
+	description.setString(item.getDescription());
 	description.setFillColor(sf::Color::Black);
 	description.setCharacterSize(15);
 
 	//type
 	type.setFont(font);
-	type.setString(item.type);
+	type.setString(item.getTypeString(item.getType()));
 	type.setFillColor(sf::Color::Black);
 	type.setCharacterSize(15);
 
 	//value
 	value.setFont(font);
-	value.setString(item.value);
+	value.setString(std::to_string(item.getValue()));
 	value.setFillColor(sf::Color::Black);
 	value.setCharacterSize(15);
 
 	//SIZE AND POSITION
 	double w = 200, h;
-	statW = (stats.findCharacterPos(item.stats.size()) - stats.findCharacterPos(0)).y + 14 + 8;
-	descW = (description.findCharacterPos(item.description.size()) - description.findCharacterPos(0)).y + 14 + 8;
+	statW = (stats.findCharacterPos(item.getStats().size()) - stats.findCharacterPos(0)).y + 14 + 8;
+	descW = (description.findCharacterPos(item.getDescription().size()) - description.findCharacterPos(0)).y + 14 + 8;
 	h = 158 + statW + descW;
 	size += sf::Vector2f(w, h);
 	position += sf::Vector2f(-(size.x - 5), 30);
@@ -160,10 +156,10 @@ void ItemUI::SetButtons() {
 	buttons.push_back(b3);
 
 	//Initializing
-	sf::Vector2f position(position + sf::Vector2f(10, statW + descW + 52));
+	sf::Vector2f newPos(position + sf::Vector2f(10, statW + descW + 52));
 	for (int i = 0; i < buttons.size(); i++) {
-		buttons[i].Init(position, size);
-		position += sf::Vector2f(40, 0);
+		buttons[i].Init(newPos, size);
+		newPos += sf::Vector2f(40, 0);
 	}
 	buttons[focus].SetFocus();
 }

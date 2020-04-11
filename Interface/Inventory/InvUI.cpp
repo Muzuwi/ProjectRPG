@@ -1,12 +1,16 @@
 #include "InvUI.hpp"
 
-InvUI::InvUI() { }
+InvUI::InvUI(PlayerInventory& _inventory)
+: inventory(_inventory)
+{
+
+}
 
 void InvUI::DrawSelf(sf::RenderTarget& target) {
 	target.draw(title);
 	DrawButtons(target);
-	if (subWin.isActive()) {
-		subWin.Draw(target);
+	if (subWin && subWin->isActive()) {
+		subWin->Draw(target);
 	}
 }
 
@@ -18,62 +22,60 @@ void InvUI::SelfInit() {
 	title.setPosition(sf::Vector2f(600.f, 15.f));
 	SetButtons();
 	sub = false;
-
-	Item item("Ostrze burzy",
-		"Legendarny",
-		"One-Handed",
-		"6900",
-		"Attack: 3 - 5\nLightning: 1 - 2\nParry: 20%",
-		"To legendarne ostrze\nzostalo wykute w\nniebianskiej kuzni\n600 lat temu.");
-	backpack[0].setItem(item);
-	backpack[0].getItem().Init("sword");
 }
 
 void InvUI::SetButtons() {
 	focus = 0;
-	sf::Vector2f size(32, 32);
-	sf::Vector2f position(520, 50);
-
-	for (int i = 0; i < 64; i++) {
-		Cell acc;
-		backpack.push_back(acc);
-	}
-	for (int i = 0; i < 64; i++) {
-		backpack[i].Init(position + sf::Vector2f((i % 8 * 32), (i / 8 * 32)), size);
-	}
-	backpack[focus].SetFocus();
 }
 
 void InvUI::DrawButtons(sf::RenderTarget& target) {
-	for (int i = 0; i < backpack.size(); i++) {
-		backpack[i].Draw(target);
-		backpack[i].getItem().Draw(backpack[i].GetPosition(),target);
+	sf::Vector2f size(32, 32);
+	sf::Vector2f position(520, 50);
+
+	unsigned i = 0;
+	//  Przelatujemy przez wszystkie wskaźniki na itemki w backpacku
+	for(auto& item : inventory.getBackpack()) {
+		Cell itemCell {item};
+		itemCell.Init(position + sf::Vector2f((i % 8 * 32), (i / 8 * 32)), size);
+
+		if(i == focus) itemCell.SetFocus();
+		else itemCell.RemoveFocus();
+
+		itemCell.Draw(target);
+
+		if(item != nullptr) {
+			item->draw(target, itemCell.GetPosition());
+		}
+
+		++i;
 	}
+
 }
 
 void InvUI::Update(int change) {
-	backpack[focus].RemoveFocus();
 	focus = focus + change;
-	if (focus < 0) focus = backpack.size() + focus;
-	else focus = focus % backpack.size();
-	backpack[focus].SetFocus();
+	if (focus < 0) focus = (int)inventory.getBackpack().size() + focus;
+	else focus = focus % inventory.getBackpack().size();
 }
 
 void InvUI::ProcessKey(sf::Event::KeyEvent key) {
-	if (!subWin.isActive()) {
+	if (!subWin || (subWin && !subWin->isActive())) {
 		if (key.code == sf::Keyboard::W) Update(-8);
 		else if (key.code == sf::Keyboard::S) Update(8);
 		else if (key.code == sf::Keyboard::A) Update(-1);
 		else if (key.code == sf::Keyboard::D) Update(1);
 		if (key.code == sf::Keyboard::Space) {
-			if (!backpack[focus].isEmpty()) {
-				subWin = backpack[focus].getItem();
-				subWin.Init(backpack[focus].GetPosition(), sf::Vector2f(0, 0));
-				subWin.ProcessKey(key);
+			if(inventory.getItem(focus) != nullptr) {
+				subWin = std::make_shared<ItemUI>(*inventory.getItem(focus));
+
+				sf::Vector2f offset(520, 50);
+				Vec2f windowPos (position + sf::Vector2f((focus % 8 * 32), (focus / 8 * 32)));
+				subWin->Init(windowPos, sf::Vector2f(0, 0));
+				subWin->ProcessKey(key);
 			}
 		}
 	}
 	else{
-		subWin.ProcessKey(key);
+		subWin->ProcessKey(key);
 	}
 }

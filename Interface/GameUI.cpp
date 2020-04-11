@@ -1,6 +1,9 @@
 #include "GameUI.hpp"
 
-GameUI::GameUI() { current = NONE; }
+GameUI::GameUI(Player& _player)
+: player(_player), eq(_player.getInventory()) {
+	current = NONE;
+}
 
 void GameUI::Init() {
 	settings.Init(sf::Vector2f(250, 100), sf::Vector2f(300, 400));

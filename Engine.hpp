@@ -42,7 +42,9 @@ private:
 	void Update();
 
 public:
-	Engine() {};
+	Engine()
+	: GUI(world.getPlayer()){};
+
 	~Engine() {};
 
 	void Start();

@@ -16,7 +16,6 @@ add_library(RPGBase
         World/TileSet.cpp
         JsonOverloads.cpp
         Sound/SoundEngine.cpp
-        Item.cpp
         Interface/DialogEngine.cpp
         "Interface/Components/Window.cpp"
         AssetManager.cpp

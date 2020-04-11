@@ -4,20 +4,21 @@
 #include "Interface/Components/Window.hpp"
 #include "Interface/Inventory/Cell.hpp"
 #include "Interface/Inventory/ItemUI.hpp"
-#include "Item.hpp"
+#include "Entity/PlayerInventory.hpp"
 
 class InvUI : public Window{
 protected:
 	sf::Text title;
-	std::vector<Cell> backpack;
 	int focus;
 	bool sub;
-	ItemUI subWin;
+	std::shared_ptr<ItemUI> subWin;
+
+	PlayerInventory& inventory;
 
 	void DrawSelf(sf::RenderTarget&)override;
 	void SelfInit();
 public:
-	InvUI();
+	InvUI(PlayerInventory& inventory);
 	void SetButtons();
 	void DrawButtons(sf::RenderTarget&);	//Basicly its eq KAPPA
 	void ProcessKey(sf::Event::KeyEvent);
