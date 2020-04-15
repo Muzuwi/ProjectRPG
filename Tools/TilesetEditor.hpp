@@ -50,9 +50,12 @@ public:
 		ImGui::SameLine();
 		ImGui::Checkbox("D", &currTile.collision[(unsigned)Direction::Down]);
 
+		ImGui::Text("Collisions");
 		ImGui::Separator();
 
-		ImGui::Text("Collisions");
+		ImGui::InputScalar("Priority", ImGuiDataType_U32, &currTile.priority);
+
+
 		ImGui::SameLine();
 		if(ImGui::Button("Save changes")) {
 			tileset->serializeToFile();

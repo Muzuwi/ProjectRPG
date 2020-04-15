@@ -31,7 +31,7 @@ public:
 				if(tileCoords.x >= map.getWidth() || tileCoords.y >= map.getHeight()) continue;
 
 				map.floorTiles[layer][tileCoords.x][tileCoords.y] = tiles[x][y];
-				map.updateVertexAt(tileCoords, layer);
+				map.initializeVertexArrays();
 			}
 		}
 

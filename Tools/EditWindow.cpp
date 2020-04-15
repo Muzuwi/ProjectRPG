@@ -10,6 +10,9 @@ void EditWindow::start() {
 	editorWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode(width, height), "RPGEditor");
 	editorWindow->setFramerateLimit(60);
 	ImGui::SFML::Init(*editorWindow);
+	ImGuiIO& io = ImGui::GetIO();
+	ImFont* font = io.Fonts->AddFontFromFileTTF("GameContent/Fonts/arial-unicode-ms.ttf", 22.0f);
+	ImGui::SFML::UpdateFontTexture();
 
 	sf::Clock deltaClock;
 	while(editorWindow->isOpen()) {
@@ -17,7 +20,9 @@ void EditWindow::start() {
 		ImGui::SFML::Update(*editorWindow, deltaClock.restart());
 		editorWindow->clear();
 
+		ImGui::PushFont(font);
 		frameLoop();
+		ImGui::PopFont();
 
 		if(MouseMovement.leftClick) leftClickHandler();
 
