@@ -22,13 +22,12 @@ class Map {
 
 	const Player* player;
 
-	sf::VertexArray vertices;
-	sf::VertexBuffer buffer;
+	std::vector<sf::VertexArray> vertices;
+	sf::VertexBuffer buffer[15];
 protected:
 	void drawTiles(sf::RenderTarget&);
 	void drawTiles(sf::RenderTarget&, unsigned);
 	void drawEntities(sf::RenderTarget&);
-	void updateVertexAt(Vec2u pos, unsigned layer);
 	Map(Vec2u size, const std::string& tileset);
 
 	void serializeToFile(const std::string& file);

@@ -113,59 +113,80 @@ Map::Map(const Map &map)
 	}
 	this->vertices = map.vertices;
 	this->npcs = map.npcs;
-	this->buffer = map.buffer;
+
+	for(unsigned i = 0; i < 15; i++) {
+		this->buffer[i] = map.buffer[i];
+	}
 }
 
 void Map::draw(sf::RenderTarget &target) {
-	this->drawTiles(target);
+
+	for(unsigned layer = 0; layer < 3; layer++) {
+		target.draw(buffer[5* layer + 0], &tileset.getTexture());
+	}
+
 	this->drawEntities(target);
+
+	for(unsigned layer = 0; layer < 3; layer++) {
+		for(unsigned priority = 1; priority < 5; priority++) {
+			target.draw(buffer[5* layer + priority], &tileset.getTexture());
+		}
+	}
+
 }
 
 void Map::initializeVertexArrays() {
-	unsigned vertexCount = 3 * size.x * size.y * 4;
-	vertices = sf::VertexArray(sf::Quads, vertexCount);
+	for(auto & vertice : vertices) {
+		vertice.clear();
+	}
+
+	vertices.resize(3 * 5);
 
 	for(unsigned layer = 0; layer < 3; ++layer) {
 		for(unsigned i = 0; i < size.x; i++) {
 			for(unsigned j = 0; j < size.y; j++) {
-				this->updateVertexAt(Vec2u(i, j), layer);
+				if(floorTiles[layer][i][j] == 0) continue;
+
+				auto& tileType = floorTiles[layer][i][j];
+				unsigned priority = tileset.getTile(tileType).getPriority();
+				auto textureCoords = tileset.getSpritesheet().getTextureCoordinates(tileType);
+
+				auto& whichArray = vertices[5* layer + priority];
+				unsigned nsize = whichArray.getVertexCount() + 4;
+				whichArray.resize(nsize);
+
+				unsigned first = layer * size.x * size.y * 4;
+				unsigned offset = first + (i + j*size.x) * 4;
+
+				sf::Vertex* quad = &whichArray[nsize - 4];
+				quad[0].position = sf::Vector2f(i * Tile::dimensions(), j * Tile::dimensions());
+				quad[1].position = sf::Vector2f((i + 1) * Tile::dimensions(), j * Tile::dimensions());
+				quad[2].position = sf::Vector2f((i + 1) * Tile::dimensions(), (j + 1) * Tile::dimensions());
+				quad[3].position = sf::Vector2f(i * Tile::dimensions(), (j + 1) * Tile::dimensions());
+
+				quad[0].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top);
+				quad[1].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top);
+				quad[2].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top+textureCoords.height);
+				quad[3].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top+textureCoords.height);
 			}
 		}
 	}
 
-	if(!buffer.create(vertexCount)) {
-		if(!sf::VertexBuffer::isAvailable())
-			throw std::runtime_error("Your system does not support Vertex Buffers, which are required tu run the engine");
-		else
-			throw std::runtime_error("Vertex Buffer object creation for map failed");
+	for(unsigned i = 0; i < 15; i++) {
+		if(vertices[i].getVertexCount() == 0) {
+			continue;
+		}
+
+		if(!buffer[i].create(vertices[i].getVertexCount())) {
+			if(!sf::VertexBuffer::isAvailable())
+				throw std::runtime_error("Your system does not support Vertex Buffers, which are required tu run the engine");
+			else
+				throw std::runtime_error("Vertex Buffer object creation for map failed");
+		}
+
+		buffer[i].setPrimitiveType(sf::Quads);
+		buffer[i].update(&vertices[i][0], vertices[i].getVertexCount(), 0);
 	}
-
-	buffer.setPrimitiveType(sf::Quads);
-	buffer.update(&vertices[0], 3*size.x*size.y*4, 0);
-}
-
-void Map::updateVertexAt(Vec2u pos, unsigned layer) {
-	assert(layer < 3);
-	auto i = pos.x,
-		 j = pos.y;
-
-	unsigned first = layer * size.x * size.y * 4;
-	unsigned offset = first + (i + j*size.x) * 4;
-
-	sf::Vertex* quad = &vertices[offset];
-	quad[0].position = sf::Vector2f(i * Tile::dimensions(), j * Tile::dimensions());
-	quad[1].position = sf::Vector2f((i + 1) * Tile::dimensions(), j * Tile::dimensions());
-	quad[2].position = sf::Vector2f((i + 1) * Tile::dimensions(), (j + 1) * Tile::dimensions());
-	quad[3].position = sf::Vector2f(i * Tile::dimensions(), (j + 1) * Tile::dimensions());
-
-	auto& tileType = floorTiles[layer][i][j];
-	auto textureCoords = tileset.getSpritesheet().getTextureCoordinates(tileType);
-	quad[0].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top);
-	quad[1].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top);
-	quad[2].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top+textureCoords.height);
-	quad[3].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top+textureCoords.height);
-
-	buffer.update(quad, 4, offset);
 }
 
 
@@ -204,7 +225,9 @@ NPC* Map::findNPC(Vec2u pos) {
  *  Rysowanie wszystkich kafli mapy
  */
 void Map::drawTiles(sf::RenderTarget &target) {
-	target.draw(buffer, &tileset.getTexture());
+	for(auto& buf : buffer) {
+		target.draw(buf, &tileset.getTexture());
+	}
 }
 
 /*
@@ -213,8 +236,9 @@ void Map::drawTiles(sf::RenderTarget &target) {
 void Map::drawTiles(sf::RenderTarget &target, unsigned layer) {
 	assert(layer < 3);
 
-	unsigned vertexCount = size.x * size.y * 4;
-	target.draw(buffer, vertexCount * layer, vertexCount, &tileset.getTexture());
+	for(unsigned i = 0; i < 5; i++) {
+		target.draw(buffer[5* layer + i], &tileset.getTexture());
+	}
 }
 
 
