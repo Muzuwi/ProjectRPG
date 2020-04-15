@@ -66,6 +66,12 @@ void Engine::ProcessInput() {
 				window->close();
 				break;
 			}
+			case sf::Event::Resized: {
+				this->windowWidth = event.size.width;
+				this->windowHeight = event.size.height;
+				break;
+			}
+
 			case sf::Event::KeyPressed: {
 				if (scene == INGAME) {
 					if (event.key.code == sf::Keyboard::Space) {

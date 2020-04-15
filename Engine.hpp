@@ -19,8 +19,8 @@ enum Focus{
 class Engine
 {
 private:
-	const unsigned windowWidth = 800;
-	const unsigned windowHeight = 600;
+	unsigned windowWidth = 800;
+	unsigned windowHeight = 600;
 
 	std::shared_ptr<sf::RenderWindow> window;
 	sf::RenderTexture mapTexture;
