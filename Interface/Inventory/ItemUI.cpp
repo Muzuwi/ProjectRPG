@@ -1,7 +1,7 @@
 #include "Interface/Inventory/ItemUI.hpp"
 
 ItemUI::ItemUI(const Item& toDisp)
-: item(toDisp), font(AssetManager::getFont("ConnectionSerif")), active(false)
+: item(toDisp), font(AssetManager::getFont("ConnectionSerif")), active(false), mov(false), del(false), use(false)
 {
 
 }
@@ -188,15 +188,18 @@ void ItemUI::Update(int change) {
 void ItemUI::Call() {
 	switch (focus) {
 	case 0:	//leave
-		active = !active;
 		break;
 	case 1:	//move
+		mov = true;
 		break;
 	case 2:	//use
+		use = true;
 		break;
 	case 3:	//delete
+		del = true;
 		break;
 	}
+	active = !active;
 }
 
 void ItemUI::DrawButtons(sf::RenderTarget& target) {

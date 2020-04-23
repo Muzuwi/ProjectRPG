@@ -31,6 +31,7 @@ void InvUI::SetButtons() {
 void InvUI::DrawButtons(sf::RenderTarget& target) {
 	sf::Vector2f size(32, 32);
 	sf::Vector2f position(520, 50);
+	sf::Vector2f ghost_pos;
 
 	unsigned i = 0;
 	//  Przelatujemy przez wszystkie wskaźniki na itemki w backpacku
@@ -38,7 +39,12 @@ void InvUI::DrawButtons(sf::RenderTarget& target) {
 		Cell itemCell {item};
 		itemCell.Init(position + sf::Vector2f((i % 8 * 32), (i / 8 * 32)), size);
 
-		if(i == focus) itemCell.SetFocus();
+		if (i == focus) {
+			itemCell.SetFocus();
+			if (subWin and subWin->MovFlag()) {
+				ghost_pos = itemCell.GetPosition() + sf::Vector2f(5, 5);
+			}
+		}
 		else itemCell.RemoveFocus();
 
 		itemCell.Draw(target);
@@ -72,12 +78,13 @@ void InvUI::DrawButtons(sf::RenderTarget& target) {
 		++i;
 	}
 
+	if (subWin and subWin->MovFlag() and to_move) {
+		to_move->draw(target, ghost_pos, sf::Color(255, 255, 255, 200));
+	}
 }
 
 void InvUI::Update(int change) {
-	focus = focus + change;
-	if (focus < 0) focus = (int)inventory.getBackpack().size() + focus;
-	else focus = focus % inventory.getBackpack().size();
+	focus = (focus + change) % inventory.getBackpack().size();
 }
 
 void InvUI::ProcessKey(sf::Event::KeyEvent key) {
@@ -87,17 +94,36 @@ void InvUI::ProcessKey(sf::Event::KeyEvent key) {
 		else if (key.code == sf::Keyboard::A) Update(-1);
 		else if (key.code == sf::Keyboard::D) Update(1);
 		if (key.code == sf::Keyboard::Space) {
-			if(inventory.getItem(focus) != nullptr) {
-				subWin = std::make_shared<ItemUI>(*inventory.getItem(focus));
+			if (subWin and subWin->MovFlag()) {
+				inventory.swapItems(focus, action_index);
+				subWin->SetMovFlag(false);
+			}
+			else {
+				if (inventory.getItem(focus) != nullptr) {
+					subWin = std::make_shared<ItemUI>(*inventory.getItem(focus));
 
-				sf::Vector2f offset(520, 50);
-				Vec2f windowPos (offset + sf::Vector2f((focus % 8 * 32), (focus / 8 * 32)));
-				subWin->Init(windowPos, sf::Vector2f(0, 0));
-				subWin->ProcessKey(key);
+					sf::Vector2f offset(520, 50);
+					Vec2f windowPos(offset + sf::Vector2f((focus % 8 * 32), (focus / 8 * 32)));
+					subWin->Init(windowPos, sf::Vector2f(0, 0));
+					subWin->ProcessKey(key);
+					action_index = focus;
+				}
 			}
 		}
 	}
 	else{
 		subWin->ProcessKey(key);
+		if (subWin->MovFlag()) {
+			to_move = inventory.getItem(focus);
+		}
+	}
+
+	if (subWin and subWin->DelFlag()) {
+		inventory.deleteItem(action_index);
+		subWin->SetDelFlag(false);
+	}
+	if (subWin and subWin->UseFlag()) {
+		inventory.useItem(action_index);
+		subWin->SetUseFlag(false);
 	}
 }

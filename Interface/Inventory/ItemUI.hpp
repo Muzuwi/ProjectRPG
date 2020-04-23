@@ -24,6 +24,9 @@ protected:
 
 	//IsActive Flag
 	bool active;
+	bool mov;
+	bool del;
+	bool use;
 
 	//Source of Content
 	const Item& item;
@@ -43,5 +46,11 @@ public:
 	void Call();
 	void DrawButtons(sf::RenderTarget&);
 	bool isActive() { return active; }
+	bool MovFlag() { return mov; }
+	bool DelFlag() { return del; }
+	bool UseFlag() { return use; }
+	void SetMovFlag(bool toSet) { mov = toSet; }
+	void SetDelFlag(bool toSet) { del = toSet; }
+	void SetUseFlag(bool toSet) { use = toSet; }
 	void Update(int);
 };

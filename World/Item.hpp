@@ -57,7 +57,7 @@ public:
 	std::string getDescription() const { return "Desc here"; }
 	std::string getStats() const { return "Stats here"; }
 
-	void draw(sf::RenderTarget& target, Vec2f pos) const;
+	void draw(sf::RenderTarget& target, Vec2f pos, sf::Color color = sf::Color::White) const;
 
 	static sf::Color getRarityColor(Rarity);
 	static std::string getRarityString(Rarity);

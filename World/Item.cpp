@@ -121,9 +121,10 @@ std::string Item::getTypeString(ItemType type) {
 	return "undefined";
 }
 
-void Item::draw(sf::RenderTarget &target, Vec2f pos) const {
+void Item::draw(sf::RenderTarget &target, Vec2f pos, sf::Color color) const {
 	auto sprite = AssetManager::getUI(designator).getSprite();
 	sprite.setPosition(pos);
+	sprite.setColor(color);
 	target.draw(sprite);
 }
 

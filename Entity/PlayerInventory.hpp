@@ -61,4 +61,19 @@ public:
 		}) != backpack.end();
 	}
 
+	bool deleteItem(unsigned toDelete) {
+		if (!backpack[toDelete]) return false;
+		else {
+			backpack[toDelete] = nullptr;
+			return true;
+		}
+	}
+
+	bool useItem(unsigned toUse) {
+		if (!backpack[toUse]) return false;
+		else {
+			std::cout << "Uzyto przedmiotu: " << backpack[toUse]->getName() << "." << std::endl;
+			return true;
+		}
+	}
 };

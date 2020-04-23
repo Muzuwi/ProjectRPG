@@ -9,9 +9,11 @@
 class InvUI : public Window{
 protected:
 	sf::Text title;
-	int focus;
+	int focus, action_index;
 	bool sub;
+	bool mov;
 	std::shared_ptr<ItemUI> subWin;
+	std::shared_ptr<Item> to_move;
 
 	PlayerInventory& inventory;
 
