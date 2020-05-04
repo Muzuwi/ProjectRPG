@@ -25,6 +25,14 @@ public:
 		return backpack;
 	}
 
+	const PlayerEquipment& getEquipment() const {
+		return equipment;
+	}
+
+	PlayerEquipment& getEquipment() {
+		return equipment;
+	}
+
 	std::shared_ptr<Item> getItem(unsigned index) {
 		assert(index < backpack.size());
 		return backpack[index];
