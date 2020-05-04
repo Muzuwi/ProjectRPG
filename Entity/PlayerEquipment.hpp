@@ -1,5 +1,6 @@
 #pragma once
 #include "World/Item.hpp"
+#include <array>
 
 enum class EquipmentSlot {
 	LeftHand = 0,

@@ -16,13 +16,15 @@ protected:
 	std::shared_ptr<Item> to_move;
 
 	PlayerInventory& inventory;
+	PlayerEquipment& equipment;
 
 	void DrawSelf(sf::RenderTarget&)override;
 	void SelfInit();
 public:
 	InvUI(Player& inventory);
 	void SetButtons();
-	void DrawButtons(sf::RenderTarget&);	//draw eq cells
+	void DrawInventory(sf::RenderTarget&);	//draw eq cells
+	void DrawEquipment(sf::RenderTarget&);
 	void ProcessKey(sf::Event::KeyEvent);
 	void Update(int);
 };

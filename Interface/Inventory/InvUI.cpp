@@ -1,13 +1,14 @@
 #include "InvUI.hpp"
 
 InvUI::InvUI(Player& entity)
-: inventory(entity.getInventory())
+: inventory(entity.getInventory()), equipment(inventory.getEquipment())
 {
 
 }
 
 void InvUI::DrawSelf(sf::RenderTarget& target) {
-	DrawButtons(target);
+	DrawInventory(target);
+	DrawEquipment(target);
 	target.draw(title);
 	if (subWin && subWin->isActive()) {
 		subWin->Draw(target);
@@ -35,7 +36,7 @@ void InvUI::SetButtons() {
 	focus = 0;
 }
 
-void InvUI::DrawButtons(sf::RenderTarget& target) {
+void InvUI::DrawInventory(sf::RenderTarget& target) {
 	sf::Vector2f cell_size(32, 32);
 	double offset_x = position.x + (size.x / 2.0) + ((size.x / 2.0) - 256.0) / 2.0;
 	double offset_y = position.y + (size.y / 3.0);
@@ -58,38 +59,60 @@ void InvUI::DrawButtons(sf::RenderTarget& target) {
 
 		itemCell.Draw(target);
 
-		if(item != nullptr) {
-			item->draw(target, itemCell.GetPosition());
-		}
-
-		if(item != nullptr && item->getMaxStack() != 1){
-			unsigned counterSize = 10;
-			auto offset = Vec2f {2.0, 2.0};
-
-			auto& font = AssetManager::getFont("ConnectionSerif");
-			std::string count = std::to_string(item->getStack());
-
-			sf::Text itemCount;
-			itemCount.setFont(font);
-			itemCount.setString(count);
-			itemCount.setFillColor(sf::Color::White);
-			itemCount.setOutlineColor(sf::Color::Black);
-			itemCount.setOutlineThickness(1.2);
-			itemCount.setCharacterSize(counterSize);
-
-			auto endPos = itemCount.findCharacterPos(count.size());
-			Vec2f textPos = itemCell.GetPosition() + itemCell.GetSize() - Vec2f{endPos.x,(float)counterSize} - offset;
-			itemCount.setPosition(textPos);
-
-			target.draw(itemCount);
-		}
-
 		++i;
 	}
 
 	if (subWin and subWin->MovFlag() and to_move) {
 		to_move->draw(target, ghost_pos, sf::Color(255, 255, 255, 200));
 	}
+}
+
+void InvUI::DrawEquipment(sf::RenderTarget& target) {
+	sf::Vector2f cell_size(32, 32);
+	double offset_x = position.x + (size.x / 2.0) + ((size.x / 2.0) - 256.0) / 2.0;
+	double offset_y = position.y + 34;
+	sf::Vector2f equipment_offset(offset_x, offset_y);
+	
+	//R-hand
+	Cell R_hand{ equipment.getEquipmentBySlot(EquipmentSlot::RightHand) };
+	R_hand.Init(equipment_offset, cell_size);
+	R_hand.Draw(target);
+
+	//Helmet
+	Cell Helmet{ equipment.getEquipmentBySlot(EquipmentSlot::Helmet) };
+	Helmet.Init(equipment_offset + sf::Vector2f(64, 0), cell_size);
+	Helmet.Draw(target);
+
+	//Chest
+	Cell Chest{ equipment.getEquipmentBySlot(EquipmentSlot::Chest) };
+	Chest.Init(equipment_offset + sf::Vector2f(128, 0), cell_size);
+	Chest.Draw(target);
+
+	//Gloves
+	Cell Gloves{ equipment.getEquipmentBySlot(EquipmentSlot::Gloves) };
+	Gloves.Init(equipment_offset + sf::Vector2f(196, 0), cell_size);
+	Gloves.Draw(target);
+
+	//L-hand
+	equipment_offset += sf::Vector2f(0, 0);
+	Cell L_hand{ equipment.getEquipmentBySlot(EquipmentSlot::LeftHand) };
+	L_hand.Init(equipment_offset + sf::Vector2f(0, 56), cell_size);
+	L_hand.Draw(target);
+
+	//Boots
+	Cell Boots{ equipment.getEquipmentBySlot(EquipmentSlot::Boots) };
+	Boots.Init(equipment_offset + sf::Vector2f(64, 56), cell_size);
+	Boots.Draw(target);
+
+	//Ring
+	Cell Ring{ equipment.getEquipmentBySlot(EquipmentSlot::Ring) };
+	Ring.Init(equipment_offset + sf::Vector2f(128, 56), cell_size);
+	Ring.Draw(target);
+
+	//Necklace
+	Cell Necklace{ equipment.getEquipmentBySlot(EquipmentSlot::Amulet) };
+	Necklace.Init(equipment_offset + sf::Vector2f(196, 56), cell_size);
+	Necklace.Draw(target);
 }
 
 void InvUI::Update(int change) {
