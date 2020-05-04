@@ -23,6 +23,8 @@ enum class ItemType : unsigned {
 
 	EquipRing      = 50,
 	EquipNecklace  = 51,
+	EquipGloves    = 52,
+	EquipBraces    = 53,
 
 	WeaponSword    = 70,
 	WeaponBow      = 71,
