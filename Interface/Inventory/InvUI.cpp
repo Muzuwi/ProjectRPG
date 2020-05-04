@@ -1,14 +1,14 @@
 #include "InvUI.hpp"
 
-InvUI::InvUI(PlayerInventory& _inventory)
-: inventory(_inventory)
+InvUI::InvUI(Player& entity)
+: inventory(entity.getInventory())
 {
 
 }
 
 void InvUI::DrawSelf(sf::RenderTarget& target) {
-	target.draw(title);
 	DrawButtons(target);
+	target.draw(title);
 	if (subWin && subWin->isActive()) {
 		subWin->Draw(target);
 	}
@@ -16,10 +16,17 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 
 void InvUI::SelfInit() {
 	title.setFont(font);
-	title.setString("Inventory");
+	std::string what = "Inventory";
+	title.setString(what);
 	title.setFillColor(sf::Color::Black);
 	title.setCharacterSize(24);
-	title.setPosition(sf::Vector2f(600.f, 15.f));
+
+	sf::Vector2f stringSize = (title.findCharacterPos(what.size()) - title.findCharacterPos(0));
+	stringSize.y = 24.0;
+	double offset_x = position.x + (size.x / 2.0) + ((size.x / 2.0) - stringSize.x) / 2.0;
+	double offset_y = position.y + (size.y / 3.0) - stringSize.y - 8;
+
+	title.setPosition(sf::Vector2f(offset_x, offset_y));
 	SetButtons();
 	sub = false;
 }
@@ -29,15 +36,17 @@ void InvUI::SetButtons() {
 }
 
 void InvUI::DrawButtons(sf::RenderTarget& target) {
-	sf::Vector2f size(32, 32);
-	sf::Vector2f position(520, 50);
+	sf::Vector2f cell_size(32, 32);
+	double offset_x = position.x + (size.x / 2.0) + ((size.x / 2.0) - 256.0) / 2.0;
+	double offset_y = position.y + (size.y / 3.0);
+	sf::Vector2f inventory_offset(offset_x, offset_y);
 	sf::Vector2f ghost_pos;
 
 	unsigned i = 0;
 	//  Przelatujemy przez wszystkie wskaźniki na itemki w backpacku
 	for(auto& item : inventory.getBackpack()) {
 		Cell itemCell {item};
-		itemCell.Init(position + sf::Vector2f((i % 8 * 32), (i / 8 * 32)), size);
+		itemCell.Init(inventory_offset + sf::Vector2f((i % 8 * 32), (i / 8 * 32)), cell_size);
 
 		if (i == focus) {
 			itemCell.SetFocus();
@@ -102,8 +111,10 @@ void InvUI::ProcessKey(sf::Event::KeyEvent key) {
 				if (inventory.getItem(focus) != nullptr) {
 					subWin = std::make_shared<ItemUI>(*inventory.getItem(focus));
 
-					sf::Vector2f offset(520, 50);
-					Vec2f windowPos(offset + sf::Vector2f((focus % 8 * 32), (focus / 8 * 32)));
+					double offset_x = position.x + (size.x / 2.0) + ((size.x / 2.0) - 256.0) / 2.0;
+					double offset_y = position.y + (size.y / 3.0);
+					sf::Vector2f inventory_offset(offset_x, offset_y);
+					Vec2f windowPos(inventory_offset + sf::Vector2f((focus % 8 * 32), (focus / 8 * 32)));
 					subWin->Init(windowPos, sf::Vector2f(0, 0));
 					subWin->ProcessKey(key);
 					action_index = focus;

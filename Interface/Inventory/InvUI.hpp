@@ -4,7 +4,7 @@
 #include "Interface/Components/Window.hpp"
 #include "Interface/Inventory/Cell.hpp"
 #include "Interface/Inventory/ItemUI.hpp"
-#include "Entity/PlayerInventory.hpp"
+#include "Entity/Player.hpp"
 
 class InvUI : public Window{
 protected:
@@ -20,7 +20,7 @@ protected:
 	void DrawSelf(sf::RenderTarget&)override;
 	void SelfInit();
 public:
-	InvUI(PlayerInventory& inventory);
+	InvUI(Player& inventory);
 	void SetButtons();
 	void DrawButtons(sf::RenderTarget&);	//draw eq cells
 	void ProcessKey(sf::Event::KeyEvent);

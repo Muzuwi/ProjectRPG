@@ -1,14 +1,14 @@
 #include "GameUI.hpp"
 
 GameUI::GameUI(Player& _player)
-: player(_player), eq(_player.getInventory()) {
+: player(_player), eq(_player) {
 	current = NONE;
 }
 
 void GameUI::Init() {
 	settings.Init(sf::Vector2f(250, 100), sf::Vector2f(300, 400));
 	stats.Init(sf::Vector2f(0, 0), sf::Vector2f(300, 600));
-	eq.Init(sf::Vector2f(500, 0), sf::Vector2f(300, 600));
+	eq.Init(sf::Vector2f(50, 25), sf::Vector2f(700, 500));
 	hud.Init();
 }
 
