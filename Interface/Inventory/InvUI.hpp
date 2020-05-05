@@ -8,7 +8,8 @@
 
 class InvUI : public Window{
 protected:
-	sf::Text title;
+	const sf::Font& font;
+	sf::Text title_eq, title_inv, title_char;
 	int focus, action_index;
 	bool sub;
 	bool mov;

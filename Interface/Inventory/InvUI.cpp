@@ -1,7 +1,7 @@
 #include "InvUI.hpp"
 
 InvUI::InvUI(Player& entity)
-: inventory(entity.getInventory()), equipment(inventory.getEquipment())
+: inventory(entity.getInventory()), equipment(inventory.getEquipment()), font(AssetManager::getFont("ConnectionSerif"))
 {
 
 }
@@ -10,25 +10,58 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 	DrawSeparator(target);
 	DrawInventory(target);
 	DrawEquipment(target);
-	target.draw(title);
+
+	//static titles
+	target.draw(title_eq);
+	target.draw(title_inv);
+	target.draw(title_char);
+
 	if (subWin && subWin->isActive()) {
 		subWin->Draw(target);
 	}
 }
 
 void InvUI::SelfInit() {
-	title.setFont(font);
-	std::string what = "Inventory";
-	title.setString(what);
-	title.setFillColor(sf::Color::Black);
-	title.setCharacterSize(24);
+	//title_inv
+	title_inv.setFont(font);
+	title_inv.setString("Inventory");
+	title_inv.setFillColor(sf::Color::Black);
+	title_inv.setCharacterSize(21);
 
-	sf::Vector2f stringSize = (title.findCharacterPos(what.size()) - title.findCharacterPos(0));
+	sf::Vector2f stringSize = (title_inv.findCharacterPos(8) - title_inv.findCharacterPos(0));
 	stringSize.y = 24.0;
 	double offset_x = position.x + (size.x / 2.0) + ((size.x / 2.0) - stringSize.x) / 2.0;
 	double offset_y = position.y + (size.y / 3.0) - stringSize.y - 8;
 
-	title.setPosition(sf::Vector2f(offset_x, offset_y));
+	title_inv.setPosition(sf::Vector2f(offset_x, offset_y));
+
+	//title_eq
+	title_eq.setFont(font);
+	title_eq.setString("Equipment");
+	title_eq.setFillColor(sf::Color::Black);
+	title_eq.setCharacterSize(21);
+
+	stringSize = (title_eq.findCharacterPos(8) - title_eq.findCharacterPos(0));
+	stringSize.y = 24.0;
+	offset_x = position.x + (size.x / 2.0) + ((size.x / 2.0) - stringSize.x) / 2.0;
+	offset_y = position.y + 8;
+
+	title_eq.setPosition(sf::Vector2f(offset_x, offset_y));
+
+	//Title Stats
+	title_char.setFont(font);
+	title_char.setString("Character");
+	title_char.setFillColor(sf::Color::Black);
+	title_char.setCharacterSize(21);
+
+	stringSize = (title_char.findCharacterPos(8) - title_char.findCharacterPos(0));
+	stringSize.y = 24.0;
+	offset_x = position.x + ((size.x / 2.0) - stringSize.x) / 2.0;
+	offset_y = position.y + 8;
+
+	title_char.setPosition(sf::Vector2f(offset_x, offset_y));
+
+	//Other
 	SetButtons();
 	sub = false;
 }
@@ -81,7 +114,7 @@ void InvUI::DrawSeparator(sf::RenderTarget& target) {
 void InvUI::DrawEquipment(sf::RenderTarget& target) {
 	sf::Vector2f cell_size(32, 32);
 	double offset_x = position.x + (size.x / 2.0) + ((size.x / 2.0) - 256.0) / 2.0;
-	double offset_y = position.y + 34;
+	double offset_y = position.y + 44;
 	sf::Vector2f equipment_offset(offset_x, offset_y);
 	
 	//R-hand
@@ -91,17 +124,17 @@ void InvUI::DrawEquipment(sf::RenderTarget& target) {
 
 	//Helmet
 	Cell Helmet{ equipment.getEquipmentBySlot(EquipmentSlot::Helmet) };
-	Helmet.Init(equipment_offset + sf::Vector2f(64, 0), cell_size);
+	Helmet.Init(equipment_offset + sf::Vector2f(96, 0), cell_size);
 	Helmet.Draw(target);
 
 	//Chest
 	Cell Chest{ equipment.getEquipmentBySlot(EquipmentSlot::Chest) };
-	Chest.Init(equipment_offset + sf::Vector2f(128, 0), cell_size);
+	Chest.Init(equipment_offset + sf::Vector2f(160, 0), cell_size);
 	Chest.Draw(target);
 
 	//Gloves
 	Cell Gloves{ equipment.getEquipmentBySlot(EquipmentSlot::Gloves) };
-	Gloves.Init(equipment_offset + sf::Vector2f(196, 0), cell_size);
+	Gloves.Init(equipment_offset + sf::Vector2f(224, 0), cell_size);
 	Gloves.Draw(target);
 
 	//L-hand
@@ -112,18 +145,27 @@ void InvUI::DrawEquipment(sf::RenderTarget& target) {
 
 	//Boots
 	Cell Boots{ equipment.getEquipmentBySlot(EquipmentSlot::Boots) };
-	Boots.Init(equipment_offset + sf::Vector2f(64, 56), cell_size);
+	Boots.Init(equipment_offset + sf::Vector2f(96, 56), cell_size);
 	Boots.Draw(target);
 
 	//Ring
 	Cell Ring{ equipment.getEquipmentBySlot(EquipmentSlot::Ring) };
-	Ring.Init(equipment_offset + sf::Vector2f(128, 56), cell_size);
+	Ring.Init(equipment_offset + sf::Vector2f(160, 56), cell_size);
 	Ring.Draw(target);
 
 	//Necklace
 	Cell Necklace{ equipment.getEquipmentBySlot(EquipmentSlot::Amulet) };
-	Necklace.Init(equipment_offset + sf::Vector2f(196, 56), cell_size);
+	Necklace.Init(equipment_offset + sf::Vector2f(224, 56), cell_size);
 	Necklace.Draw(target);
+
+	//small separator
+	sf::RectangleShape separator;
+	sf::Vector2f sep_position = equipment_offset + sf::Vector2f(64, 0);
+	sf::Vector2f sep_size = sf::Vector2f(1, 88);
+	separator.setFillColor(sf::Color::Black);
+	separator.setPosition(sep_position);
+	separator.setSize(sep_size);
+	target.draw(separator);
 }
 
 void InvUI::Update(int change) {
