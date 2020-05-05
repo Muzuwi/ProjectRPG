@@ -7,6 +7,7 @@ InvUI::InvUI(Player& entity)
 }
 
 void InvUI::DrawSelf(sf::RenderTarget& target) {
+	DrawSeparator(target);
 	DrawInventory(target);
 	DrawEquipment(target);
 	target.draw(title);
@@ -65,6 +66,16 @@ void InvUI::DrawInventory(sf::RenderTarget& target) {
 	if (subWin and subWin->MovFlag() and to_move) {
 		to_move->draw(target, ghost_pos, sf::Color(255, 255, 255, 200));
 	}
+}
+
+void InvUI::DrawSeparator(sf::RenderTarget& target) {
+	sf::RectangleShape separator;
+	sf::Vector2f sep_position = sf::Vector2f(position.x + (size.x / 2) , position.y + 8);
+	sf::Vector2f sep_size = sf::Vector2f(2 , size.y - 16);
+	separator.setFillColor(sf::Color::Black);
+	separator.setPosition(sep_position);
+	separator.setSize(sep_size);
+	target.draw(separator);
 }
 
 void InvUI::DrawEquipment(sf::RenderTarget& target) {

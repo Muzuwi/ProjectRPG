@@ -25,6 +25,7 @@ public:
 	void SetButtons();
 	void DrawInventory(sf::RenderTarget&);	//draw eq cells
 	void DrawEquipment(sf::RenderTarget&);
+	void DrawSeparator(sf::RenderTarget&);
 	void ProcessKey(sf::Event::KeyEvent);
 	void Update(int);
 };
