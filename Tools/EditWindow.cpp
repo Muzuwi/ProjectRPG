@@ -11,7 +11,7 @@ void EditWindow::start() {
 	editorWindow->setFramerateLimit(60);
 	ImGui::SFML::Init(*editorWindow);
 	ImGuiIO& io = ImGui::GetIO();
-	ImFont* font = io.Fonts->AddFontFromFileTTF("GameContent/Fonts/arial-unicode-ms.ttf", 22.0f);
+	ImFont* font = io.Fonts->AddFontFromFileTTF("GameContent/Fonts/arial-unicode-ms.ttf", 20.0f);
 	ImGui::SFML::UpdateFontTexture();
 
 	sf::Clock deltaClock;
@@ -37,6 +37,16 @@ void EditWindow::start() {
 void EditWindow::frameLoop() {
 	this->drawMenuBar();
 	this->drawCommonWindows();
+
+	if(EditingMap.isTileChosen || EditingMap.isLoaded) {
+		picker.drawWindow();
+
+		if(picker.getSelection().getX() == 1 && picker.getSelection().getY() == 1)
+			tilesEditor.updateEditing(picker.getSelection()[0][0]);
+
+		if(EditingMap.isLoaded)
+			tilesEditor.drawWindow();
+	}
 
 	if(!EditingMap.isLoaded) return;
 
@@ -83,14 +93,6 @@ void EditWindow::frameLoop() {
 	MouseMovement.hoverCoordinates = (pos + sf::Mouse::getPosition(*editorWindow)) / (int)Tile::dimensions();
 	MouseMovement.hoverCoordinates.x = std::clamp(MouseMovement.hoverCoordinates.x, 0, EditingMap.width-1);
 	MouseMovement.hoverCoordinates.y = std::clamp(MouseMovement.hoverCoordinates.y, 0, EditingMap.height-1);
-
-	picker.drawWindow();
-
-	if(picker.getSelection().getX() == 1 && picker.getSelection().getY() == 1)
-		tilesEditor.updateEditing(picker.getSelection()[0][0]);
-
-	tilesEditor.drawWindow();
-
 
 	if(currentTool) currentTool->drawToolWindow(Vec2u(MouseMovement.hoverCoordinates),*editorWindow);
 }
@@ -158,8 +160,13 @@ bool EditWindow::drawCommonWindows() {
 				for(const auto& key : AssetManager::getAllTilesets() ) {
 					std::string name = key.first + " (" + std::to_string(key.second.getSpriteSize().x)
 					                   + "x" + std::to_string(key.second.getSpriteSize().y) + ")";
-					if(ImGui::Selectable(name.c_str()))
+					if(ImGui::Selectable(name.c_str())) {
 						selectedSpritesheet = key.first;
+						if(!selectedSpritesheet.empty()) {
+							picker.init(selectedSpritesheet);
+							EditingMap.isTileChosen = true;
+						}
+					}
 
 					if(key.first == selectedSpritesheet)
 						ImGui::SetItemDefaultFocus();

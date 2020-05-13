@@ -17,6 +17,7 @@ class EditWindow {
 
 	struct {
 		bool isLoaded = false;
+		bool isTileChosen = false;
 		int width, height;
 		std::string fname;
 		Map mapData = Map({100,100}, "Tileset");
