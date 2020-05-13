@@ -3,8 +3,8 @@
 #include <array>
 
 enum class EquipmentSlot {
-	LeftHand = 0,
-	RightHand,
+	RightHand = 0,
+	LeftHand,
 	Helmet,
 	Gloves,
 	Chest,

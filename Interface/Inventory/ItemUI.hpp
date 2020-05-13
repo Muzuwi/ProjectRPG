@@ -53,4 +53,5 @@ public:
 	void SetDelFlag(bool toSet) { del = toSet; }
 	void SetUseFlag(bool toSet) { use = toSet; }
 	void Update(int);
+	sf::Vector2f getContentSize(std::string, int);
 };

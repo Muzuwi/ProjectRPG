@@ -38,104 +38,54 @@ void ItemUI::DrawSelf(sf::RenderTarget& target) {
 
 	//Draw buttons
 	DrawButtons(target);
-
-/* Control Shapes
-	//DRAW ICON
-	sf::RectangleShape icon;
-	icon.setFillColor(sf::Color::White);
-	icon.setPosition(position + sf::Vector2f(10, 10));
-	icon.setSize(sf::Vector2f(32,32));
-	target.draw(icon);
-	// DRAW QUALITY
-	sf::RectangleShape qual;
-	qual.setFillColor(sf::Color::White);
-	qual.setPosition(position + sf::Vector2f(48, 10));
-	qual.setSize(quality.findCharacterPos(item.quality.size()) - quality.findCharacterPos(0) + sf::Vector2f(0,14));
-	target.draw(qual);
-	//DRAW NAME
-	sf::RectangleShape obName;
-	obName.setFillColor(sf::Color::White);
-	obName.setPosition(position + sf::Vector2f(48, 28));
-	obName.setSize(name.findCharacterPos(item.name.size()) - name.findCharacterPos(0) + sf::Vector2f(0,14));
-	target.draw(obName);
-	// DRAW Stats
-	sf::RectangleShape st;
-	st.setFillColor(sf::Color::White);
-	st.setPosition(position + sf::Vector2f(10, 48));
-	st.setSize(stats.findCharacterPos(item.stats.size()) - stats.findCharacterPos(0) + sf::Vector2f(0, 14));
-	target.draw(st);
-	// DRAW Description
-	sf::RectangleShape ds;
-	ds.setFillColor(sf::Color::White);
-	ds.setPosition(position + sf::Vector2f(10, 48 + st.getSize().y + 8));
-	ds.setSize(description.findCharacterPos(item.description.size()) - description.findCharacterPos(0) + sf::Vector2f(0, 14));
-	target.draw(ds);
-	// DRAW TYPE
-	sf::RectangleShape typed;
-	typed.setFillColor(sf::Color::White);
-	typed.setPosition(position + sf::Vector2f(10, size.y - 24));
-	typed.setSize(type.findCharacterPos(item.type.size()) - type.findCharacterPos(0) + sf::Vector2f(0, 14));
-	target.draw(typed);
-	// DRAW VALUE
-	sf::RectangleShape val;
-	val.setFillColor(sf::Color::White);
-	val.setPosition(position + sf::Vector2f(size.x - 50, size.y - 24));
-	val.setSize(value.findCharacterPos(item.value.size()) - value.findCharacterPos(0) + sf::Vector2f(0, 14));
-	target.draw(val);
-*/
 }
 
 void ItemUI::SelfInit() {
 	//Quality
-	quality.setFont(font);
-	quality.setString(Item::getRarityString(item.getRarity()));
+	quality = sf::Text(Item::getRarityString(item.getRarity()), font, 16);
 	quality.setFillColor(Item::getRarityColor(item.getRarity()));
-	quality.setCharacterSize(16);
 
 	//Name
-	name.setFont(font);
-	name.setString(item.getName());
+	name = sf::Text(item.getName(), font, 15);
 	name.setFillColor(sf::Color::Black);
-	name.setCharacterSize(15);
 
 	//Stat
-	stats.setFont(font);
-	stats.setString(item.getStats());
+	stats = sf::Text(item.getStats(), font, 15);
 	stats.setFillColor(sf::Color::White);
-	stats.setCharacterSize(15);
+
 
 	//Descr
-	description.setFont(font);
-	description.setString(item.getDescription());
+	description = sf::Text(item.getDescription(), font, 15);
 	description.setFillColor(sf::Color::Black);
-	description.setCharacterSize(15);
 
 	//type
-	type.setFont(font);
-	type.setString(item.getTypeString(item.getType()));
+	type = sf::Text(item.getTypeString(item.getType()), font, 15);
 	type.setFillColor(sf::Color::Black);
-	type.setCharacterSize(15);
 
 	//value
-	value.setFont(font);
-	value.setString(std::to_string(item.getValue()));
+	value = sf::Text(std::to_string(item.getValue()), font, 15);
 	value.setFillColor(sf::Color::Black);
-	value.setCharacterSize(15);
 
 	//SIZE AND POSITION
-	double window_width = 200, window_height;
-	stats_height = (stats.findCharacterPos(item.getStats().size()) - stats.findCharacterPos(0)).y;
-	stats_height += 16;
-	descript_height = (description.findCharacterPos(item.getDescription().size()) - description.findCharacterPos(0)).y;
-	descript_height += 16;
-	window_height = 158 + stats_height + descript_height;
-	size += sf::Vector2f(window_width, window_height);
+	double window_width = 200;
+	
+	sf::Vector2f name_size = getContentSize(item.getName(), 15);
+	if (name_size.x + 70 > window_width) window_width = name_size.x + 70;
+	sf::Vector2f stat_size = getContentSize(item.getStats(), 15);
+	if (stat_size.x + 30 > window_width) window_width = stat_size.x + 30;
+	sf::Vector2f desc_size = getContentSize(item.getDescription(), 15);
+	if (desc_size.x + 30 > window_width) window_width = desc_size.x + 30;
+	stats_height = stat_size.y;
+	descript_height = desc_size.y;
+
+
+	size = sf::Vector2f(window_width, stat_size.y + desc_size.y + 158);
 	position += sf::Vector2f(-(size.x - 5), 24);
 
 	quality.setPosition(position + sf::Vector2f(48, 8));
 	name.setPosition(position + sf::Vector2f(48, 26));
 	stats.setPosition(position + sf::Vector2f(10, 46));
-	description.setPosition(position + sf::Vector2f(10, 46 + stats_height));
+	description.setPosition(position + sf::Vector2f(10, 46 + stat_size.y));
 	type.setPosition(position + sf::Vector2f(10, size.y - 26));
 	value.setPosition(position + sf::Vector2f(size.x - 65, size.y - 26));
 
@@ -206,4 +156,26 @@ void ItemUI::DrawButtons(sf::RenderTarget& target) {
 	for (int i = 0; i < buttons.size(); i++) {
 		buttons[i].Draw(target);
 	}
+}
+
+sf::Vector2f ItemUI::getContentSize(std::string content, int fontsize) {
+
+	sf::Text object;
+	object.setFont(font);
+	object.setCharacterSize(fontsize);
+	object.setString(content);
+
+	double object_height =(object.findCharacterPos(content.size()) - object.findCharacterPos(0)).y + 16;
+	double object_width = 0;
+
+	int begin_line = 0;
+	for (int i = 0; i < content.size(); i++) {
+		if (content[i] == '\n' or i == content.size() - 1) {
+			double line_width = (object.findCharacterPos(i) - object.findCharacterPos(begin_line)).x;
+			if (line_width > object_width) object_width = line_width;
+			begin_line = i + 1;
+		}
+	}
+
+	return sf::Vector2f(object_width, object_height);
 }
