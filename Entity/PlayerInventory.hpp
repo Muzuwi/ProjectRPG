@@ -25,6 +25,10 @@ public:
 		return backpack;
 	}
 
+	std::vector<std::shared_ptr<Item>>& getBackpack() {
+		return backpack;
+	}
+
 	const PlayerEquipment& getEquipment() const {
 		return equipment;
 	}

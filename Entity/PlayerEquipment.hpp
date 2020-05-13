@@ -6,12 +6,12 @@ enum class EquipmentSlot {
 	LeftHand = 0,
 	RightHand,
 	Helmet,
-	Chest,
-	Pants,
-	Boots,
-	Ring,
-	Amulet,
 	Gloves,
+	Chest,
+	Boots,
+	Amulet,
+	Ring,
+	Pants,
 	Braces
 };
 
@@ -25,7 +25,41 @@ class PlayerEquipment {
 	std::array<std::shared_ptr<Item>, 4> accessories;
 public:
 	bool setEquipment(EquipmentSlot slot, const std::shared_ptr<Item>& item) {
-		if(!item) return false;
+		if (!item) {
+			switch (slot) {
+			case EquipmentSlot::LeftHand:
+				leftHanded = nullptr;
+				break;
+			case EquipmentSlot::RightHand:
+				rightHanded = nullptr;
+				break;
+			case EquipmentSlot::Helmet:
+				helmet = nullptr;
+				break;
+			case EquipmentSlot::Chest:
+				chest = nullptr;
+				break;
+			case EquipmentSlot::Pants:
+				pants = nullptr;
+				break;
+			case EquipmentSlot::Boots:
+				boots = nullptr;
+				break;
+			case EquipmentSlot::Ring:
+				accessories[0] = nullptr;
+				break;
+			case EquipmentSlot::Amulet:
+				accessories[1] = nullptr;
+				break;
+			case EquipmentSlot::Gloves:
+				accessories[2] = nullptr;
+				break;
+			case EquipmentSlot::Braces:
+				accessories[3] = nullptr;
+				break;
+			}
+			return true;
+		}
 		
 		switch(slot) {
 			case EquipmentSlot::LeftHand:

@@ -1,7 +1,7 @@
 #include "InvUI.hpp"
 
 InvUI::InvUI(Player& entity)
-: inventory(entity.getInventory()), equipment(inventory.getEquipment()), font(AssetManager::getFont("ConnectionSerif"))
+: inventory(entity.getInventory()), equipment(inventory.getEquipment()), font(AssetManager::getFont("ConnectionSerif")), sec_focus(section::INVENTORY)
 {
 
 }
@@ -10,6 +10,14 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 	DrawSeparator(target);
 	DrawInventory(target);
 	DrawEquipment(target);
+
+	sf::Vector2f ghost_pos;
+	if (subWin and subWin->MovFlag()) {
+		ghost_pos = focusCellPos + sf::Vector2f(5, 5);
+	}
+	if (subWin and subWin->MovFlag() and to_move) {
+		to_move->draw(target, ghost_pos, sf::Color(255, 255, 255, 200));
+	}
 
 	//static titles
 	target.draw(title_eq);
@@ -75,7 +83,6 @@ void InvUI::DrawInventory(sf::RenderTarget& target) {
 	double offset_x = position.x + (size.x / 2.0) + ((size.x / 2.0) - 256.0) / 2.0;
 	double offset_y = position.y + (size.y / 3.0);
 	sf::Vector2f inventory_offset(offset_x, offset_y);
-	sf::Vector2f ghost_pos;
 
 	unsigned i = 0;
 	//  Przelatujemy przez wszystkie wskaźniki na itemki w backpacku
@@ -83,21 +90,15 @@ void InvUI::DrawInventory(sf::RenderTarget& target) {
 		Cell itemCell {item};
 		itemCell.Init(inventory_offset + sf::Vector2f((i % 8 * 32), (i / 8 * 32)), cell_size);
 
-		if (i == focus) {
+		if (sec_focus == INVENTORY and i == focus) {
 			itemCell.SetFocus();
-			if (subWin and subWin->MovFlag()) {
-				ghost_pos = itemCell.GetPosition() + sf::Vector2f(5, 5);
-			}
+			focusCellPos = itemCell.GetPosition();
 		}
 		else itemCell.RemoveFocus();
 
 		itemCell.Draw(target);
 
 		++i;
-	}
-
-	if (subWin and subWin->MovFlag() and to_move) {
-		to_move->draw(target, ghost_pos, sf::Color(255, 255, 255, 200));
 	}
 }
 
@@ -117,100 +118,190 @@ void InvUI::DrawEquipment(sf::RenderTarget& target) {
 	double offset_y = position.y + 44;
 	sf::Vector2f equipment_offset(offset_x, offset_y);
 	
+	//L-hand
+	equipment_offset += sf::Vector2f(0, 0);
+	Cell L_hand{ equipment.getEquipmentBySlot(EquipmentSlot::LeftHand) };
+	L_hand.Init(equipment_offset, cell_size);
+	if (sec_focus == EQUIPMENT and focus == 0) { 
+		L_hand.SetFocus(); 
+		focusCellPos = L_hand.GetPosition();
+	}
+	else { L_hand.RemoveFocus(); }
+	L_hand.Draw(target);
+
 	//R-hand
 	Cell R_hand{ equipment.getEquipmentBySlot(EquipmentSlot::RightHand) };
-	R_hand.Init(equipment_offset, cell_size);
+	R_hand.Init(equipment_offset + sf::Vector2f(32, 0), cell_size);
+	if (sec_focus == EQUIPMENT and focus == 1){ 
+		R_hand.SetFocus(); 
+		focusCellPos = R_hand.GetPosition();
+	}
+	else { R_hand.RemoveFocus(); }
 	R_hand.Draw(target);
 
 	//Helmet
 	Cell Helmet{ equipment.getEquipmentBySlot(EquipmentSlot::Helmet) };
-	Helmet.Init(equipment_offset + sf::Vector2f(96, 0), cell_size);
+	Helmet.Init(equipment_offset + sf::Vector2f(64, 0), cell_size);
+	if (sec_focus == EQUIPMENT and focus == 2) { 
+		Helmet.SetFocus(); 
+		focusCellPos = Helmet.GetPosition();
+	}
+	else { Helmet.RemoveFocus(); }
 	Helmet.Draw(target);
-
-	//Chest
-	Cell Chest{ equipment.getEquipmentBySlot(EquipmentSlot::Chest) };
-	Chest.Init(equipment_offset + sf::Vector2f(160, 0), cell_size);
-	Chest.Draw(target);
 
 	//Gloves
 	Cell Gloves{ equipment.getEquipmentBySlot(EquipmentSlot::Gloves) };
-	Gloves.Init(equipment_offset + sf::Vector2f(224, 0), cell_size);
+	Gloves.Init(equipment_offset + sf::Vector2f(96, 0), cell_size);
+	if (sec_focus == EQUIPMENT and focus == 3) { 
+		Gloves.SetFocus(); 
+		focusCellPos = Gloves.GetPosition();
+	}
+	else { Gloves.RemoveFocus(); }
 	Gloves.Draw(target);
 
-	//L-hand
-	equipment_offset += sf::Vector2f(0, 0);
-	Cell L_hand{ equipment.getEquipmentBySlot(EquipmentSlot::LeftHand) };
-	L_hand.Init(equipment_offset + sf::Vector2f(0, 56), cell_size);
-	L_hand.Draw(target);
+	//Chest
+	Cell Chest{ equipment.getEquipmentBySlot(EquipmentSlot::Chest) };
+	Chest.Init(equipment_offset + sf::Vector2f(128, 0), cell_size);
+	if (sec_focus == EQUIPMENT and focus == 4) { 
+		Chest.SetFocus(); 
+		focusCellPos = Chest.GetPosition();
+	}
+	else { Chest.RemoveFocus(); }
+	Chest.Draw(target);
 
 	//Boots
 	Cell Boots{ equipment.getEquipmentBySlot(EquipmentSlot::Boots) };
-	Boots.Init(equipment_offset + sf::Vector2f(96, 56), cell_size);
+	Boots.Init(equipment_offset + sf::Vector2f(160, 0), cell_size);
+	if (sec_focus == EQUIPMENT and focus == 5) { 
+		Boots.SetFocus(); 
+		focusCellPos = Boots.GetPosition();
+	}
+	else { Boots.RemoveFocus(); }
 	Boots.Draw(target);
-
-	//Ring
-	Cell Ring{ equipment.getEquipmentBySlot(EquipmentSlot::Ring) };
-	Ring.Init(equipment_offset + sf::Vector2f(160, 56), cell_size);
-	Ring.Draw(target);
 
 	//Necklace
 	Cell Necklace{ equipment.getEquipmentBySlot(EquipmentSlot::Amulet) };
-	Necklace.Init(equipment_offset + sf::Vector2f(224, 56), cell_size);
+	Necklace.Init(equipment_offset + sf::Vector2f(192, 0), cell_size);
+	if (sec_focus == EQUIPMENT and focus == 6) { 
+		Necklace.SetFocus(); 
+		focusCellPos = Necklace.GetPosition();
+	}
+	else { Necklace.RemoveFocus(); }
 	Necklace.Draw(target);
 
-	//small separator
-	sf::RectangleShape separator;
-	sf::Vector2f sep_position = equipment_offset + sf::Vector2f(64, 0);
-	sf::Vector2f sep_size = sf::Vector2f(1, 88);
-	separator.setFillColor(sf::Color::Black);
-	separator.setPosition(sep_position);
-	separator.setSize(sep_size);
-	target.draw(separator);
+	//Ring
+	Cell Ring{ equipment.getEquipmentBySlot(EquipmentSlot::Ring) };
+	Ring.Init(equipment_offset + sf::Vector2f(224, 0), cell_size);
+	if (sec_focus == EQUIPMENT and focus == 7) {
+		Ring.SetFocus(); 
+		focusCellPos = Ring.GetPosition();
+	}
+	else { Ring.RemoveFocus(); }
+	Ring.Draw(target);
 }
 
 void InvUI::Update(int change) {
-	focus = (focus + change) % inventory.getBackpack().size();
+	if (sec_focus == INVENTORY) {
+		if (focus < 8 and change == -8) {
+			sec_focus = EQUIPMENT;
+		}
+		else {
+			if (focus >= 56 and change == 8) return;
+			if (focus % 8 == 0 and change == -1) return;
+			if (focus % 8 == 7 and change == 1) return;
+
+			focus = (focus + change) % inventory.getBackpack().size();
+		}
+	}
+	else if (sec_focus == EQUIPMENT) {
+		if (change == 8) {
+			sec_focus = INVENTORY;
+		}
+		else {
+			if (focus == 0 and change == -1) return;
+			if (focus == 7 and change == 1) return;
+			if (change == -8) return;
+			focus = (focus + change);
+		}
+	}
 }
 
 void InvUI::ProcessKey(sf::Event::KeyEvent key) {
 	if (!subWin || (subWin && !subWin->isActive())) {
-		if (key.code == sf::Keyboard::W) Update(-8);
-		else if (key.code == sf::Keyboard::S) Update(8);
-		else if (key.code == sf::Keyboard::A) Update(-1);
-		else if (key.code == sf::Keyboard::D) Update(1);
-		if (key.code == sf::Keyboard::Space) {
-			if (subWin and subWin->MovFlag()) {
-				inventory.swapItems(focus, action_index);
-				subWin->SetMovFlag(false);
-			}
-			else {
-				if (inventory.getItem(focus) != nullptr) {
-					subWin = std::make_shared<ItemUI>(*inventory.getItem(focus));
-
-					double offset_x = position.x + (size.x / 2.0) + ((size.x / 2.0) - 256.0) / 2.0;
-					double offset_y = position.y + (size.y / 3.0);
-					sf::Vector2f inventory_offset(offset_x, offset_y);
-					Vec2f windowPos(inventory_offset + sf::Vector2f((focus % 8 * 32), (focus / 8 * 32)));
-					subWin->Init(windowPos, sf::Vector2f(0, 0));
-					subWin->ProcessKey(key);
-					action_index = focus;
+			if (key.code == sf::Keyboard::W) Update(-8);
+			else if (key.code == sf::Keyboard::S) Update(8);
+			else if (key.code == sf::Keyboard::A) Update(-1);
+			else if (key.code == sf::Keyboard::D) Update(1);
+			if (key.code == sf::Keyboard::Space) {
+				if (subWin and subWin->MovFlag()) {
+					if (sec_focus == INVENTORY) {
+						if (action_source == EQUIPMENT) {
+							std::shared_ptr<Item> temp = equipment.getEquipmentBySlot((EquipmentSlot)action_index);
+							if (equipment.setEquipment((EquipmentSlot)action_index, inventory.getItem(focus))) {
+								inventory.getBackpack()[focus] = temp;
+							}
+						}
+						else
+							inventory.swapItems(focus, action_index);
+					}
+					else if (sec_focus == EQUIPMENT) {
+						std::shared_ptr<Item> temp = equipment.getEquipmentBySlot((EquipmentSlot)focus);
+						if (equipment.setEquipment((EquipmentSlot)focus, inventory.getItem(action_index))) {
+							inventory.getBackpack()[action_index] = temp;
+						}
+					}
+					subWin->SetMovFlag(false);
+				}
+				else {
+					if (sec_focus == INVENTORY) {
+						if (inventory.getItem(focus) != nullptr) {
+							subWin = std::make_shared<ItemUI>(*inventory.getItem(focus));
+							subWin->Init(focusCellPos, sf::Vector2f(0, 0));
+							subWin->ProcessKey(key);
+							action_index = focus;
+							action_source = INVENTORY;
+						}
+					}
+					else if (sec_focus == EQUIPMENT) {
+						if (equipment.getEquipmentBySlot((EquipmentSlot)focus) != nullptr) {
+							subWin = std::make_shared<ItemUI>(*equipment.getEquipmentBySlot((EquipmentSlot)focus));
+							subWin->Init(focusCellPos, sf::Vector2f(0, 0));
+							subWin->ProcessKey(key);
+							action_index = focus;
+							action_source = EQUIPMENT;
+						}
+					}
 				}
 			}
-		}
 	}
 	else{
 		subWin->ProcessKey(key);
 		if (subWin->MovFlag()) {
-			to_move = inventory.getItem(focus);
+			if (action_source == INVENTORY) {
+				to_move = inventory.getItem(focus);
+			}
+			else if (action_source == EQUIPMENT) {
+				to_move = equipment.getEquipmentBySlot((EquipmentSlot)focus);
+			}
 		}
 	}
 
 	if (subWin and subWin->DelFlag()) {
-		inventory.deleteItem(action_index);
+		if (action_source == INVENTORY) {
+			inventory.deleteItem(action_index);
+		}
+		else if (action_source == EQUIPMENT) {
+			equipment.setEquipment((EquipmentSlot)action_index, nullptr);
+		}
 		subWin->SetDelFlag(false);
 	}
 	if (subWin and subWin->UseFlag()) {
-		inventory.useItem(action_index);
+		if (action_source == INVENTORY) {
+			inventory.useItem(action_index);
+		}
+		else if (action_source == EQUIPMENT) {
+			//nop
+		}
 		subWin->SetUseFlag(false);
 	}
 }

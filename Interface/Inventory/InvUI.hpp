@@ -6,6 +6,11 @@
 #include "Interface/Inventory/ItemUI.hpp"
 #include "Entity/Player.hpp"
 
+enum section {
+	EQUIPMENT = 0,
+	INVENTORY = 1
+};
+
 class InvUI : public Window{
 protected:
 	const sf::Font& font;
@@ -13,8 +18,11 @@ protected:
 	int focus, action_index;
 	bool sub;
 	bool mov;
+	section sec_focus;
+	section action_source;
 	std::shared_ptr<ItemUI> subWin;
 	std::shared_ptr<Item> to_move;
+	sf::Vector2f focusCellPos;
 
 	PlayerInventory& inventory;
 	PlayerEquipment& equipment;
