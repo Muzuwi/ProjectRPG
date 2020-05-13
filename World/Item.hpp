@@ -55,9 +55,9 @@ public:
 	void onEquip(bool remove = false);
 	unsigned addStack(unsigned count);
 
-	std::string getName() const { return "Name here"; }
-	std::string getDescription() const { return "Desc here"; }
-	std::string getStats() const { return "Stats here"; }
+	std::string getName() const;
+	std::string getDescription() const;
+	std::string getStats() const;
 
 	void draw(sf::RenderTarget& target, Vec2f pos, sf::Color color = sf::Color::White) const;
 

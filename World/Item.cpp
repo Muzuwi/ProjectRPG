@@ -139,6 +139,30 @@ unsigned Item::addStack(unsigned count) {
 	}
 }
 
+std::string Item::getName() const {
+	const auto& list = AssetManager::getJSON("ItemList");
+	if(!list.contains(designator) || (!list[designator].contains("name")))
+		return "undefined";
+
+	return list[designator]["name"];
+}
+
+std::string Item::getDescription() const {
+	const auto& list = AssetManager::getJSON("ItemList");
+	if(!list.contains(designator) || (!list[designator].contains("description")))
+		return "undefined";
+
+	return list[designator]["description"];
+}
+
+std::string Item::getStats() const {
+	const auto& list = AssetManager::getJSON("ItemList");
+	if(!list.contains(designator) || (!list[designator].contains("stats")))
+		return "undefined";
+
+	return list[designator]["stats"];
+}
+
 bool operator==(const Item& a, const Item& b) {
 	return a.getDesignator() == b.getDesignator() &&
 		   a.getRarity() == b.getRarity() &&
