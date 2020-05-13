@@ -58,7 +58,7 @@ Script::Script(const std::string &scriptName) {
 		std::cerr << "Error loading Lua script from file!\n";
 		std::cerr << "Tried loading from path " << "GameContent/Script/"+scriptName+".lua" << "\n";
 		file.close();
-		return;
+		throw std::runtime_error("Script load failed");
 	}
 	std::string script((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 	file.close();

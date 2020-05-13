@@ -118,7 +118,12 @@ public:
 		selectedNPC = pointingAtNPC;
 
 		if(pickingLocation) {
-			map.npcs.push_back(std::make_shared<NPC>(selectedSpritesheet, coords, scriptFilename));
+			std::shared_ptr<NPC> ptr;
+			try {
+				ptr = std::make_shared<NPC>(selectedSpritesheet, coords, scriptFilename);
+			} catch (std::runtime_error&) { }
+			if(ptr)
+				map.npcs.push_back(ptr);
 			pickingLocation = false;
 		}
 
