@@ -107,40 +107,30 @@ Map::Map(const Map &map)
 	this->player = nullptr;
 	this->tilesetName = map.tilesetName;
 	this->size = map.size;
-	for(unsigned layer = 0; layer < 3; layer++) {
-		this->floorTiles[layer] = map.floorTiles[layer];
-		this->animatedTiles[layer] = map.animatedTiles[layer];
-	}
 	this->vertices = map.vertices;
+	this->layerVertices = map.layerVertices;
 	this->npcs = map.npcs;
 
-	for(unsigned i = 0; i < 15; i++) {
+	for(unsigned layer = 0; layer < 3; layer++)
+		this->floorTiles[layer] = map.floorTiles[layer];
+
+	for(unsigned i = 0; i < 5; i++)
 		this->buffer[i] = map.buffer[i];
-	}
 }
 
 void Map::draw(sf::RenderTarget &target) {
-
-	for(unsigned layer = 0; layer < 3; layer++) {
-		target.draw(buffer[5* layer + 0], &tileset.getTexture());
+	for(unsigned i = 0; i < 5; ++i) {
+		if(i == 1) this->drawEntities(target);
+		target.draw(buffer[i], &tileset.getTexture());
 	}
-
-	this->drawEntities(target);
-
-	for(unsigned layer = 0; layer < 3; layer++) {
-		for(unsigned priority = 1; priority < 5; priority++) {
-			target.draw(buffer[5* layer + priority], &tileset.getTexture());
-		}
-	}
-
 }
 
 void Map::initializeVertexArrays() {
-	for(auto & vertice : vertices) {
+	for(auto& vertice : vertices)
 		vertice.clear();
-	}
 
-	vertices.resize(3 * 5);
+	for(auto& vertice : layerVertices)
+		vertice.clear();
 
 	for(unsigned layer = 0; layer < 3; ++layer) {
 		for(unsigned i = 0; i < size.x; i++) {
@@ -151,14 +141,13 @@ void Map::initializeVertexArrays() {
 				unsigned priority = tileset.getTile(tileType).getPriority();
 				auto textureCoords = tileset.getSpritesheet().getTextureCoordinates(tileType);
 
-				auto& whichArray = vertices[5* layer + priority];
-				unsigned nsize = whichArray.getVertexCount() + 4;
-				whichArray.resize(nsize);
+				unsigned pSize = vertices[priority].getVertexCount() + 4;
+				vertices[priority].resize(pSize);
 
-				unsigned first = layer * size.x * size.y * 4;
-				unsigned offset = first + (i + j*size.x) * 4;
+				unsigned lSize = layerVertices[layer].getVertexCount() + 4;
+				layerVertices[layer].resize(lSize);
 
-				sf::Vertex* quad = &whichArray[nsize - 4];
+				sf::Vertex* quad = &vertices[priority][pSize - 4];
 				quad[0].position = sf::Vector2f(i * Tile::dimensions(), j * Tile::dimensions());
 				quad[1].position = sf::Vector2f((i + 1) * Tile::dimensions(), j * Tile::dimensions());
 				quad[2].position = sf::Vector2f((i + 1) * Tile::dimensions(), (j + 1) * Tile::dimensions());
@@ -168,11 +157,15 @@ void Map::initializeVertexArrays() {
 				quad[1].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top);
 				quad[2].texCoords = sf::Vector2f(textureCoords.left+textureCoords.width, textureCoords.top+textureCoords.height);
 				quad[3].texCoords = sf::Vector2f(textureCoords.left, textureCoords.top+textureCoords.height);
+
+				sf::Vertex* quadForLayer = &layerVertices[layer][lSize - 4];
+				for(unsigned q = 0; q < 4; ++q)
+					quadForLayer[q] = quad[q];
 			}
 		}
 	}
 
-	for(unsigned i = 0; i < 15; i++) {
+	for(unsigned i = 0; i < 5; i++) {
 		if(vertices[i].getVertexCount() == 0) {
 			continue;
 		}
@@ -230,15 +223,13 @@ void Map::drawTiles(sf::RenderTarget &target) {
 	}
 }
 
+
 /*
  *  Rysowanie kafli tylko podanej warstwy
  */
 void Map::drawTiles(sf::RenderTarget &target, unsigned layer) {
 	assert(layer < 3);
-
-	for(unsigned i = 0; i < 5; i++) {
-		target.draw(buffer[5* layer + i], &tileset.getTexture());
-	}
+	target.draw(&layerVertices[layer][0], layerVertices[layer].getVertexCount(), sf::Quads, &tileset.getTexture());
 }
 
 

@@ -2,8 +2,9 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <array>
 #include <SFML/Graphics.hpp>
-#include <Entity/Player.hpp>
+#include "Entity/Player.hpp"
 #include "Tile.hpp"
 #include "Types.hpp"
 #include "Entity/NPC.hpp"
@@ -17,13 +18,15 @@ class Map {
 
 	TileSet tileset;
 	Array2D<unsigned> floorTiles[3];
-	std::vector<Vec2u> animatedTiles[3];
 	std::vector<std::shared_ptr<NPC>>   npcs;
 
 	const Player* player;
 
-	std::vector<sf::VertexArray> vertices;
-	sf::VertexBuffer buffer[15];
+	std::array<sf::VertexArray, 5> vertices;
+	//  FIXME: Nieoptymalne! Ale wymagane w edytorze
+	std::array<sf::VertexArray, 3> layerVertices;
+
+	sf::VertexBuffer buffer[5];
 protected:
 	void drawTiles(sf::RenderTarget&);
 	void drawTiles(sf::RenderTarget&, unsigned);
