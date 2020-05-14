@@ -40,4 +40,6 @@ protected:
 	void onMove(Direction) override {}
 	void onUpdate() override {}
 	void setDefaultStatistics();
+
+	friend class WorldManager;
 };

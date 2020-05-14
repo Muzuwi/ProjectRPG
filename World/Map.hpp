@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <array>
+#include <vector>
 #include <SFML/Graphics.hpp>
 #include "Entity/Player.hpp"
 #include "Tile.hpp"
@@ -11,7 +12,18 @@
 #include "World/TileSet.hpp"
 #include "AssetManager.hpp"
 
+struct Connection {
+	Vec2u sourcePos;
+	std::string targetMap;
+	Vec2u targetPos;
+};
+
 class Map {
+	struct {
+		Connection goingThroughConnection;
+		bool valid = false;
+	} standingOnConnection;
+
 	std::string tilesetName;
 
 	Vec2u size;
@@ -27,7 +39,10 @@ class Map {
 	std::array<sf::VertexArray, 3> layerVertices;
 
 	sf::VertexBuffer buffer[5];
+
+	std::vector<Connection> connections;
 protected:
+	void drawSpecial(sf::RenderTarget&);
 	void drawTiles(sf::RenderTarget&);
 	void drawTiles(sf::RenderTarget&, unsigned);
 	void drawEntities(sf::RenderTarget&);
@@ -61,11 +76,27 @@ public:
 
 	NPC* findNPC(Vec2u pos);
 
-	friend class EditWindow;
-	friend class NPCCreator;
-	friend class Brush;
-
 	void bindPlayer(const Player& _player) {
 		player = &_player;
 	}
+
+	void onStepHook(Vec2u pos);
+
+	const std::vector<Connection>& getConnections() const {
+		return connections;
+	}
+
+	bool standingConnectionValid() const {
+		return standingOnConnection.valid;
+	}
+
+	Connection getStandingConnection() {
+		standingOnConnection.valid = false;
+		return standingOnConnection.goingThroughConnection;
+	}
+
+	friend class EditWindow;
+	friend class NPCCreator;
+	friend class Brush;
+	friend class ConnectionTool;
 };

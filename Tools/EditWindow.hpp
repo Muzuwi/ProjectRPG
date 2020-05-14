@@ -9,6 +9,7 @@
 #include "CursorTool.hpp"
 #include "NPCCreator.hpp"
 #include "TilesetEditor.hpp"
+#include "ConnectionTool.hpp"
 
 class EditWindow {
 	unsigned width, height;
@@ -41,6 +42,7 @@ class EditWindow {
 		std::shared_ptr<Brush> brush;
 		std::shared_ptr<CursorTool> cursor;
 		std::shared_ptr<NPCCreator> creator;
+		std::shared_ptr<ConnectionTool> connect;
 	} Tools;
 
 	std::shared_ptr<Tool> currentTool;

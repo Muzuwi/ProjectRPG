@@ -1,5 +1,6 @@
 #include "Entity/NPC.hpp"
 #include "World/Tile.hpp"
+#include "World/Map.hpp"
 #include "JsonOverloads.hpp"
 
 /*
@@ -37,6 +38,20 @@ void from_json(const json &j, Tile &tile) {
 	j.at(1).get_to(bitmap);
 
 	tile = Tile(bitmap, priority);
+}
+
+void to_json(json& j, const Connection& connection) {
+	j = json {
+		connection.sourcePos,
+		connection.targetMap,
+		connection.targetPos
+	};
+}
+
+void from_json(const json& j, Connection& connection) {
+	j.at(0).get_to(connection.sourcePos);
+	j.at(1).get_to(connection.targetMap);
+	j.at(2).get_to(connection.targetPos);
 }
 
 /*

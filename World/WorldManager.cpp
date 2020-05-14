@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "World/WorldManager.hpp"
 
 void WorldManager::loadMap(const std::string &mapName) {
@@ -13,7 +14,8 @@ void WorldManager::loadMap(const std::string &mapName) {
 }
 
 bool WorldManager::movePlayer(Direction dir) {
-	return currentMap->moveActor(player, dir);
+	bool ret = currentMap->moveActor(player, dir);
+	return ret;
 }
 
 bool WorldManager::playerInteract() {
@@ -41,7 +43,42 @@ bool WorldManager::playerInteract() {
  *  Ogólna funkcja do wyrenderowania całej mapy do danego targetu
  */
 void WorldManager::draw(sf::RenderTarget &target) {
-	currentMap->draw(target);
+	if(MapTravel.isTravelling) {
+		//  Fade out
+		if(MapTravel.currentMapTravelTime < 0) {
+			sf::RectangleShape rect;
+			rect.setPosition(0,0);
+			rect.setSize(Vec2f(currentMap->getWidth() * Tile::dimensions(), currentMap->getHeight() * Tile::dimensions()));
+			auto alpha = 255 - (unsigned)(((double)-1*MapTravel.currentMapTravelTime/mapTravelTime) * 255);
+			rect.setFillColor(sf::Color(0, 0, 0, alpha));
+
+			currentMap->draw(target);
+			target.draw(rect);
+			MapTravel.currentMapTravelTime++;
+		}
+		//  Actually change the map once fully opaque
+		else if(MapTravel.currentMapTravelTime == 0) {
+			assert(currentMap->standingConnectionValid());
+			this->handleMapTransfer(currentMap->getStandingConnection());
+			MapTravel.currentMapTravelTime++;
+		}
+		//  Fade in
+		else {
+			sf::RectangleShape rect;
+			rect.setPosition(0,0);
+			rect.setSize(Vec2f(currentMap->getWidth() * Tile::dimensions(), currentMap->getHeight() * Tile::dimensions()));
+			auto alpha = (unsigned)(((double)-1*MapTravel.currentMapTravelTime/mapTravelTime) * 255);
+			rect.setFillColor(sf::Color(0, 0, 0, alpha));
+
+			currentMap->draw(target);
+			target.draw(rect);
+			MapTravel.currentMapTravelTime++;
+			if(MapTravel.currentMapTravelTime > mapTravelTime)
+				MapTravel.isTravelling = false;
+		}
+	} else {
+		currentMap->draw(target);
+	}
 }
 
 /*
@@ -50,4 +87,21 @@ void WorldManager::draw(sf::RenderTarget &target) {
 void WorldManager::updateWorld() {
 	player.update();
 	currentMap->updateActors();
+	if(!player.isMoving && currentMap->standingConnectionValid() && !MapTravel.isTravelling) {
+		MapTravel.isTravelling = true;
+		MapTravel.currentMapTravelTime = -1 * mapTravelTime;
+	}
+}
+
+bool WorldManager::handleMapTransfer(Connection conn) {
+	try {
+		this->currentMap = allMaps[conn.targetMap];
+	} catch (std::exception&) {
+		return false;
+	}
+
+	this->player.worldPosition.x = std::clamp(conn.targetPos.x, 0u, this->currentMap->getWidth());
+	this->player.worldPosition.y = std::clamp(conn.targetPos.y, 0u, this->currentMap->getHeight());
+	this->player.spritePosition = Vec2f(this->player.worldPosition) * (float)Tile::dimensions();
+	this->player.isMoving = false;
 }

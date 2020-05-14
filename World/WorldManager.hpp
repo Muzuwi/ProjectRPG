@@ -7,6 +7,12 @@ class WorldManager {
 	std::shared_ptr<Map> currentMap;
 	Player player;
 
+	static const int mapTravelTime = 10;
+	struct {
+		bool isTravelling;
+		int currentMapTravelTime = 0;
+	} MapTravel;
+
 	std::unordered_map<std::string, std::shared_ptr<Map>> allMaps;
 public:
 	WorldManager() {
@@ -28,6 +34,8 @@ public:
 
 	bool movePlayer(Direction dir);
 	bool playerInteract();
+
+	bool handleMapTransfer(Connection conn);
 
 	void draw(sf::RenderTarget&);
 	void updateWorld();

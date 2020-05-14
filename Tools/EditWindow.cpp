@@ -238,6 +238,7 @@ void EditWindow::drawMenuBar() {
 		TOOL_BUTTON(Tools.cursor,"Cursor")
 		TOOL_BUTTON(Tools.brush, "Brush")
 		TOOL_BUTTON(Tools.creator, "NPC Tool")
+		TOOL_BUTTON(Tools.connect, "Connections")
 
 		if(ImGui::Button("Layer 0")) {
 			EditingMap.editingLayer = 0;
@@ -276,6 +277,7 @@ void EditWindow::doMapLoadTasks() {
 	Tools.brush = std::make_shared<Brush>(EditingMap.mapData);
 	Tools.cursor = std::make_shared<CursorTool>(EditingMap.mapData);
 	Tools.creator = std::make_shared<NPCCreator>(EditingMap.mapData);
+	Tools.connect = std::make_shared<ConnectionTool>(EditingMap.mapData);
 
 	assert(mapTexture.create(EditingMap.width * Tile::dimensions(), EditingMap.height*Tile::dimensions()));
 }

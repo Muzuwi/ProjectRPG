@@ -62,6 +62,9 @@ Map Map::from_file(const std::string& mapName) {
 		}
 	}
 
+	if(!js["mapData"]["connections"].is_null())
+		newMap.connections = js["mapData"]["connections"].get<std::vector<Connection>>();
+
 	return newMap;
 }
 
@@ -97,6 +100,8 @@ void Map::serializeToFile(const std::string &filename) {
 		}
 	}
 
+	j["mapData"]["connections"] = this->connections;
+
 	file << j.dump(1, '\t');
 	file.close();
 }
@@ -110,6 +115,7 @@ Map::Map(const Map &map)
 	this->vertices = map.vertices;
 	this->layerVertices = map.layerVertices;
 	this->npcs = map.npcs;
+	this->connections = map.connections;
 
 	for(unsigned layer = 0; layer < 3; layer++)
 		this->floorTiles[layer] = map.floorTiles[layer];
@@ -230,6 +236,7 @@ void Map::drawTiles(sf::RenderTarget &target) {
 void Map::drawTiles(sf::RenderTarget &target, unsigned layer) {
 	assert(layer < 3);
 	target.draw(&layerVertices[layer][0], layerVertices[layer].getVertexCount(), sf::Quads, &tileset.getTexture());
+	this->drawSpecial(target);
 }
 
 
@@ -313,6 +320,7 @@ bool Map::moveActor(Actor &actor, Direction dir) {
 		bool nextTileCollision = checkCollision(Tile::offset(actorPos, dir), Actor::flipDirection(dir), actor);
 		bool currTileCollision = checkCollision(actorPos, dir, actor);
 		if(!nextTileCollision && !currTileCollision) {
+			this->onStepHook(Tile::offset(actorPos, dir));
 			actor.move(dir);
 			return true;
 		}
@@ -320,4 +328,24 @@ bool Map::moveActor(Actor &actor, Direction dir) {
 
 	actor.setFacing(dir);
 	return false;
+}
+
+void Map::drawSpecial(sf::RenderTarget& target) {
+	for(auto& k : connections) {
+		sf::RectangleShape rect;
+		rect.setPosition(Vec2f(k.sourcePos) * (float)Tile::dimensions());
+		rect.setSize(Vec2f(Tile::dimensions(), Tile::dimensions()));
+		rect.setFillColor(sf::Color(255, 0, 0, 160));
+		target.draw(rect);
+	}
+}
+
+void Map::onStepHook(Vec2u pos) {
+	for(auto& v : connections) {
+		if(v.sourcePos == pos) {
+			standingOnConnection.valid = true;
+			standingOnConnection.goingThroughConnection = v;
+			return;
+		}
+	}
 }
