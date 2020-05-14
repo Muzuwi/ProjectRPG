@@ -3,7 +3,6 @@
 #include "AssetManager.hpp"
 #include "Graphics/Spritesheet.hpp"
 #include "Interface/Hud.hpp"
-#include "Interface/Statistics/StatUI.hpp"
 #include "Interface/Inventory/InvUI.hpp"
 #include "Interface/Settings/SettUI.hpp"
 #include "Interface/Components/Window.hpp"
@@ -11,7 +10,6 @@
 enum Scene {
 	NONE,
 	EQ,
-	STATS,
 	JOURNAL,
 	SETTINGS,
 	MAP
@@ -22,7 +20,6 @@ private:
 	Scene current;
 
 	SettUI settings;
-	StatUI stats;
 	InvUI eq;
 	Hud hud;
 	Player& player;

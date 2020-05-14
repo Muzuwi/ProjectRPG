@@ -17,7 +17,7 @@ add_library(RPGBase
         JsonOverloads.cpp
         Sound/SoundEngine.cpp
         Interface/DialogEngine.cpp
-        "Interface/Components/Window.cpp"
+        Interface/Components/Window.cpp
         AssetManager.cpp
         World/Item.cpp
         )
@@ -25,15 +25,14 @@ add_library(RPGBase
 
 add_executable(ProjectRPG
     Interface/GameUI.cpp
-    "Interface/Inventory/InvUI.cpp"
-    "Interface/Statistics/StatUI.cpp"
-    "Interface/Settings/SettUI.cpp"
+    Interface/Inventory/InvUI.cpp
+    Interface/Settings/SettUI.cpp
     Interface/Hud.cpp
-    "Interface/Components/Button.cpp"
-    "Interface/Components/Window.cpp"
-    "Interface/Components/Frame.cpp"
-    "Interface/Inventory/Cell.cpp"
-    "Interface/Inventory/ItemUI.cpp"
+    Interface/Components/Button.cpp
+    Interface/Components/Window.cpp
+    Interface/Components/Frame.cpp
+    Interface/Inventory/Cell.cpp
+    Interface/Inventory/ItemUI.cpp
     Engine.cpp
     Main.cpp
     )
