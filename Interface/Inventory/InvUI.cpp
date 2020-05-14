@@ -10,12 +10,12 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 	DrawSeparator(target);
 	DrawInventory(target);
 	DrawEquipment(target);
+	DrawActorFace(target, sf::Vector2f(position.x + 8, title_char.getPosition().y + 32), sf::Vector2f(97,97));
 
+	//Draw Ghost while moving item
 	sf::Vector2f ghost_pos;
-	if (subWin and subWin->MovFlag()) {
-		ghost_pos = focusCellPos + sf::Vector2f(5, 5);
-	}
 	if (subWin and subWin->MovFlag() and to_move) {
+		ghost_pos = focusCellPos + sf::Vector2f(5, 5);
 		to_move->draw(target, ghost_pos, sf::Color(255, 255, 255, 200));
 	}
 
@@ -24,6 +24,7 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 	target.draw(title_inv);
 	target.draw(title_char);
 
+	//Draw subwin(ItemInfo)
 	if (subWin && subWin->isActive()) {
 		subWin->Draw(target);
 	}
@@ -32,6 +33,9 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 void InvUI::SelfInit() {
 	//EQ_legend
 	eq_legend.setTexture(AssetManager::getUI("eq_back").getTexture());
+
+	//Hero_face
+	hero_face.setTexture(AssetManager::getUI("player_face").getTexture());
 
 	//title_inv
 	title_inv.setFont(font);
@@ -277,4 +281,12 @@ void InvUI::DrawEqCell(sf::RenderTarget& target, std::shared_ptr<Item> item, int
 	else { object.RemoveFocus(); }
 	object.Draw(target);
 	if (!object.getItem()) DrawIcon(target, eq_legend, index, object.GetPosition(), object.GetSize());
+}
+
+void InvUI::DrawActorFace(sf::RenderTarget& target, sf::Vector2f position, sf::Vector2f size) {
+	Button frame("");
+	frame.Init(position, size);
+	frame.Draw(target);
+	hero_face.setPosition(position + sf::Vector2f(1, 1));
+	target.draw(hero_face);
 }

@@ -24,6 +24,7 @@ protected:
 	std::shared_ptr<Item> to_move;
 	sf::Vector2f focusCellPos;
 	sf::Sprite eq_legend;
+	sf::Sprite hero_face;
 
 	PlayerInventory& inventory;
 	PlayerEquipment& equipment;
@@ -40,5 +41,6 @@ public:
 	void Update(int);
 	void DrawIcon(sf::RenderTarget&, sf::Sprite&, int, sf::Vector2f, sf::Vector2f);
 	void DrawEqCell(sf::RenderTarget&, std::shared_ptr<Item>, int, sf::Vector2f, sf::Vector2f);
+	void DrawActorFace(sf::RenderTarget&, sf::Vector2f, sf::Vector2f);
 };
 
