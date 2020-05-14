@@ -122,94 +122,21 @@ void InvUI::DrawEquipment(sf::RenderTarget& target) {
 	sf::Vector2f equipment_offset(offset_x, offset_y);
 	
 	//R-hand
-	Cell R_hand{ equipment.getEquipmentBySlot(EquipmentSlot::RightHand) };
-	R_hand.Init(equipment_offset, cell_size);
-	if (sec_focus == EQUIPMENT and focus == 0) {
-		R_hand.SetFocus();
-		focusCellPos = R_hand.GetPosition();
-	}
-	else { R_hand.RemoveFocus(); }
-	R_hand.Draw(target);
-	if (!R_hand.getItem()) DrawIcon(target, eq_legend, 0, R_hand.GetPosition(),R_hand.GetSize());
-
+	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::RightHand), 0, equipment_offset, cell_size);
 	//L-hand
-	equipment_offset += sf::Vector2f(0, 0);
-	Cell L_hand{ equipment.getEquipmentBySlot(EquipmentSlot::LeftHand) };
-	L_hand.Init(equipment_offset + sf::Vector2f(32, 0), cell_size);
-	if (sec_focus == EQUIPMENT and focus == 1) { 
-		L_hand.SetFocus(); 
-		focusCellPos = L_hand.GetPosition();
-	}
-	else { L_hand.RemoveFocus(); }
-	L_hand.Draw(target);
-	if (!L_hand.getItem()) DrawIcon(target, eq_legend, 1, L_hand.GetPosition(), L_hand.GetSize());
-	
-
+	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::LeftHand), 1, equipment_offset + sf::Vector2f(32,0), cell_size);
 	//Helmet
-	Cell Helmet{ equipment.getEquipmentBySlot(EquipmentSlot::Helmet) };
-	Helmet.Init(equipment_offset + sf::Vector2f(64, 0), cell_size);
-	if (sec_focus == EQUIPMENT and focus == 2) { 
-		Helmet.SetFocus(); 
-		focusCellPos = Helmet.GetPosition();
-	}
-	else { Helmet.RemoveFocus(); }
-	Helmet.Draw(target);
-	if (!Helmet.getItem()) DrawIcon(target, eq_legend, 2, Helmet.GetPosition(), Helmet.GetSize());
-
+	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::Helmet), 2, equipment_offset + sf::Vector2f(64, 0), cell_size);
 	//Gloves
-	Cell Gloves{ equipment.getEquipmentBySlot(EquipmentSlot::Gloves) };
-	Gloves.Init(equipment_offset + sf::Vector2f(96, 0), cell_size);
-	if (sec_focus == EQUIPMENT and focus == 3) { 
-		Gloves.SetFocus(); 
-		focusCellPos = Gloves.GetPosition();
-	}
-	else { Gloves.RemoveFocus(); }
-	Gloves.Draw(target);
-	if (!Gloves.getItem()) DrawIcon(target, eq_legend, 3, Gloves.GetPosition(), Gloves.GetSize());
-
+	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::Gloves), 3, equipment_offset + sf::Vector2f(96, 0), cell_size);
 	//Chest
-	Cell Chest{ equipment.getEquipmentBySlot(EquipmentSlot::Chest) };
-	Chest.Init(equipment_offset + sf::Vector2f(128, 0), cell_size);
-	if (sec_focus == EQUIPMENT and focus == 4) { 
-		Chest.SetFocus(); 
-		focusCellPos = Chest.GetPosition();
-	}
-	else { Chest.RemoveFocus(); }
-	Chest.Draw(target);
-	if (!Chest.getItem()) DrawIcon(target, eq_legend, 4, Chest.GetPosition(), Chest.GetSize());
-
+	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::Chest), 4, equipment_offset + sf::Vector2f(128, 0), cell_size);
 	//Boots
-	Cell Boots{ equipment.getEquipmentBySlot(EquipmentSlot::Boots) };
-	Boots.Init(equipment_offset + sf::Vector2f(160, 0), cell_size);
-	if (sec_focus == EQUIPMENT and focus == 5) { 
-		Boots.SetFocus(); 
-		focusCellPos = Boots.GetPosition();
-	}
-	else { Boots.RemoveFocus(); }
-	Boots.Draw(target);
-	if (!Boots.getItem()) DrawIcon(target, eq_legend, 5, Boots.GetPosition(), Boots.GetSize());
-
+	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::Boots), 5, equipment_offset + sf::Vector2f(160, 0), cell_size);
 	//Necklace
-	Cell Necklace{ equipment.getEquipmentBySlot(EquipmentSlot::Amulet) };
-	Necklace.Init(equipment_offset + sf::Vector2f(192, 0), cell_size);
-	if (sec_focus == EQUIPMENT and focus == 6) { 
-		Necklace.SetFocus(); 
-		focusCellPos = Necklace.GetPosition();
-	}
-	else { Necklace.RemoveFocus(); }
-	Necklace.Draw(target);
-	if (!Necklace.getItem()) DrawIcon(target, eq_legend, 6, Necklace.GetPosition(), Necklace.GetSize());
-
+	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::Amulet), 6, equipment_offset + sf::Vector2f(192, 0), cell_size);
 	//Ring
-	Cell Ring{ equipment.getEquipmentBySlot(EquipmentSlot::Ring) };
-	Ring.Init(equipment_offset + sf::Vector2f(224, 0), cell_size);
-	if (sec_focus == EQUIPMENT and focus == 7) {
-		Ring.SetFocus(); 
-		focusCellPos = Ring.GetPosition();
-	}
-	else { Ring.RemoveFocus(); }
-	Ring.Draw(target);
-	if (!Ring.getItem()) DrawIcon(target, eq_legend, 7, Ring.GetPosition(), Ring.GetSize());
+	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::Ring), 7, equipment_offset + sf::Vector2f(224, 0), cell_size);
 }
 
 void InvUI::Update(int change) {
@@ -338,4 +265,16 @@ void InvUI::DrawIcon(sf::RenderTarget& target, sf::Sprite& object, int index, sf
 	object.setColor(sf::Color(255,255,255,160));
 	object.setPosition(position);
 	target.draw(object);
+}
+
+void InvUI::DrawEqCell(sf::RenderTarget& target, std::shared_ptr<Item> item, int index, sf::Vector2f position, sf::Vector2f size) {
+	Cell object{ item };
+	object.Init(position, size);
+	if (sec_focus == EQUIPMENT and focus == index) {
+		object.SetFocus();
+		focusCellPos = object.GetPosition();
+	}
+	else { object.RemoveFocus(); }
+	object.Draw(target);
+	if (!object.getItem()) DrawIcon(target, eq_legend, index, object.GetPosition(), object.GetSize());
 }

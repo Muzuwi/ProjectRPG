@@ -39,5 +39,6 @@ public:
 	void ProcessKey(sf::Event::KeyEvent);
 	void Update(int);
 	void DrawIcon(sf::RenderTarget&, sf::Sprite&, int, sf::Vector2f, sf::Vector2f);
+	void DrawEqCell(sf::RenderTarget&, std::shared_ptr<Item>, int, sf::Vector2f, sf::Vector2f);
 };
 
