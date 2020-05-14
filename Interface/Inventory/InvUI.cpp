@@ -30,6 +30,9 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 }
 
 void InvUI::SelfInit() {
+	//EQ_legend
+	eq_legend.setTexture(AssetManager::getUI("eq_back").getTexture());
+
 	//title_inv
 	title_inv.setFont(font);
 	title_inv.setString("Inventory");
@@ -74,7 +77,7 @@ void InvUI::SelfInit() {
 	sub = false;
 }
 
-void InvUI::SetButtons() {
+void InvUI::SetButtons() {	//ARTIFACT
 	focus = 0;
 }
 
@@ -127,6 +130,7 @@ void InvUI::DrawEquipment(sf::RenderTarget& target) {
 	}
 	else { R_hand.RemoveFocus(); }
 	R_hand.Draw(target);
+	if (!R_hand.getItem()) DrawIcon(target, eq_legend, 0, R_hand.GetPosition(),R_hand.GetSize());
 
 	//L-hand
 	equipment_offset += sf::Vector2f(0, 0);
@@ -138,6 +142,8 @@ void InvUI::DrawEquipment(sf::RenderTarget& target) {
 	}
 	else { L_hand.RemoveFocus(); }
 	L_hand.Draw(target);
+	if (!L_hand.getItem()) DrawIcon(target, eq_legend, 1, L_hand.GetPosition(), L_hand.GetSize());
+	
 
 	//Helmet
 	Cell Helmet{ equipment.getEquipmentBySlot(EquipmentSlot::Helmet) };
@@ -148,6 +154,7 @@ void InvUI::DrawEquipment(sf::RenderTarget& target) {
 	}
 	else { Helmet.RemoveFocus(); }
 	Helmet.Draw(target);
+	if (!Helmet.getItem()) DrawIcon(target, eq_legend, 2, Helmet.GetPosition(), Helmet.GetSize());
 
 	//Gloves
 	Cell Gloves{ equipment.getEquipmentBySlot(EquipmentSlot::Gloves) };
@@ -158,6 +165,7 @@ void InvUI::DrawEquipment(sf::RenderTarget& target) {
 	}
 	else { Gloves.RemoveFocus(); }
 	Gloves.Draw(target);
+	if (!Gloves.getItem()) DrawIcon(target, eq_legend, 3, Gloves.GetPosition(), Gloves.GetSize());
 
 	//Chest
 	Cell Chest{ equipment.getEquipmentBySlot(EquipmentSlot::Chest) };
@@ -168,6 +176,7 @@ void InvUI::DrawEquipment(sf::RenderTarget& target) {
 	}
 	else { Chest.RemoveFocus(); }
 	Chest.Draw(target);
+	if (!Chest.getItem()) DrawIcon(target, eq_legend, 4, Chest.GetPosition(), Chest.GetSize());
 
 	//Boots
 	Cell Boots{ equipment.getEquipmentBySlot(EquipmentSlot::Boots) };
@@ -178,6 +187,7 @@ void InvUI::DrawEquipment(sf::RenderTarget& target) {
 	}
 	else { Boots.RemoveFocus(); }
 	Boots.Draw(target);
+	if (!Boots.getItem()) DrawIcon(target, eq_legend, 5, Boots.GetPosition(), Boots.GetSize());
 
 	//Necklace
 	Cell Necklace{ equipment.getEquipmentBySlot(EquipmentSlot::Amulet) };
@@ -188,6 +198,7 @@ void InvUI::DrawEquipment(sf::RenderTarget& target) {
 	}
 	else { Necklace.RemoveFocus(); }
 	Necklace.Draw(target);
+	if (!Necklace.getItem()) DrawIcon(target, eq_legend, 6, Necklace.GetPosition(), Necklace.GetSize());
 
 	//Ring
 	Cell Ring{ equipment.getEquipmentBySlot(EquipmentSlot::Ring) };
@@ -198,6 +209,7 @@ void InvUI::DrawEquipment(sf::RenderTarget& target) {
 	}
 	else { Ring.RemoveFocus(); }
 	Ring.Draw(target);
+	if (!Ring.getItem()) DrawIcon(target, eq_legend, 7, Ring.GetPosition(), Ring.GetSize());
 }
 
 void InvUI::Update(int change) {
@@ -319,4 +331,11 @@ void InvUI::ProcessKey(sf::Event::KeyEvent key) {
 		}
 		subWin->SetUseFlag(false);
 	}
+}
+
+void InvUI::DrawIcon(sf::RenderTarget& target, sf::Sprite& object, int index, sf::Vector2f position, sf::Vector2f size) {
+	object.setTextureRect(sf::IntRect(index*32, 0, size.x, size.y));
+	object.setColor(sf::Color(255,255,255,160));
+	object.setPosition(position);
+	target.draw(object);
 }

@@ -23,6 +23,7 @@ protected:
 	std::shared_ptr<ItemUI> subWin;
 	std::shared_ptr<Item> to_move;
 	sf::Vector2f focusCellPos;
+	sf::Sprite eq_legend;
 
 	PlayerInventory& inventory;
 	PlayerEquipment& equipment;
@@ -37,5 +38,6 @@ public:
 	void DrawSeparator(sf::RenderTarget&);
 	void ProcessKey(sf::Event::KeyEvent);
 	void Update(int);
+	void DrawIcon(sf::RenderTarget&, sf::Sprite&, int, sf::Vector2f, sf::Vector2f);
 };
 
