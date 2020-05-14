@@ -37,8 +37,6 @@ void Player::setDefaultStatistics() {
 	statistics["MP"] = 12;
 	statistics["MaxMP"] = 35;
 	//Attack
-	statistics["Crit"] = 3;
-	statistics["Precision"] = 95; //%
 		//Physical
 	statistics["MinPhysical"] = 3;
 	statistics["MaxPhysical"] = 5;
@@ -54,6 +52,9 @@ void Player::setDefaultStatistics() {
 		//Poison
 	statistics["MinPoison"] = 0;
 	statistics["MaxPoison"] = 0;
+		//Other
+	statistics["Crit"] = 3;
+	statistics["Precision"] = 95; //%
 	//Defence
 	statistics["Armor"] = 2;
 	statistics["Dodge"] = 10;

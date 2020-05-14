@@ -1,7 +1,7 @@
 #include "InvUI.hpp"
 
 InvUI::InvUI(Player& entity)
-: inventory(entity.getInventory()), equipment(inventory.getEquipment()), font(AssetManager::getFont("ConnectionSerif")), sec_focus(section::INVENTORY)
+: player(entity), statistics(entity.getStatistics()), inventory(entity.getInventory()), equipment(inventory.getEquipment()), font(AssetManager::getFont("ConnectionSerif")), sec_focus(section::INVENTORY)
 {
 
 }
@@ -10,7 +10,10 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 	DrawSeparator(target);
 	DrawInventory(target);
 	DrawEquipment(target);
-	DrawActorFace(target, sf::Vector2f(position.x + 8, title_char.getPosition().y + 32), sf::Vector2f(97,97));
+	DrawActorFace(target, sf::Vector2f(position.x + 16, title_char.getPosition().y + 32), sf::Vector2f(97,97));
+	DrawName(target, position + sf::Vector2f(120, title_char.getPosition().y + 16), player.getName());
+	DrawLine(target, position + sf::Vector2f(120, title_char.getPosition().y + 48), ParseStatistic("Poziom_ ", player.getLVL(), 16));
+	DrawStatistics(target, sf::Vector2f(position.x + 16, title_char.getPosition().y + 144), 16);
 
 	//Draw Ghost while moving item
 	sf::Vector2f ghost_pos;
@@ -289,4 +292,88 @@ void InvUI::DrawActorFace(sf::RenderTarget& target, sf::Vector2f position, sf::V
 	frame.Draw(target);
 	hero_face.setPosition(position + sf::Vector2f(1, 1));
 	target.draw(hero_face);
+}
+
+void InvUI::DrawName(sf::RenderTarget& target, sf::Vector2f position, std::string name) {
+	sf::Text toDisp(name, font, 21);
+	toDisp.setFillColor(sf::Color::Black);
+	toDisp.setPosition(position);
+	target.draw(toDisp);
+}
+
+void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f offset, int font_size) {
+	/*
+	std::vector<std::string> statNames{ "HP","MaxHP",
+										"MP","MaxMP",
+										"MinPhysical","MaxPhysical",
+										"MinFire","MaxFire",
+										"MinIce","MaxIce",
+										"MinThunder","MaxThunder",
+										"MinPoison","MaxPoison",
+										"Crit",
+										"Precision",
+										"Armor",
+										"Dodge",
+										"FireRes","IceRes","ThunderRes","PoisonRes",
+										"Strength",
+										"Vitality",
+										"Agility",
+										"Intelligence"
+	};
+	*/
+
+	DrawLine(target, offset, ParseStatistic("Zycie:_", statistics["HP"], statistics["MaxHP"], "/", font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Mana:_", statistics["MP"], statistics["MaxMP"], "/", font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Obrazenia fizyczne:_", statistics["MinPhysical"], statistics["MaxPhysical"], "-", font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Obrazenia od ognia:_", statistics["MinFire"], statistics["MaxFire"], "-", font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Obrazenia od lodu:_", statistics["MinIce"], statistics["MaxIce"], "-", font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Obrazenia od blyskawic:_", statistics["MinThunder"], statistics["MaxThunder"], "-", font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Obrazenia od trucizny:_", statistics["MinPoison"], statistics["MaxPoison"], "-", font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Trafienie krytyczne:_", statistics["Crit"], font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Celnosc:_", statistics["Precision"], font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Pancerz:_", statistics["Armor"], font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Unik:_", statistics["Dodge"], font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Odp. na ogien:_", statistics["FireRes"], font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Odp. na lod:_", statistics["IceRes"], font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Odp. na blyskawice:_", statistics["ThunderRes"], font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Odp. na trucizne:_", statistics["PoisonRes"], font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Sila:_", statistics["Strength"], font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Kondycja:_", statistics["Vitality"], font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Zrecznosc:_", statistics["Agility"], font_size));
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseStatistic("Intelekt:_", statistics["Intelligence"], font_size));
+}
+
+sf::Text InvUI::ParseStatistic(std::string prefix, int value1, int value2, std::string separator, int fontSize) {
+	std::string line = prefix + std::to_string(value1) + separator + std::to_string(value2);
+	return sf::Text(line, font, fontSize);
+}
+
+sf::Text InvUI::ParseStatistic(std::string prefix, int value, int fontSize) {
+	std::string line = prefix + std::to_string(value);
+	return sf::Text(line, font, fontSize);
+}
+
+void InvUI::DrawLine(sf::RenderTarget& target, sf::Vector2f position, sf::Text text) {
+	text.setFont(font);
+	text.setColor(sf::Color::Black);
+	text.setPosition(position);
+	target.draw(text);
 }

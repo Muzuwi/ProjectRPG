@@ -26,13 +26,15 @@ protected:
 	sf::Sprite eq_legend;
 	sf::Sprite hero_face;
 
+	Player& player;
+	std::map<std::string, int>& statistics;
 	PlayerInventory& inventory;
 	PlayerEquipment& equipment;
 
 	void DrawSelf(sf::RenderTarget&)override;
 	void SelfInit();
 public:
-	InvUI(Player& inventory);
+	InvUI(Player&);
 	void SetButtons();
 	void DrawInventory(sf::RenderTarget&);	//draw eq cells
 	void DrawEquipment(sf::RenderTarget&);
@@ -42,5 +44,10 @@ public:
 	void DrawIcon(sf::RenderTarget&, sf::Sprite&, int, sf::Vector2f, sf::Vector2f);
 	void DrawEqCell(sf::RenderTarget&, std::shared_ptr<Item>, int, sf::Vector2f, sf::Vector2f);
 	void DrawActorFace(sf::RenderTarget&, sf::Vector2f, sf::Vector2f);
+	void DrawName(sf::RenderTarget&, sf::Vector2f, std::string);
+	void DrawStatistics(sf::RenderTarget&, sf::Vector2f, int);
+	void DrawLine(sf::RenderTarget&, sf::Vector2f, sf::Text);
+	sf::Text ParseStatistic(std::string, int, int, std::string, int);
+	sf::Text ParseStatistic(std::string, int, int);
 };
 
