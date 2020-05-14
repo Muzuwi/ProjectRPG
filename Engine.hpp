@@ -23,7 +23,6 @@ private:
 	unsigned windowHeight = 600;
 
 	std::shared_ptr<sf::RenderWindow> window;
-	sf::RenderTexture mapTexture;
 
 	Focus scene;
 

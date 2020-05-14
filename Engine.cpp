@@ -11,9 +11,6 @@ bool Engine::Init() {
 	GUI.Init();
 	world.loadMap("default");
 
-	if(!mapTexture.create(world.getMap().getWidth() * Tile::dimensions(), world.getMap().getHeight() * Tile::dimensions()))
-		return false;
-
 	Item item {"sword", 1};
 
 	world.getPlayer().getInventory().addItem(item);
@@ -34,26 +31,31 @@ bool Engine::Init() {
 
 void Engine::RenderFrame() {
 	window->clear();
-	mapTexture.clear(sf::Color::Black);
-	RenderWorld(mapTexture);
-
-	mapTexture.display();
 
 	auto player = world.getPlayer();
+	auto& map = world.getMap();
 	auto playerCentre = player.getSpritePosition() + Vec2f(player.getDimensions()/2u);
+	Vec2f worldSize (map.getWidth() * Tile::dimensions(), map.getHeight() * Tile::dimensions());
 	Vec2f viewCenter = playerCentre;
-	if(playerCentre.x + (windowWidth/2.0f) > mapTexture.getSize().x)
-		viewCenter.x = mapTexture.getSize().x - (windowWidth/2.0f);
-	if(playerCentre.y + (windowHeight/2.0f) > mapTexture.getSize().y)
-		viewCenter.y = mapTexture.getSize().y - (windowHeight/2.0f);
-	if(playerCentre.x - (windowWidth/2.0f) < 0)
-		viewCenter.x = (windowWidth/2.0f);
-	if(playerCentre.y - (windowHeight/2.0f) < 0)
-		viewCenter.y = (windowHeight/2.0f);
+	Vec2f viewport = Vec2f(windowWidth, windowHeight);
+	Vec2f viewportHalf (viewport / 2.0f);
+	if(playerCentre.x + viewportHalf.x > worldSize.x)
+		viewCenter.x = worldSize.x - viewportHalf.x;
+	if(playerCentre.y + viewportHalf.y > worldSize.y)
+		viewCenter.y = worldSize.y - viewportHalf.y;
+	if(playerCentre.x - viewportHalf.x < 0)
+		viewCenter.x = viewportHalf.x;
+	if(playerCentre.y - viewportHalf.y < 0)
+		viewCenter.y = viewportHalf.y;
+	if(worldSize.x < viewport.x)
+		viewCenter.x = worldSize.x / 2.0f;
+	if(worldSize.y < viewport.y)
+		viewCenter.y = worldSize.y / 2.0f;
 
 	sf::View view(viewCenter, Vec2f(windowWidth, windowHeight));
+
 	window->setView(view);
-	window->draw(sf::Sprite(mapTexture.getTexture()));
+	RenderWorld(*window);
 
 	window->setView(window->getDefaultView());
 	RenderHud(*window);

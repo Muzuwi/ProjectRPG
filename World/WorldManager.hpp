@@ -1,16 +1,27 @@
 #pragma once
+#include <unordered_map>
 #include "Entity/Player.hpp"
 #include "Map.hpp"
 
 class WorldManager {
-	Map currentMap;
+	std::shared_ptr<Map> currentMap;
 	Player player;
 
+	std::unordered_map<std::string, std::shared_ptr<Map>> allMaps;
 public:
-	WorldManager()
-	: currentMap(Map::make_empty({1,1},0)){ }
+	WorldManager() {
+		allMaps["_undefined"] = std::make_shared<Map>(Map::make_empty({1,1},0));
+		allMaps["_undefined"]->initializeVertexArrays();
+		allMaps["_undefined"]->bindPlayer(player);
+		currentMap = allMaps["_undefined"];
+	}
 
-	Map& getMap() { return currentMap; };
+	Map& getMap() {
+		if(!currentMap)
+			throw std::runtime_error("WorldManager: getMap() called but no map loaded");
+		return *currentMap;
+	}
+
 	Player& getPlayer() { return player; };
 
 	void loadMap(const std::string& mapName);
