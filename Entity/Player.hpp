@@ -5,16 +5,21 @@
 #include "Entity/PlayerInventory.hpp"
 
 class Player final : public Actor, protected RenderableObject {
+	std::string name;
 	int maxHP = 100;
 	int maxMP = 100;
 
 	int HP = 89;
 	int	MP = 65;
 
+	std::map < std::string, int > statistics;
+
 	PlayerInventory inventory;
 public:
 	Player()
-	: Actor(0, 7) {}
+	: Actor(0, 7), name("Andrzej") {
+		setDefaultStatistics();
+	}
 
 	void draw(sf::RenderTarget& target) const override;
 
@@ -30,4 +35,5 @@ protected:
 	void onStep() override {};
 	void onMove(Direction) override {}
 	void onUpdate() override {}
+	void setDefaultStatistics();
 };
