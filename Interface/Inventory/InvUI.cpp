@@ -11,8 +11,8 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 	DrawInventory(target);
 	DrawEquipment(target);
 	DrawActorFace(target, sf::Vector2f(position.x + 16, title_char.getPosition().y + 32), sf::Vector2f(97,97));
-	DrawName(target, position + sf::Vector2f(120, title_char.getPosition().y + 16), player.getName());
-	DrawLine(target, position + sf::Vector2f(120, title_char.getPosition().y + 48), ParseStatistic("Poziom_ ", player.getPlayerInfo()["lvl"], 16));
+	DrawName(target, position + sf::Vector2f(120, title_char.getPosition().y + 8), player.getName());
+	DrawLine(target, position + sf::Vector2f(120, title_char.getPosition().y + 40), ParseStatistic("Poziom ", player.getPlayerInfo()["lvl"], 16));
 	DrawStatistics(target, sf::Vector2f(position.x + 16, title_char.getPosition().y + 144), 16);
 
 	//Draw Ghost while moving item
@@ -306,15 +306,13 @@ void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f offset, int fo
 	std::vector<std::string> statNames{ "HP","MaxHP",
 										"MP","MaxMP",
 										"MinPhysical","MaxPhysical",
-										"MinFire","MaxFire",
-										"MinIce","MaxIce",
-										"MinThunder","MaxThunder",
+										"MinMagical","MaxMagical",
 										"MinPoison","MaxPoison",
 										"Crit",
 										"Precision",
 										"Armor",
 										"Dodge",
-										"FireRes","IceRes","ThunderRes","PoisonRes",
+										"MagicalRes","PoisonRes",
 										"Strength",
 										"Vitality",
 										"Agility",
@@ -322,43 +320,35 @@ void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f offset, int fo
 	};
 	*/
 
-	DrawLine(target, offset, ParseStatistic("Zycie:_", statistics["HP"], statistics["MaxHP"], "/", font_size));
+	DrawLine(target, offset, ParseStatistic("Zdrowie: ", statistics["HP"], statistics["MaxHP"], " / ", font_size));
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Mana:_", statistics["MP"], statistics["MaxMP"], "/", font_size));
+	DrawLine(target, offset, ParseStatistic("Mana: ", statistics["MP"], statistics["MaxMP"], " / ", font_size));
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Obrazenia fizyczne:_", statistics["MinPhysical"], statistics["MaxPhysical"], "-", font_size));
+	DrawLine(target, offset, ParseStatistic("Obrazenia fizyczne: ", statistics["MinPhysical"], statistics["MaxPhysical"], " - ", font_size));
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Obrazenia od ognia:_", statistics["MinFire"], statistics["MaxFire"], "-", font_size));
+	DrawLine(target, offset, ParseStatistic("Obrazenia magiczne: ", statistics["MinMagical"], statistics["MaxMagical"], " - ", font_size));
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Obrazenia od lodu:_", statistics["MinIce"], statistics["MaxIce"], "-", font_size));
+	DrawLine(target, offset, ParseStatistic("Trucizna: ", statistics["MinPoison"], statistics["MaxPoison"], " - ", font_size));
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Obrazenia od blyskawic:_", statistics["MinThunder"], statistics["MaxThunder"], "-", font_size));
+	DrawLine(target, offset, ParseStatistic("Trafienie krytyczne: ", statistics["Crit"], font_size));
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Obrazenia od trucizny:_", statistics["MinPoison"], statistics["MaxPoison"], "-", font_size));
+	DrawLine(target, offset, ParseStatistic("Celnosc: ", statistics["Precision"], font_size));
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Trafienie krytyczne:_", statistics["Crit"], font_size));
+	DrawLine(target, offset, ParseStatistic("Pancerz: ", statistics["Armor"], font_size));
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Celnosc:_", statistics["Precision"], font_size));
+	DrawLine(target, offset, ParseStatistic("Unik: ", statistics["Dodge"], font_size));
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Pancerz:_", statistics["Armor"], font_size));
+	DrawLine(target, offset, ParseStatistic("Odp. magiczne: ", statistics["MagicalRes"], font_size));
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Unik:_", statistics["Dodge"], font_size));
+	DrawLine(target, offset, ParseStatistic("Odp. na trucizne: ", statistics["PoisonRes"], font_size));
+	offset += sf::Vector2f(0, font_size + 9);
+	DrawLine(target, offset, ParseStatistic("Sila: ", statistics["Strength"], font_size));
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Odp. na ogien:_", statistics["FireRes"], font_size));
+	DrawLine(target, offset, ParseStatistic("Kondycja: ", statistics["Vitality"], font_size));
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Odp. na lod:_", statistics["IceRes"], font_size));
+	DrawLine(target, offset, ParseStatistic("Zrecznosc: ", statistics["Agility"], font_size));
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Odp. na blyskawice:_", statistics["ThunderRes"], font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Odp. na trucizne:_", statistics["PoisonRes"], font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Sila:_", statistics["Strength"], font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Kondycja:_", statistics["Vitality"], font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Zrecznosc:_", statistics["Agility"], font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Intelekt:_", statistics["Intelligence"], font_size));
+	DrawLine(target, offset, ParseStatistic("Intelekt: ", statistics["Intelligence"], font_size));
 }
 
 sf::Text InvUI::ParseStatistic(std::string prefix, int value1, int value2, std::string separator, int fontSize) {

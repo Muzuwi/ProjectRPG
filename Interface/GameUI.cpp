@@ -7,7 +7,7 @@ GameUI::GameUI(Player& _player)
 
 void GameUI::Init() {
 	settings.Init(sf::Vector2f(250, 100), sf::Vector2f(300, 400));
-	eq.Init(sf::Vector2f(50, 25), sf::Vector2f(700, 500));
+	eq.Init(sf::Vector2f(100, 50), sf::Vector2f(600, 450));
 	hud.Init();
 }
 

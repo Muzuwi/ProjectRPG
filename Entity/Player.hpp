@@ -28,6 +28,7 @@ protected:
 	void onStep() override {};
 	void onMove(Direction) override {}
 	void onUpdate() override {}
+	void Lvlup();
 	void setDefaultStatistics();
 
 	friend class WorldManager;

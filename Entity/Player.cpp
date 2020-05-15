@@ -41,15 +41,9 @@ void Player::setDefaultStatistics() {
 		//Physical
 	statistics["MinPhysical"] = 3;
 	statistics["MaxPhysical"] = 5;
-		//Fire
-	statistics["MinFire"] = 0;
-	statistics["MaxFire"] = 0;
-		//Ice
-	statistics["MinIce"] = 0;
-	statistics["MaxIce"] = 0;
-		//Thunder
-	statistics["MinThunder"] = 0;
-	statistics["MaxThunder"] = 0;
+		//Magical
+	statistics["MinMagical"] = 1;
+	statistics["MaxMagical"] = 2;
 		//Poison
 	statistics["MinPoison"] = 0;
 	statistics["MaxPoison"] = 0;
@@ -60,9 +54,7 @@ void Player::setDefaultStatistics() {
 	statistics["Armor"] = 2;
 	statistics["Dodge"] = 10;
 	//Resistances
-	statistics["FireRes"] = 0;
-	statistics["IceRes"] = 0;
-	statistics["ThunderRes"] = 0;
+	statistics["MagicalRes"] = 0;
 	statistics["PoisonRes"] = 0;
 	//Atributes
 	statistics["Strength"] = 11;
@@ -71,8 +63,15 @@ void Player::setDefaultStatistics() {
 	statistics["Intelligence"] = 2;
 
 //========== EXPERIENCE ==========//
-	player_info["lvl"] = 12;
-	player_info["current"] = 872;
-	player_info["next"] = 1354;
+	player_info["lvl"] = 1;
+	player_info["current"] = 0;
+	player_info["next"] = 11;
 	player_info["gold"] = 352;
+}
+
+void Player::Lvlup() {
+	if(player_info["lvl"] < 30) player_info["lvl"] += 1;	//temporary cap: 30 lvl
+	player_info["current"] = 0;
+	player_info["next"] += (int)(player_info["next"] * (5.2 / player_info["lvl"]));
+	std::cout << "LvL: " << player_info["lvl"] << " -> " << player_info["next"] << std::endl;
 }
