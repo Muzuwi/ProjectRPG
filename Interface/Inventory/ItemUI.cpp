@@ -1,7 +1,7 @@
 #include "Interface/Inventory/ItemUI.hpp"
 
 ItemUI::ItemUI(const Item& toDisp)
-: item(toDisp), font(AssetManager::getFont("ConnectionSerif")), active(false), mov(false), del(false), use(false)
+: item(toDisp), font(AssetManager::getFont("Browser-Cyberlink-New")), active(false), mov(false), del(false), use(false)
 {
 
 }

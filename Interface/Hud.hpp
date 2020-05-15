@@ -11,11 +11,10 @@ private:
 	sf::Vector2f position;
 	Player& player;
 public:
-	Hud(Player& entity, sf::Vector2f offset) : player(entity), position(offset), font(AssetManager::getFont("ConnectionSerif")) {};
+	Hud(Player& entity, sf::Vector2f offset) : player(entity), position(offset), font(AssetManager::getFont("VCR_OSD_MONO")) {};
 	void Init();
 	void Draw(sf::RenderTarget&);
 	sf::Text ParseStatistic(std::string, int, std::string, int, std::string, int);
 	sf::Text ParseStatistic(std::string, int, std::string, int);
 	void DrawLine(sf::RenderTarget&, sf::Vector2f, sf::Text);
-	void SetTransparency(unsigned int);
 };

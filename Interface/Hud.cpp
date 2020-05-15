@@ -36,11 +36,11 @@ void Hud::Draw(sf::RenderTarget& target) {
 
 		target.draw(base);
 
-		DrawLine(target, position + sf::Vector2f(230, 16), ParseStatistic("", player.getStatistics()["HP"], " / ", player.getStatistics()["MaxHP"], "", 16));
-		DrawLine(target, position + sf::Vector2f(230, 50), ParseStatistic("", player.getStatistics()["MP"], " / ", player.getStatistics()["MaxMP"], "", 16));
-		DrawLine(target, position + sf::Vector2f(40, 28), ParseStatistic("LVL ", player.getPlayerInfo()["lvl"], "", 24));
-		DrawLine(target, position + sf::Vector2f(48, 72), ParseStatistic("", shiftExp*100, " %", 14));
-		DrawLine(target, position + sf::Vector2f(158, 84), ParseStatistic("", player.getPlayerInfo()["gold"], "", 18));
+		DrawLine(target, position + sf::Vector2f(230, 18), ParseStatistic("", player.getStatistics()["HP"], "/", player.getStatistics()["MaxHP"], "", 16));
+		DrawLine(target, position + sf::Vector2f(230, 52), ParseStatistic("", player.getStatistics()["MP"], "/", player.getStatistics()["MaxMP"], "", 16));
+		DrawLine(target, position + sf::Vector2f(32, 28), ParseStatistic("lvl", player.getPlayerInfo()["lvl"], "", 24));
+		DrawLine(target, position + sf::Vector2f(48, 72), ParseStatistic("", shiftExp*100, " %", 16));
+		DrawLine(target, position + sf::Vector2f(158, 86), ParseStatistic("", player.getPlayerInfo()["gold"], "", 16));
 	}
 }
 

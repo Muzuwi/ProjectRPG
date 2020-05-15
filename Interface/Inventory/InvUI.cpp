@@ -1,7 +1,7 @@
 #include "InvUI.hpp"
 
 InvUI::InvUI(Player& entity)
-: player(entity), statistics(entity.getStatistics()), inventory(entity.getInventory()), equipment(inventory.getEquipment()), font(AssetManager::getFont("ConnectionSerif")), sec_focus(section::INVENTORY)
+: player(entity), statistics(entity.getStatistics()), inventory(entity.getInventory()), equipment(inventory.getEquipment()), font(AssetManager::getFont("VCR_OSD_MONO")), sec_focus(section::INVENTORY)
 {
 
 }
