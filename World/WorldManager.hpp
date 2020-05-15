@@ -9,7 +9,7 @@ class WorldManager {
 
 	static const int mapTravelTime = 10;
 	struct {
-		bool isTravelling;
+		bool isTravelling = false;
 		int currentMapTravelTime = 0;
 	} MapTravel;
 

@@ -1,7 +1,7 @@
 #include "GameUI.hpp"
 
 GameUI::GameUI(Player& _player)
-: player(_player), eq(_player) {
+: player(_player), eq(_player), hud(_player, sf::Vector2f(8,8)) {
 	current = NONE;
 }
 
@@ -11,13 +11,12 @@ void GameUI::Init() {
 	hud.Init();
 }
 
-void GameUI::DrawGUI(sf::RenderTarget& target, const int& HP, const int& MP, const int& maxHP, const int& maxMP) {
+void GameUI::DrawGUI(sf::RenderTarget& target) {
+	hud.Draw(target);
 	if (current != NONE) {
 		if (current == SETTINGS) settings.Draw(target);
 		else if (current == EQ) eq.Draw(target);
 	}
-
-	hud.draw(target, HP, MP, maxHP, maxMP);
 }
 
 void GameUI::ProcessKey(sf::Event::KeyEvent key) {

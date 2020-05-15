@@ -9,6 +9,7 @@ bool Engine::Init() {
 	
 	scene = INGAME;
 	GUI.Init();
+	world.loadMap("Hello");
 	world.loadMap("default");
 
 	Item item {"sword", 1};
@@ -140,9 +141,5 @@ void Engine::RenderWorld(sf::RenderTarget& target) {
 }
 
 void Engine::RenderHud(sf::RenderTarget& target) {
-	int HP = world.getPlayer().getHP();
-	int MP = world.getPlayer().getMP();
-	int maxHP = world.getPlayer().getMaxHP();
-	int maxMP = world.getPlayer().getMaxMP();
-	GUI.DrawGUI(target, HP, MP, maxHP, maxMP);
+	GUI.DrawGUI(target);
 }

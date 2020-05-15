@@ -30,6 +30,7 @@ Vec2u Player::getDimensions() const {
 }
 
 void Player::setDefaultStatistics() {
+//========== STATISTICS ==========//
 	//HP
 	statistics["HP"] = 85;
 	statistics["MaxHP"] = 100;
@@ -68,4 +69,10 @@ void Player::setDefaultStatistics() {
 	statistics["Vitality"] = 8;
 	statistics["Agility"] = 6;
 	statistics["Intelligence"] = 2;
+
+//========== EXPERIENCE ==========//
+	player_info["lvl"] = 12;
+	player_info["current"] = 872;
+	player_info["next"] = 1354;
+	player_info["gold"] = 352;
 }

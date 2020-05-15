@@ -27,7 +27,7 @@ public:
 	GameUI(Player& player);
 
 	void Init();
-	void DrawGUI(sf::RenderTarget&,const int&, const int&, const int&, const int&);
+	void DrawGUI(sf::RenderTarget&);
 	
 	void SetScene(sf::Event::KeyEvent);
 	void ProcessKey(sf::Event::KeyEvent);

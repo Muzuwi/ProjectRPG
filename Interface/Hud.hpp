@@ -6,10 +6,16 @@
 
 class Hud {
 private:
-	sf::Sprite hp, mp, base, cricleL, cricleR;
-
+	const sf::Font& font;
+	sf::Sprite hp, mp, base, back, exp;
+	sf::Vector2f position;
+	Player& player;
 public:
-	Hud();
+	Hud(Player& entity, sf::Vector2f offset) : player(entity), position(offset), font(AssetManager::getFont("ConnectionSerif")) {};
 	void Init();
-	void draw(sf::RenderTarget&, int, int, int, int);
+	void Draw(sf::RenderTarget&);
+	sf::Text ParseStatistic(std::string, int, std::string, int, std::string, int);
+	sf::Text ParseStatistic(std::string, int, std::string, int);
+	void DrawLine(sf::RenderTarget&, sf::Vector2f, sf::Text);
+	void SetTransparency(unsigned int);
 };

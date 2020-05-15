@@ -12,7 +12,7 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 	DrawEquipment(target);
 	DrawActorFace(target, sf::Vector2f(position.x + 16, title_char.getPosition().y + 32), sf::Vector2f(97,97));
 	DrawName(target, position + sf::Vector2f(120, title_char.getPosition().y + 16), player.getName());
-	DrawLine(target, position + sf::Vector2f(120, title_char.getPosition().y + 48), ParseStatistic("Poziom_ ", player.getLVL(), 16));
+	DrawLine(target, position + sf::Vector2f(120, title_char.getPosition().y + 48), ParseStatistic("Poziom_ ", player.getPlayerInfo()["lvl"], 16));
 	DrawStatistics(target, sf::Vector2f(position.x + 16, title_char.getPosition().y + 144), 16);
 
 	//Draw Ghost while moving item

@@ -1,37 +1,62 @@
 #include "Hud.hpp"
 
-Hud::Hud() { }
-
 void Hud::Init() {
 	hp = AssetManager::getUI("hp_fill").getSprite();
 	mp = AssetManager::getUI("mp_fill").getSprite();
-	base = AssetManager::getUI("hud_empty").getSprite();
-	cricleL = AssetManager::getUI("hud_cricle").getSprite();
-	cricleR = AssetManager::getUI("hud_cricle").getSprite();
+	base = AssetManager::getUI("hud_cover").getSprite();
+	exp = AssetManager::getUI("hud_exp").getSprite();
+	back = AssetManager::getUI("hud_back").getSprite();
 
-	base.setPosition(Vec2f(0.f, 300.f));
-	hp.setPosition(Vec2f(1.f, 466.f));
-	mp.setPosition(Vec2f(669.f, 464.f));
-	cricleL.setPosition(Vec2f(-1.f, 467.f));
-	cricleR.setPosition(Vec2f(669.f, 468.f));
+	base.setPosition(position);
+	hp.setPosition(position);
+	mp.setPosition(position);
+	exp.setPosition(position);
+	back.setPosition(position);
 }
 
-void Hud::draw(sf::RenderTarget& target, int HP, int MP, int maxHP, int maxMP) {
+void Hud::Draw(sf::RenderTarget& target) {
+	if (player.getWorldPosition().x > 10 or player.getWorldPosition().y > 3) {
 
-	target.draw(base);
-	float shiftHP = 131 - 131 * ( HP / double(maxHP) );
-	float shiftMP = 131 - 131 * ( MP / double(maxMP) );
+		target.draw(back);
+		float shiftHP = 320 * (player.getStatistics()["HP"] / double(player.getStatistics()["MaxHP"]));
+		float shiftMP = 320 * (player.getStatistics()["MP"] / double(player.getStatistics()["MaxMP"]));
+		float shiftExp = (player.getPlayerInfo()["current"] / double(player.getPlayerInfo()["next"]));
 
-	hp.setTextureRect(sf::IntRect(0, shiftHP, 131, 131));
-	hp.setPosition(-1, 467 + shiftHP);
-	
-	target.draw(hp);
+		hp.setTextureRect(sf::IntRect(0, 0, shiftHP, 18));
+		hp.setPosition(position + sf::Vector2f(86, 18));
+		target.draw(hp);
 
-	mp.setTextureRect(sf::IntRect(0, shiftMP, 131, 131));
-	mp.setPosition(669, 468 + shiftMP);
+		mp.setTextureRect(sf::IntRect(0, 0, shiftMP, 18));
+		mp.setPosition(position + sf::Vector2f(86, 52));
+		target.draw(mp);
 
-	target.draw(mp);
+		exp.setTextureRect(sf::IntRect(0, 128 - 128*shiftExp, 128, 128*shiftExp));
+		exp.setPosition(position + sf::Vector2f(0, 128 - 128 * shiftExp));
+		target.draw(exp);
 
-	target.draw(cricleL);
-	target.draw(cricleR);
+		target.draw(base);
+
+		DrawLine(target, position + sf::Vector2f(230, 16), ParseStatistic("", player.getStatistics()["HP"], " / ", player.getStatistics()["MaxHP"], "", 16));
+		DrawLine(target, position + sf::Vector2f(230, 50), ParseStatistic("", player.getStatistics()["MP"], " / ", player.getStatistics()["MaxMP"], "", 16));
+		DrawLine(target, position + sf::Vector2f(40, 28), ParseStatistic("LVL ", player.getPlayerInfo()["lvl"], "", 24));
+		DrawLine(target, position + sf::Vector2f(48, 72), ParseStatistic("", shiftExp*100, " %", 14));
+		DrawLine(target, position + sf::Vector2f(158, 84), ParseStatistic("", player.getPlayerInfo()["gold"], "", 18));
+	}
+}
+
+sf::Text Hud::ParseStatistic(std::string prefix, int value1, std::string separator, int value2, std::string sufix, int fontSize) {
+	std::string line = prefix + std::to_string(value1) + separator + std::to_string(value2) + sufix;
+	return sf::Text(line, font, fontSize);
+}
+
+sf::Text Hud::ParseStatistic(std::string prefix, int value, std::string sufix, int fontSize) {
+	std::string line = prefix + std::to_string(value) + sufix;
+	return sf::Text(line, font, fontSize);
+}
+
+void Hud::DrawLine(sf::RenderTarget& target, sf::Vector2f position, sf::Text text) {
+	text.setFont(font);
+	text.setColor(sf::Color::White);
+	text.setPosition(position);
+	target.draw(text);
 }
