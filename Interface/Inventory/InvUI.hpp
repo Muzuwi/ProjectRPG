@@ -63,6 +63,7 @@ public:
 	void DrawPlayerInfo(sf::RenderTarget&, sf::Vector2f, int);
 	void DrawStatistics(sf::RenderTarget&, sf::Vector2f, int);
 	void DrawLine(sf::RenderTarget&, sf::Vector2f, sf::Text, sf::Color = sf::Color::Black);
+	void DrawBar(sf::RenderTarget&, sf::Vector2f, int, int, sf::Vector2f, sf::Color = sf::Color::White);
 	//Procesing Functions
 	void ProcessKey(sf::Event::KeyEvent);
 	void Update(int);

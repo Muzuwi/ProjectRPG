@@ -270,36 +270,24 @@ void InvUI::DrawPlayerInfo(sf::RenderTarget& target, sf::Vector2f offset, int fo
 
 	//Level
 	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseText(player_info["lvl"], font_size - 2, "Poziom "), sf::Color::Green);
+	DrawLine(target, offset, ParseText(player_info["lvl"], font_size - 2, "level "), sf::Color::Green);
 
 	//HP
 	offset += sf::Vector2f(0, font_size );
 	DrawIcon(target, stat_icons, 0, offset, sf::Vector2f(32, 32));
-	DrawLine(target, offset + sf::Vector2f(28,8), ParseText(statistics["HP"], statistics["MaxHP"], font_size - 1, "Life:", "/"), sf::Color::Red);
+	DrawLine(target, offset + sf::Vector2f(32, 4), ParseText(statistics["HP"], statistics["MaxHP"], font_size - 2, "", "/"), sf::Color::Red);
+	DrawBar(target, offset + sf::Vector2f(32, 24), statistics["HP"], statistics["MaxHP"], sf::Vector2f(size.x / 2 - 168, 4), sf::Color::Red);
 
 	//MP
 	offset += sf::Vector2f(0, 32);
 	DrawIcon(target, stat_icons, 1, offset, sf::Vector2f(32, 32));
-	DrawLine(target, offset + sf::Vector2f(28, 8), ParseText(statistics["MP"], statistics["MaxMP"], font_size - 1, "Mana:", "/"), sf::Color::Blue);
+	DrawLine(target, offset + sf::Vector2f(32, 4), ParseText(statistics["MP"], statistics["MaxMP"], font_size - 2, "", "/"), sf::Color::Blue);
+	DrawBar(target, offset + sf::Vector2f(32, 24), statistics["MP"], statistics["MaxMP"], sf::Vector2f(size.x / 2 - 168, 4), sf::Color::Blue);
 
 	//EXP
-	double exp_width = size.x / 2 - 32;
-	double fill_width = (player_info["current"] / (double)player_info["next"]) * (exp_width - 2);
-
-		//frame
-	Frame exp_back;
 	offset += sf::Vector2f(-104, 40);
-	exp_back.Init(offset, sf::Vector2f((size.x / 2 - 32), 4));
-	exp_back.Draw(target);
-		//fill
-	offset += sf::Vector2f(1, 1);
-	sf::RectangleShape exp_fill(sf::Vector2f(fill_width, 2));
-	exp_fill.setPosition(offset);
-	exp_fill.setFillColor(sf::Color::Yellow);
-	target.draw(exp_fill);
-		//numbers
-	offset += sf::Vector2f(0, 3);
-	DrawLine(target, offset, ParseText(player_info["current"], player_info["next"], font_size - 4, "EXP: ", "/"), sf::Color::White);
+	DrawBar(target, offset, player_info["current"], player_info["next"], sf::Vector2f(size.x / 2 - 32, 4), sf::Color::Yellow);
+	DrawLine(target, offset + sf::Vector2f(0, 3), ParseText(player_info["current"], player_info["next"], font_size - 4, "EXP: ", "/"), sf::Color::White);
 }
 
 void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, int font_size) {
@@ -353,6 +341,26 @@ void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, int 
 	}
 }
 
+void InvUI::DrawLine(sf::RenderTarget& target, sf::Vector2f position, sf::Text text, sf::Color color) {
+	text.setFont(font);
+	text.setColor(color);
+	text.setPosition(position);
+	target.draw(text);
+}
+
+void InvUI::DrawBar(sf::RenderTarget& target, sf::Vector2f position, int val1, int val2, sf::Vector2f size, sf::Color color) {
+	//BACK
+	Frame object_back;
+	object_back.Init(position, size);
+	object_back.Draw(target);
+	//FILL
+	double fill_width = (val1 / (double)val2) * (size.x - 2);
+	sf::RectangleShape fill(sf::Vector2f(fill_width, size.y - 1));
+	fill.setPosition(position + sf::Vector2f(1, 1));
+	fill.setFillColor(color);
+	target.draw(fill);
+}
+
 sf::Text InvUI::ParseText(int value1, int value2, int fontSize, std::string prefix, std::string separator, std::string sufix) {
 	std::string line = prefix + std::to_string(value1) + separator + std::to_string(value2) + sufix;
 	return sf::Text(line, font, fontSize);
@@ -361,13 +369,6 @@ sf::Text InvUI::ParseText(int value1, int value2, int fontSize, std::string pref
 sf::Text InvUI::ParseText(int value, int fontSize, std::string prefix, std::string sufix) {
 	std::string line = prefix + std::to_string(value) + sufix;
 	return sf::Text(line, font, fontSize);
-}
-
-void InvUI::DrawLine(sf::RenderTarget& target, sf::Vector2f position, sf::Text text, sf::Color color) {
-	text.setFont(font);
-	text.setColor(color);
-	text.setPosition(position);
-	target.draw(text);
 }
 
 sf::Vector2f InvUI::getTextSize(sf::Text object, std::string text) {
