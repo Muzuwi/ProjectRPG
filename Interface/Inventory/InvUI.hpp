@@ -14,40 +14,62 @@ enum section {
 class InvUI : public Window{
 protected:
 	const sf::Font& font;
+
+	//Static Titles
 	sf::Text title_eq, title_inv, title_char;
-	int focus, action_index;
-	bool sub;
-	bool mov;
-	section sec_focus;
-	section action_source;
-	std::shared_ptr<ItemUI> subWin;
-	std::shared_ptr<Item> to_move;
-	sf::Vector2f focusCellPos;
+
+	//Indexes
+	int focus;			//current focus
+	int action_index;	//focus of action (FE moving)
+	
+	//Flags
+	bool sub;	//Subwindow is active? (ItemUI)
+	bool mov;	//Moving an item?
+
+	//Section flags
+	section sec_focus;		//Where focus is? (Inv / Eq)
+	section action_source;	//From where action is comming? (Inv / Eq)
+
+	//Holding Item
+	std::shared_ptr<ItemUI> subWin;	//to display info
+	std::shared_ptr<Item> to_move;	//to move
+
+	sf::Vector2f focusCellPos;	//Position of focused cell
+
+	//Icons
 	sf::Sprite eq_legend;
+	sf::Sprite stat_icons;
 	sf::Sprite hero_face;
 
-	Player& player;
-	std::map<std::string, int>& statistics;
-	PlayerInventory& inventory;
-	PlayerEquipment& equipment;
+	//PLAYER
+	Player& player;								//Player
+	std::map<std::string, int>& statistics;		//Player's statistics
+	std::map<std::string, int>& player_info;	//Player's data info
+	PlayerInventory& inventory;					//Player's inventory
+	PlayerEquipment& equipment;					//Player's equipment
 
+	//Self Operation
 	void DrawSelf(sf::RenderTarget&)override;
 	void SelfInit();
 public:
 	InvUI(Player&);
-	void SetButtons();
+	//Drawing Functions
 	void DrawInventory(sf::RenderTarget&);	//draw eq cells
 	void DrawEquipment(sf::RenderTarget&);
 	void DrawSeparator(sf::RenderTarget&);
-	void ProcessKey(sf::Event::KeyEvent);
-	void Update(int);
 	void DrawIcon(sf::RenderTarget&, sf::Sprite&, int, sf::Vector2f, sf::Vector2f);
 	void DrawEqCell(sf::RenderTarget&, std::shared_ptr<Item>, int, sf::Vector2f, sf::Vector2f);
 	void DrawActorFace(sf::RenderTarget&, sf::Vector2f, sf::Vector2f);
-	void DrawName(sf::RenderTarget&, sf::Vector2f, std::string);
+	void DrawPlayerInfo(sf::RenderTarget&, sf::Vector2f, int);
 	void DrawStatistics(sf::RenderTarget&, sf::Vector2f, int);
-	void DrawLine(sf::RenderTarget&, sf::Vector2f, sf::Text);
-	sf::Text ParseStatistic(std::string, int, int, std::string, int);
-	sf::Text ParseStatistic(std::string, int, int);
+	void DrawLine(sf::RenderTarget&, sf::Vector2f, sf::Text, sf::Color = sf::Color::Black);
+	//Procesing Functions
+	void ProcessKey(sf::Event::KeyEvent);
+	void Update(int);
+	//Parsing Functions
+	sf::Text ParseText(int value1, int value2, int = 16, std::string = "", std::string = "", std::string = "");
+	sf::Text ParseText(int value, int = 16, std::string = "", std::string = "");
+	//Other
+	sf::Vector2f getTextSize(sf::Text, std::string);
 };
 

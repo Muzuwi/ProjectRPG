@@ -1,19 +1,19 @@
 #include "InvUI.hpp"
 
 InvUI::InvUI(Player& entity)
-: player(entity), statistics(entity.getStatistics()), inventory(entity.getInventory()), equipment(inventory.getEquipment()), font(AssetManager::getFont("VCR_OSD_MONO")), sec_focus(section::INVENTORY)
+: player(entity), statistics(entity.getStatistics()), player_info(entity.getPlayerInfo()), inventory(entity.getInventory()), equipment(inventory.getEquipment()), font(AssetManager::getFont("VCR_OSD_MONO")), sec_focus(section::INVENTORY)
 {
 
 }
 
 void InvUI::DrawSelf(sf::RenderTarget& target) {
+	//Draw Content
 	DrawSeparator(target);
 	DrawInventory(target);
 	DrawEquipment(target);
-	DrawActorFace(target, sf::Vector2f(position.x + 16, title_char.getPosition().y + 32), sf::Vector2f(97,97));
-	DrawName(target, position + sf::Vector2f(120, title_char.getPosition().y + 8), player.getName());
-	DrawLine(target, position + sf::Vector2f(120, title_char.getPosition().y + 40), ParseStatistic("Poziom ", player.getPlayerInfo()["lvl"], 16));
-	DrawStatistics(target, sf::Vector2f(position.x + 16, title_char.getPosition().y + 144), 16);
+	DrawActorFace(target, position + sf::Vector2f(16, 32), sf::Vector2f(97,97));
+	DrawPlayerInfo(target, position + sf::Vector2f(120, 32), 18);
+	DrawStatistics(target, position + sf::Vector2f(16, 160), 16);
 
 	//Draw Ghost while moving item
 	sf::Vector2f ghost_pos;
@@ -34,58 +34,29 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 }
 
 void InvUI::SelfInit() {
-	//EQ_legend
-	eq_legend.setTexture(AssetManager::getUI("eq_back").getTexture());
+	//Getting sprites
+	eq_legend.setTexture(AssetManager::getUI("eq_back").getTexture());		//EQ_legend
+	hero_face.setTexture(AssetManager::getUI("player_face").getTexture());	//Hero_face
+	stat_icons.setTexture(AssetManager::getUI("stat_icons").getTexture());	//stat_icons
 
-	//Hero_face
-	hero_face.setTexture(AssetManager::getUI("player_face").getTexture());
+	//Title Inventory
+	title_inv = sf::Text("Inventory", font, 21);
+	title_inv.setFillColor(sf::Color::White);
+	title_inv.setPosition(position + sf::Vector2f((size.x / 2.0) + ((size.x / 2.0) - getTextSize(title_inv, "Inventory").x) / 2.0, (size.y / 3.0) - 28));
 
-	//title_inv
-	title_inv.setFont(font);
-	title_inv.setString("Inventory");
-	title_inv.setFillColor(sf::Color::Black);
-	title_inv.setCharacterSize(21);
+	//Title Equipment
+	title_eq = sf::Text("Equipment", font, 21);
+	title_eq.setFillColor(sf::Color::White);
+	title_eq.setPosition(position + sf::Vector2f((size.x / 2.0) + ((size.x / 2.0) - getTextSize(title_eq, "Equipment").x) / 2.0, 8));
 
-	sf::Vector2f stringSize = (title_inv.findCharacterPos(8) - title_inv.findCharacterPos(0));
-	stringSize.y = 24.0;
-	double offset_x = position.x + (size.x / 2.0) + ((size.x / 2.0) - stringSize.x) / 2.0;
-	double offset_y = position.y + (size.y / 3.0) - stringSize.y - 8;
+	//Title Character
+	title_char = sf::Text("Character", font, 21);
+	title_char.setFillColor(sf::Color::White);
+	title_char.setPosition(position + sf::Vector2f(((size.x / 2) - getTextSize(title_char, "Character").x) / 2, 6));
 
-	title_inv.setPosition(sf::Vector2f(offset_x, offset_y));
-
-	//title_eq
-	title_eq.setFont(font);
-	title_eq.setString("Equipment");
-	title_eq.setFillColor(sf::Color::Black);
-	title_eq.setCharacterSize(21);
-
-	stringSize = (title_eq.findCharacterPos(8) - title_eq.findCharacterPos(0));
-	stringSize.y = 24.0;
-	offset_x = position.x + (size.x / 2.0) + ((size.x / 2.0) - stringSize.x) / 2.0;
-	offset_y = position.y + 8;
-
-	title_eq.setPosition(sf::Vector2f(offset_x, offset_y));
-
-	//Title Stats
-	title_char.setFont(font);
-	title_char.setString("Character");
-	title_char.setFillColor(sf::Color::Black);
-	title_char.setCharacterSize(21);
-
-	stringSize = (title_char.findCharacterPos(8) - title_char.findCharacterPos(0));
-	stringSize.y = 24.0;
-	offset_x = position.x + ((size.x / 2.0) - stringSize.x) / 2.0;
-	offset_y = position.y + 8;
-
-	title_char.setPosition(sf::Vector2f(offset_x, offset_y));
-
-	//Other
-	SetButtons();
-	sub = false;
-}
-
-void InvUI::SetButtons() {	//ARTIFACT
+	//Other - flags
 	focus = 0;
+	sub = false;
 }
 
 void InvUI::DrawInventory(sf::RenderTarget& target) {
@@ -128,45 +99,38 @@ void InvUI::DrawEquipment(sf::RenderTarget& target) {
 	double offset_y = position.y + 44;
 	sf::Vector2f equipment_offset(offset_x, offset_y);
 	
-	//R-hand
-	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::RightHand), 0, equipment_offset, cell_size);
-	//L-hand
-	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::LeftHand), 1, equipment_offset + sf::Vector2f(32,0), cell_size);
-	//Helmet
-	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::Helmet), 2, equipment_offset + sf::Vector2f(64, 0), cell_size);
-	//Gloves
-	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::Gloves), 3, equipment_offset + sf::Vector2f(96, 0), cell_size);
-	//Chest
-	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::Chest), 4, equipment_offset + sf::Vector2f(128, 0), cell_size);
-	//Boots
-	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::Boots), 5, equipment_offset + sf::Vector2f(160, 0), cell_size);
-	//Necklace
-	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::Amulet), 6, equipment_offset + sf::Vector2f(192, 0), cell_size);
-	//Ring
-	DrawEqCell(target, equipment.getEquipmentBySlot(EquipmentSlot::Ring), 7, equipment_offset + sf::Vector2f(224, 0), cell_size);
+	for (unsigned int index = 0; index < (unsigned int)EquipmentSlot::_DummyEnd; index++) {
+		DrawEqCell(target, equipment.getEquipmentBySlot((EquipmentSlot)index), index, equipment_offset, cell_size);
+		equipment_offset += sf::Vector2f(32, 0);
+	}
 }
 
 void InvUI::Update(int change) {
 	if (sec_focus == INVENTORY) {
 		if (focus < 8 and change == -8) {
+			//Change Section
 			sec_focus = EQUIPMENT;
 		}
 		else {
+			//Moving Exceprions
 			if (focus >= 56 and change == 8) return;
 			if (focus % 8 == 0 and change == -1) return;
 			if (focus % 8 == 7 and change == 1) return;
-
+			//Change focus
 			focus = (focus + change) % inventory.getBackpack().size();
 		}
 	}
 	else if (sec_focus == EQUIPMENT) {
 		if (change == 8) {
+			//Change Section
 			sec_focus = INVENTORY;
 		}
 		else {
+			//Moving Exceprions
 			if (focus == 0 and change == -1) return;
 			if (focus == 7 and change == 1) return;
 			if (change == -8) return;
+			//Change focus
 			focus = (focus + change);
 		}
 	}
@@ -174,7 +138,7 @@ void InvUI::Update(int change) {
 
 void InvUI::ProcessKey(sf::Event::KeyEvent key) {
 	if (!subWin || (subWin && !subWin->isActive())) {
-			//MOVING
+			//Basic jumping
 			if (key.code == sf::Keyboard::W) Update(-8);
 			else if (key.code == sf::Keyboard::S) Update(8);
 			else if (key.code == sf::Keyboard::A) Update(-1);
@@ -236,7 +200,9 @@ void InvUI::ProcessKey(sf::Event::KeyEvent key) {
 			}
 	}
 	else{
+		//IF SUBWIN IS ACTIVE
 		subWin->ProcessKey(key);
+		//REMEMBER ITEM TO MOVE
 		if (subWin->MovFlag()) {
 			if (action_source == INVENTORY) {
 				to_move = inventory.getItem(focus);
@@ -246,7 +212,7 @@ void InvUI::ProcessKey(sf::Event::KeyEvent key) {
 			}
 		}
 	}
-
+	//DELETE ITEM
 	if (subWin and subWin->DelFlag()) {
 		if (action_source == INVENTORY) {
 			inventory.deleteItem(action_index);
@@ -256,12 +222,13 @@ void InvUI::ProcessKey(sf::Event::KeyEvent key) {
 		}
 		subWin->SetDelFlag(false);
 	}
+	//USE ITEM
 	if (subWin and subWin->UseFlag()) {
 		if (action_source == INVENTORY) {
 			inventory.useItem(action_index);
 		}
 		else if (action_source == EQUIPMENT) {
-			//nop
+			//nop feature
 		}
 		subWin->SetUseFlag(false);
 	}
@@ -294,16 +261,52 @@ void InvUI::DrawActorFace(sf::RenderTarget& target, sf::Vector2f position, sf::V
 	target.draw(hero_face);
 }
 
-void InvUI::DrawName(sf::RenderTarget& target, sf::Vector2f position, std::string name) {
-	sf::Text toDisp(name, font, 21);
-	toDisp.setFillColor(sf::Color::Black);
-	toDisp.setPosition(position);
-	target.draw(toDisp);
+void InvUI::DrawPlayerInfo(sf::RenderTarget& target, sf::Vector2f offset, int font_size){
+	//Name
+	sf::Text name(player.getName(), font, font_size + 1);
+	name.setFillColor(sf::Color::Black);
+	name.setPosition(offset);
+	target.draw(name);
+
+	//Level
+	offset += sf::Vector2f(0, font_size + 1);
+	DrawLine(target, offset, ParseText(player_info["lvl"], font_size - 2, "Poziom "), sf::Color::Green);
+
+	//HP
+	offset += sf::Vector2f(0, font_size );
+	DrawIcon(target, stat_icons, 0, offset, sf::Vector2f(32, 32));
+	DrawLine(target, offset + sf::Vector2f(28,8), ParseText(statistics["HP"], statistics["MaxHP"], font_size - 1, "Life:", "/"), sf::Color::Red);
+
+	//MP
+	offset += sf::Vector2f(0, 32);
+	DrawIcon(target, stat_icons, 1, offset, sf::Vector2f(32, 32));
+	DrawLine(target, offset + sf::Vector2f(28, 8), ParseText(statistics["MP"], statistics["MaxMP"], font_size - 1, "Mana:", "/"), sf::Color::Blue);
+
+	//EXP
+	double exp_width = size.x / 2 - 32;
+	double fill_width = (player_info["current"] / (double)player_info["next"]) * (exp_width - 2);
+
+		//frame
+	Frame exp_back;
+	offset += sf::Vector2f(-104, 40);
+	exp_back.Init(offset, sf::Vector2f((size.x / 2 - 32), 4));
+	exp_back.Draw(target);
+		//fill
+	offset += sf::Vector2f(1, 1);
+	sf::RectangleShape exp_fill(sf::Vector2f(fill_width, 2));
+	exp_fill.setPosition(offset);
+	exp_fill.setFillColor(sf::Color::Yellow);
+	target.draw(exp_fill);
+		//numbers
+	offset += sf::Vector2f(0, 3);
+	DrawLine(target, offset, ParseText(player_info["current"], player_info["next"], font_size - 4, "EXP: ", "/"), sf::Color::White);
 }
 
-void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f offset, int font_size) {
-	/*
-	std::vector<std::string> statNames{ "HP","MaxHP",
+void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, int font_size) {
+
+//=============================== DATA ===============================//
+	//KEYS FOR STATISTIC MAP
+	std::vector<std::string> statIndex{ "HP","MaxHP",
 										"MP","MaxMP",
 										"MinPhysical","MaxPhysical",
 										"MinMagical","MaxMagical",
@@ -312,58 +315,61 @@ void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f offset, int fo
 										"Precision",
 										"Armor",
 										"Dodge",
-										"MagicalRes","PoisonRes",
-										"Strength",
-										"Vitality",
-										"Agility",
-										"Intelligence"
+										"MagicalRes",
+										"PoisonRes"
 	};
-	*/
 
-	DrawLine(target, offset, ParseStatistic("Zdrowie: ", statistics["HP"], statistics["MaxHP"], " / ", font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Mana: ", statistics["MP"], statistics["MaxMP"], " / ", font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Obrazenia fizyczne: ", statistics["MinPhysical"], statistics["MaxPhysical"], " - ", font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Obrazenia magiczne: ", statistics["MinMagical"], statistics["MaxMagical"], " - ", font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Trucizna: ", statistics["MinPoison"], statistics["MaxPoison"], " - ", font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Trafienie krytyczne: ", statistics["Crit"], font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Celnosc: ", statistics["Precision"], font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Pancerz: ", statistics["Armor"], font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Unik: ", statistics["Dodge"], font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Odp. magiczne: ", statistics["MagicalRes"], font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Odp. na trucizne: ", statistics["PoisonRes"], font_size));
-	offset += sf::Vector2f(0, font_size + 9);
-	DrawLine(target, offset, ParseStatistic("Sila: ", statistics["Strength"], font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Kondycja: ", statistics["Vitality"], font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Zrecznosc: ", statistics["Agility"], font_size));
-	offset += sf::Vector2f(0, font_size + 1);
-	DrawLine(target, offset, ParseStatistic("Intelekt: ", statistics["Intelligence"], font_size));
+	//KEYS TO DISPLAY
+	std::vector<std::string> statNames{ "Life","",
+										"Mana","",
+										"Melee damage","",
+										"Magical damage","",
+										"Poison damage","",
+										"Critical",
+										"Precision",
+										"Armor",
+										"Dodge",
+										"Magical Resistance",
+										"Poison Resistance"
+	};
+//=========================== END OF DATA =============================//
+
+	int icon_index = 2;
+	//DRAW DOUBLE VALUE STATISTIC, (except 0 - 3) indexes 4 - 9
+	for (int i = 4; i < 10; i += 2) {
+		DrawIcon(target, stat_icons, i/2, position, sf::Vector2f(32, 32));
+		DrawLine(target, position + sf::Vector2f(32, 8), ParseText(statistics[statIndex[i]], statistics[statIndex[i+1]], font_size, statNames[i] + ": ", "-"));
+		position += sf::Vector2f(0, 28);
+		if(i % 2 == 0) icon_index++;
+	}
+	//DRAW SINGLE VALUE STATISTIC, indexes 10 - to the end(13)
+	for (int i = 10; i < statNames.size(); i++) {
+		DrawIcon(target, stat_icons, icon_index, position, sf::Vector2f(32, 32));
+		std::string sufix = "";
+		if (statIndex[i] == "Crit" or statIndex[i] == "Precision" or statIndex[i] == "MagicalRes" or statIndex[i] == "PoisonRes") sufix = "%";
+		DrawLine(target, position + sf::Vector2f(32, 8), ParseText(statistics[statIndex[i]], font_size, statNames[i] + ": ", sufix));
+		position += sf::Vector2f(0, 28);
+		icon_index++;
+	}
 }
 
-sf::Text InvUI::ParseStatistic(std::string prefix, int value1, int value2, std::string separator, int fontSize) {
-	std::string line = prefix + std::to_string(value1) + separator + std::to_string(value2);
+sf::Text InvUI::ParseText(int value1, int value2, int fontSize, std::string prefix, std::string separator, std::string sufix) {
+	std::string line = prefix + std::to_string(value1) + separator + std::to_string(value2) + sufix;
 	return sf::Text(line, font, fontSize);
 }
 
-sf::Text InvUI::ParseStatistic(std::string prefix, int value, int fontSize) {
-	std::string line = prefix + std::to_string(value);
+sf::Text InvUI::ParseText(int value, int fontSize, std::string prefix, std::string sufix) {
+	std::string line = prefix + std::to_string(value) + sufix;
 	return sf::Text(line, font, fontSize);
 }
 
-void InvUI::DrawLine(sf::RenderTarget& target, sf::Vector2f position, sf::Text text) {
+void InvUI::DrawLine(sf::RenderTarget& target, sf::Vector2f position, sf::Text text, sf::Color color) {
 	text.setFont(font);
-	text.setColor(sf::Color::Black);
+	text.setColor(color);
 	text.setPosition(position);
 	target.draw(text);
+}
+
+sf::Vector2f InvUI::getTextSize(sf::Text object, std::string text) {
+	return sf::Vector2f(object.findCharacterPos(text.size() - 1) - object.findCharacterPos(0));
 }

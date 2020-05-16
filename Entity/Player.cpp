@@ -56,16 +56,11 @@ void Player::setDefaultStatistics() {
 	//Resistances
 	statistics["MagicalRes"] = 0;
 	statistics["PoisonRes"] = 0;
-	//Atributes
-	statistics["Strength"] = 11;
-	statistics["Vitality"] = 8;
-	statistics["Agility"] = 6;
-	statistics["Intelligence"] = 2;
 
 //========== EXPERIENCE ==========//
-	player_info["lvl"] = 1;
-	player_info["current"] = 0;
-	player_info["next"] = 11;
+	player_info["lvl"] = 8;
+	player_info["current"] = 289;
+	player_info["next"] = 2656;
 	player_info["gold"] = 352;
 }
 

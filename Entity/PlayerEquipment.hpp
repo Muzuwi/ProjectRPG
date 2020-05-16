@@ -11,8 +11,9 @@ enum class EquipmentSlot {
 	Boots,
 	Amulet,
 	Ring,
-	Pants,
-	Braces
+	_DummyEnd,
+	Pants,	//frozen
+	Braces	//frozen
 };
 
 class PlayerEquipment {
