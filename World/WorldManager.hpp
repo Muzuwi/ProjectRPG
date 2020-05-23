@@ -7,20 +7,13 @@ class WorldManager {
 	std::shared_ptr<Map> currentMap;
 	Player player;
 
-	static const int mapTravelTime = 10;
+	static const int mapTravelTime {10};
 	struct {
-		bool isTravelling = false;
-		int currentMapTravelTime = 0;
+		bool isTravelling {false};
+		int currentMapTravelTime {0};
 	} MapTravel;
-
-	std::unordered_map<std::string, std::shared_ptr<Map>> allMaps;
 public:
-	WorldManager() {
-		allMaps["_undefined"] = std::make_shared<Map>(Map::make_empty({1,1},0));
-		allMaps["_undefined"]->initializeVertexArrays();
-		allMaps["_undefined"]->bindPlayer(player);
-		currentMap = allMaps["_undefined"];
-	}
+	WorldManager() {}
 
 	Map& getMap() {
 		if(!currentMap)
@@ -30,7 +23,7 @@ public:
 
 	Player& getPlayer() { return player; };
 
-	void loadMap(const std::string& mapName);
+	void setCurrentMap(const std::string& mapName);
 
 	bool movePlayer(Direction dir);
 	bool playerInteract();

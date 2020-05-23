@@ -109,13 +109,14 @@ void Map::serializeToFile(const std::string &filename) {
 
 Map::Map(const Map &map)
 : tileset(AssetManager::getTileset(map.tilesetName), map.tilesetName) {
-	this->player = nullptr;
+	this->player = map.player;
 	this->tilesetName = map.tilesetName;
 	this->size = map.size;
 	this->vertices = map.vertices;
 	this->layerVertices = map.layerVertices;
 	this->npcs = map.npcs;
 	this->connections = map.connections;
+	this->standingOnConnection = map.standingOnConnection;
 
 	for(unsigned layer = 0; layer < 3; layer++)
 		this->floorTiles[layer] = map.floorTiles[layer];

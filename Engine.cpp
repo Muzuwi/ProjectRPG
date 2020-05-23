@@ -3,14 +3,14 @@
 #include "World/Item.hpp"
 
 bool Engine::Init() {
+	AssetManager::loadMaps();
 	window = std::make_shared<sf::RenderWindow>(sf::VideoMode(windowWidth, windowHeight, 32), "Projekt");
 	if (!window) return false;
 	window->setFramerateLimit(60);
 	
 	scene = INGAME;
 	GUI.Init();
-	world.loadMap("Hello");
-	world.loadMap("default");
+	world.setCurrentMap("default");
 
 	Item item {"sword", 1};
 

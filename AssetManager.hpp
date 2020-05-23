@@ -5,6 +5,8 @@
 #include "Graphics/Spritesheet.hpp"
 #include "World/TileSet.hpp"
 
+class Map;
+
 class AssetManager {
 private:
 	//  Hashmapa spritesheetów, by móc odwoływać się do nich przez nazwy, np. 'player'
@@ -13,10 +15,12 @@ private:
 	std::unordered_map<std::string, Spritesheet> characters;
 	std::unordered_map<std::string, nlohmann::json> config;
 	std::unordered_map<std::string, sf::Font> fonts;
+	std::unordered_map<std::string, std::shared_ptr<Map>> maps;
 
 	bool addSpritesheet(const std::string& resourcePath, std::unordered_map<std::string, Spritesheet>& map, Vec2u (*partitioner)(Vec2u textureSize) = nullptr);
 	bool addJsonFile(const std::string& resourcePath);
 	bool addFont(const std::string& resourcePath);
+	bool addMap(const std::string& resourcePath);
 
 	static std::string getFilenameFromPath(const std::string& path);
 public:
@@ -70,6 +74,14 @@ public:
 		return get().fonts[name];
 	}
 
+	static std::shared_ptr<Map> getMap(const std::string& name) {
+		if(get().maps.find(name) == get().maps.end()) {
+			std::cerr << "Map '" << name << "' does not exist!\n";
+			throw std::runtime_error("Requested non-existant map '" + name + "'");
+		}
+
+		return get().maps[name];
+	}
 
 	static const std::unordered_map<std::string, Spritesheet> getAllTilesets(){
 		return get().tilesets;
@@ -83,6 +95,10 @@ public:
 		return get().UI;
 	}
 
+	static std::unordered_map<std::string, std::shared_ptr<Map>>& getAllMaps() {
+		return get().maps;
+	}
+
 
 	AssetManager() {
 		this->autoload();
@@ -91,4 +107,5 @@ public:
 	~AssetManager() {}
 
 	void autoload();
+	static void loadMaps();
 };

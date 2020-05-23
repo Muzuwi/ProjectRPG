@@ -21,7 +21,7 @@ class EditWindow {
 		bool isTileChosen = false;
 		int width, height;
 		std::string fname;
-		Map mapData = Map({100,100}, "Tileset");
+		std::shared_ptr<Map> mapData;
 		unsigned editingLayer = 0;
 		Player fakePlayer;
 	} EditingMap;
@@ -53,6 +53,9 @@ class EditWindow {
 	TilesetEditor tilesEditor;
 
 	Vec2i mapPosition;
+
+	void drawMapOpenDialog();
+
 
 	void doMapLoadTasks();
 	void drawErrorBox();

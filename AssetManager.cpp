@@ -1,7 +1,7 @@
 #include <filesystem>
 #include <fstream>
+#include "World/Map.hpp"
 #include "AssetManager.hpp"
-
 
 /*
  *  Importuje nową spritesheet z dysku
@@ -131,4 +131,28 @@ std::string AssetManager::getFilenameFromPath(const std::string &path) {
 		name = name.substr(0, name.find_last_of('.'));
 
 	return name;
+}
+
+bool AssetManager::addMap(const std::string& resourcePath) {
+	try {
+		auto map = std::make_shared<Map>(Map::from_file(getFilenameFromPath(resourcePath)));
+		map->initializeVertexArrays();
+		maps[getFilenameFromPath(resourcePath)] = map;
+	} catch (std::exception& e) {
+		std::cout << e.what() << "\n";
+		return false;
+	}
+
+	return true;
+}
+
+void AssetManager::loadMaps() {
+	namespace fs = std::filesystem;
+	//  Ładowanie map
+	for(const auto& entry : fs::directory_iterator("GameContent/Map/")) {
+		if(entry.is_regular_file() && entry.path().extension() == ".json") {
+			if(get().addMap(entry.path().string()))
+				std::cout << "AssetManager::autoload()/ Adding map " << entry.path().filename() << "\n";
+		}
+	}
 }

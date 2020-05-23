@@ -4,6 +4,7 @@
 #include "imgui/imgui-SFML.h"
 
 void EditWindow::start() {
+	AssetManager::loadMaps();
 	width = 1280;
 	height = 720;
 	sf::VideoMode mode;
@@ -64,30 +65,30 @@ void EditWindow::frameLoop() {
 
 	//  Przyciemniamy warstwy które nie są aktywne w edytorze
 	if (EditingMap.editingLayer == 0) {
-		EditingMap.mapData.drawTiles(*editorWindow, 0);
-		EditingMap.mapData.drawTiles(mapTexture, 1);
-		EditingMap.mapData.drawTiles(mapTexture, 2);
+		EditingMap.mapData->drawTiles(*editorWindow, 0);
+		EditingMap.mapData->drawTiles(mapTexture, 1);
+		EditingMap.mapData->drawTiles(mapTexture, 2);
 		mapTexture.display();
 		editorWindow->draw(spr);
 	} else if(EditingMap.editingLayer == 1) {
-		EditingMap.mapData.drawTiles(mapTexture, 0);
+		EditingMap.mapData->drawTiles(mapTexture, 0);
 		mapTexture.display();
 		editorWindow->draw(spr);
 
-		EditingMap.mapData.drawTiles(*editorWindow, 1);
+		EditingMap.mapData->drawTiles(*editorWindow, 1);
 
 		mapTexture.clear(sf::Color::Transparent);
-		EditingMap.mapData.drawTiles(mapTexture, 2);
+		EditingMap.mapData->drawTiles(mapTexture, 2);
 		mapTexture.display();
 		editorWindow->draw(spr);
 	} else {
-		EditingMap.mapData.drawTiles(mapTexture, 0);
-		EditingMap.mapData.drawTiles(mapTexture, 1);
+		EditingMap.mapData->drawTiles(mapTexture, 0);
+		EditingMap.mapData->drawTiles(mapTexture, 1);
 		mapTexture.display();
 		editorWindow->draw(spr);
-		EditingMap.mapData.drawTiles(*editorWindow, 2);
+		EditingMap.mapData->drawTiles(*editorWindow, 2);
 	}
-	EditingMap.mapData.drawEntities(*editorWindow);
+	EditingMap.mapData->drawEntities(*editorWindow);
 
 
 	MouseMovement.hoverCoordinates = (pos + sf::Mouse::getPosition(*editorWindow)) / (int)Tile::dimensions();
@@ -142,69 +143,11 @@ void EditWindow::leftClickHandler() {
 }
 
 bool EditWindow::drawCommonWindows() {
-	if(EditingMap.isLoaded && ErrorWindow.open) this->drawErrorBox();
+	if(EditingMap.isLoaded && ErrorWindow.open)
+		this->drawErrorBox();
 
-	if(!EditingMap.isLoaded) {
-		static char buf[128];
-		static char existingBuf[32];
-		static std::string selectedSpritesheet { };
-		static int width = 100, height = 100, type = 0;
-
-		ImGui::OpenPopup("Enter map details");
-		if (ImGui::BeginPopupModal("Enter map details", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
-			ImGui::InputText("Filename", buf, 128);
-			ImGui::InputInt("Width", &width);
-			ImGui::InputInt("Height", &height);
-			ImGui::InputInt("Default Tile", &type);
-			if(ImGui::BeginCombo("Spritesheet", selectedSpritesheet.c_str())) {
-				for(const auto& key : AssetManager::getAllTilesets() ) {
-					std::string name = key.first + " (" + std::to_string(key.second.getSpriteSize().x)
-					                   + "x" + std::to_string(key.second.getSpriteSize().y) + ")";
-					if(ImGui::Selectable(name.c_str())) {
-						selectedSpritesheet = key.first;
-						if(!selectedSpritesheet.empty()) {
-							picker.init(selectedSpritesheet);
-							EditingMap.isTileChosen = true;
-						}
-					}
-
-					if(key.first == selectedSpritesheet)
-						ImGui::SetItemDefaultFocus();
-				}
-				ImGui::EndCombo();
-			}
-
-
-			ImGui::Dummy(ImVec2(ImGui::GetWindowWidth()-30, 0));
-			if(ImGui::Button("Create") && width > 0 && height > 0) {
-				EditingMap.fname = std::string(buf);
-				EditingMap.mapData = Map::make_empty(Vec2u(width, height), type, selectedSpritesheet);
-				this->doMapLoadTasks();
-				ImGui::CloseCurrentPopup();
-			}
-
-			ImGui::Separator();
-			ImGui::Text("...or enter an existing filename here");
-			ImGui::InputText("Filename##1", existingBuf, 32);
-			std::string fname = std::string(existingBuf);
-			if(fname.empty()) fname = "default";
-			if(ImGui::Button("Open") && !fname.empty()) {
-				try {
-					EditingMap.fname = fname;
-					EditingMap.mapData = Map::from_file(fname);
-					this->doMapLoadTasks();
-				} catch (std::exception& ex) {
-					EditingMap.isLoaded = false;
-					ErrorWindow.open = true;
-					ErrorWindow.text = "Map load failed!\nDetails: " + std::string(ex.what());
-				}
-			}
-
-			if(ErrorWindow.open) this->drawErrorBox();
-
-			ImGui::EndPopup();
-		}
-	}
+	if(!EditingMap.isLoaded)
+		this->drawMapOpenDialog();
 
 	return false;
 }
@@ -218,7 +161,7 @@ void EditWindow::drawMenuBar() {
 			}
 			if(ImGui::MenuItem("Save to file")) {
 				try {
-					EditingMap.mapData.serializeToFile(EditingMap.fname);
+					EditingMap.mapData->serializeToFile(EditingMap.fname);
 				} catch (std::exception& ex) {
 					ErrorWindow.open = true;
 					ErrorWindow.text = "Saving map failed!\nDetails: " + std::string(ex.what()) + "\n";
@@ -266,18 +209,91 @@ void EditWindow::drawErrorBox() {
 }
 
 void EditWindow::doMapLoadTasks() {
-	EditingMap.mapData.initializeVertexArrays();
-	EditingMap.mapData.bindPlayer(EditingMap.fakePlayer);
-	EditingMap.width = EditingMap.mapData.size.x;
-	EditingMap.height = EditingMap.mapData.size.y;
+	EditingMap.mapData->bindPlayer(EditingMap.fakePlayer);
+	EditingMap.width = EditingMap.mapData->size.x;
+	EditingMap.height = EditingMap.mapData->size.y;
 	EditingMap.isLoaded = true;
-	picker.init(EditingMap.mapData.tilesetName);
-	tilesEditor.init(EditingMap.mapData.tilesetName, EditingMap.mapData.tileset);
+	picker.init(EditingMap.mapData->tilesetName);
+	tilesEditor.init(EditingMap.mapData->tilesetName, EditingMap.mapData->tileset);
 
-	Tools.brush = std::make_shared<Brush>(EditingMap.mapData);
-	Tools.cursor = std::make_shared<CursorTool>(EditingMap.mapData);
-	Tools.creator = std::make_shared<NPCCreator>(EditingMap.mapData);
-	Tools.connect = std::make_shared<ConnectionTool>(EditingMap.mapData);
+	Tools.brush = std::make_shared<Brush>(*EditingMap.mapData);
+	Tools.cursor = std::make_shared<CursorTool>(*EditingMap.mapData);
+	Tools.creator = std::make_shared<NPCCreator>(*EditingMap.mapData);
+	Tools.connect = std::make_shared<ConnectionTool>(*EditingMap.mapData);
 
 	assert(mapTexture.create(EditingMap.width * Tile::dimensions(), EditingMap.height*Tile::dimensions()));
+}
+
+void EditWindow::drawMapOpenDialog() {
+	static char buf[128];
+	static char existingBuf[32];
+	static std::string selectedSpritesheet { };
+	static std::string selectedMap {};
+	static int width = 100, height = 100, type = 0;
+
+	ImGui::OpenPopup("Enter map details");
+	if (ImGui::BeginPopupModal("Enter map details", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+		ImGui::InputText("Filename", buf, 128);
+		ImGui::InputInt("Width", &width);
+		ImGui::InputInt("Height", &height);
+		ImGui::InputInt("Default Tile", &type);
+		if(ImGui::BeginCombo("Spritesheet", selectedSpritesheet.c_str())) {
+			for(const auto& key : AssetManager::getAllTilesets() ) {
+				std::string name = key.first + " (" + std::to_string(key.second.getSpriteSize().x)
+				                   + "x" + std::to_string(key.second.getSpriteSize().y) + ")";
+				if(ImGui::Selectable(name.c_str())) {
+					selectedSpritesheet = key.first;
+					if(!selectedSpritesheet.empty()) {
+						picker.init(selectedSpritesheet);
+						EditingMap.isTileChosen = true;
+					}
+				}
+
+				if(key.first == selectedSpritesheet)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+
+
+		ImGui::Dummy(ImVec2(ImGui::GetWindowWidth()-30, 0));
+		if(ImGui::Button("Create") && width > 0 && height > 0) {
+			EditingMap.fname = std::string(buf);
+			EditingMap.mapData = std::make_shared<Map>(std::move(Map::make_empty(Vec2u(width, height), type, selectedSpritesheet)));
+			EditingMap.mapData->initializeVertexArrays();
+			this->doMapLoadTasks();
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::Separator();
+		if(ImGui::BeginCombo("Existing Maps", selectedMap.c_str())) {
+			for(const auto& key : AssetManager::getAllMaps()) {
+				auto name = key.first;
+
+				if(ImGui::Selectable(name.c_str())) {
+					selectedMap = name;
+				}
+
+				if(name == selectedMap)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+
+		if(ImGui::Button("Open") && !selectedMap.empty()) {
+			try {
+				EditingMap.fname = selectedMap;
+				EditingMap.mapData = AssetManager::getMap(selectedMap);
+				this->doMapLoadTasks();
+			} catch (std::exception& ex) {
+				EditingMap.isLoaded = false;
+				ErrorWindow.open = true;
+				ErrorWindow.text = "Map load failed!\nDetails: " + std::string(ex.what());
+			}
+		}
+
+		if(ErrorWindow.open) this->drawErrorBox();
+
+		ImGui::EndPopup();
+	}
 }

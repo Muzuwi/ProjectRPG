@@ -1,16 +1,14 @@
 #include <algorithm>
 #include "World/WorldManager.hpp"
 
-void WorldManager::loadMap(const std::string &mapName) {
+void WorldManager::setCurrentMap(const std::string &mapName) {
 	try {
-		allMaps[mapName] = std::make_shared<Map>(Map::from_file(mapName));
+		currentMap = AssetManager::getMap(mapName);
+		currentMap->bindPlayer(player);
 	} catch (std::exception&) {
 		std::cerr << "Failed loading map " << mapName << "\n";
 		return;
 	}
-	allMaps[mapName]->initializeVertexArrays();
-	allMaps[mapName]->bindPlayer(player);
-	currentMap = allMaps[mapName];
 }
 
 bool WorldManager::movePlayer(Direction dir) {
@@ -95,8 +93,10 @@ void WorldManager::updateWorld() {
 
 bool WorldManager::handleMapTransfer(Connection conn) {
 	try {
-		this->currentMap = allMaps[conn.targetMap];
+		currentMap = AssetManager::getMap(conn.targetMap);
+		currentMap->bindPlayer(player);
 	} catch (std::exception&) {
+		std::cerr << "Failed loading map " << conn.targetMap << "\n";
 		return false;
 	}
 
