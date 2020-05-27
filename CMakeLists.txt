@@ -20,7 +20,7 @@ add_library(RPGBase
         Interface/Components/Window.cpp
         AssetManager.cpp
         World/Item.cpp
-        )
+         "Interface/Components/Slider.cpp")
 
 
 add_executable(ProjectRPG
@@ -35,7 +35,7 @@ add_executable(ProjectRPG
     Interface/Inventory/ItemUI.cpp
     Engine.cpp
     Main.cpp
-    )
+     "Interface/Components/Slider.cpp")
 
 if(MSVC) 
 target_link_libraries(ProjectRPG RPGBase sfml-audio-d sfml-graphics-d sfml-system-d sfml-window-d lua53)

@@ -5,6 +5,7 @@
 #include "Graphics/Spritesheet.hpp"
 #include "Interface/Components/Button.hpp"
 #include "Interface/Components/Window.hpp"
+#include "Interface/Components/Slider.hpp"
 
 class SettUI : public Window {
 private:
@@ -12,9 +13,11 @@ private:
 
 	void DrawSelf(sf::RenderTarget&);
 	void SelfInit();
+	
 	//Buttons
 	int focus; // Focus index
 	std::vector<Button> buttons;
+	Slider audio;
 public:
 	SettUI();
 	void SetButtons();
@@ -22,4 +25,5 @@ public:
 	void Call();
 	void DrawButtons(sf::RenderTarget&);
 	void ProcessKey(sf::Event::KeyEvent);
+	void AudioManager(sf::Event::KeyEvent key);
 };
