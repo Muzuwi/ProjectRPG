@@ -34,4 +34,5 @@ public:
 
 	void Next() { if (current < resolutions.size() - 1) current++; }
 	void Previous() { if (current > 0) current--; }
+
 };

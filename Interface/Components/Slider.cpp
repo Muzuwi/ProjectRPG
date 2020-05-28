@@ -1,9 +1,8 @@
 #include "Slider.hpp"
 
-Slider::Slider(double set) : level(set), font(AssetManager::getFont("VCR_OSD_MONO")) { }
+Slider::Slider(double set) : level(set), font(AssetManager::getFont("VCR_OSD_MONO")), focus(false) { }
 
 void Slider::Init(sf::Vector2f pos, double wid, std::string title) {
-	focus = false;
 	position = pos;
 	prefix = title;
 	width = (wid < 128) ? width = 128 : width = wid;
@@ -21,7 +20,7 @@ void Slider::Draw(sf::RenderTarget& target) {
 }
 
 void Slider::DrawSlider(sf::RenderTarget& target) {
-	if (focus) final.setColor(sf::Color(102, 179, 255));
+	if (focus) final.setColor(sf::Color(199, 174, 119));
 	else final.setColor(sf::Color(255, 255, 255));
 
 	//Left Edge

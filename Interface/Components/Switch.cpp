@@ -1,10 +1,18 @@
 #include "Switch.hpp"
 
-Switch::Switch() : font(AssetManager::getFont("VCR_OSD_MONO")) { }
+Switch::Switch() : font(AssetManager::getFont("VCR_OSD_MONO")), focus(false), current(0) { 
+	//Compatible resolutions
+	resolutions.push_back(std::pair(800, 600));		// 4:3
+	resolutions.push_back(std::pair(1024, 768));	// 4:3
+	resolutions.push_back(std::pair(1280, 720));	// 16:9
+	resolutions.push_back(std::pair(1280, 800));	// 16:10
+	resolutions.push_back(std::pair(1366, 768));	// 16:9
+	resolutions.push_back(std::pair(1440, 900));	// 16:10
+	resolutions.push_back(std::pair(1920, 1080));	// 16:9
+	resolutions.push_back(std::pair(1920, 1200));	// 16:10
+}
 
 void Switch::Init(sf::Vector2f pos, sf::Vector2f siz, std::string title) {
-	focus = false;
-	current = 0;
 	position = pos;
 	size = siz;
 	prefix = title;
@@ -13,21 +21,11 @@ void Switch::Init(sf::Vector2f pos, sf::Vector2f siz, std::string title) {
 
 	header = sf::Text("Resolution:", font, 16);
 	header.setFillColor(sf::Color::White);
-	header.setPosition(getMiddleCords(header, -4, -18));
+	header.setPosition(getMiddleCords(header, 0, -18));
 
 	content = sf::Text("", font, 16); //dynamic string
 
-	final.setTexture(AssetManager::getUI("windowskinv3").getTexture());
-
-	//Compatible resolutions
-	resolutions.push_back(std::pair(800, 600) );		// 4:3
-	resolutions.push_back(std::pair(1024, 768) );		// 4:3
-	resolutions.push_back(std::pair(1280, 720) );		// 16:9
-	resolutions.push_back(std::pair(1280, 800) );		// 16:10
-	resolutions.push_back(std::pair(1366, 768) );		// 16:9
-	resolutions.push_back(std::pair(1440, 900) );		// 16:10
-	resolutions.push_back(std::pair(1920, 1080) );		// 16:9
-	resolutions.push_back(std::pair(1920, 1200) );		// 16:10
+	final.setTexture(AssetManager::getUI("windowskin").getTexture());
 }
 
 
@@ -38,7 +36,7 @@ void Switch::Draw(sf::RenderTarget& target) {
 }
 
 void Switch::DrawArrows(sf::RenderTarget& target) {
-	if (focus) final.setColor(sf::Color(102, 179, 255));
+	if (focus) final.setColor(sf::Color(199, 174, 119));
 	else final.setColor(sf::Color(255, 255, 255));
 
 	sf::Vector2f arrow_offset_y(0, (size.y - 16) / 2);
@@ -55,12 +53,12 @@ void Switch::DrawArrows(sf::RenderTarget& target) {
 }
 
 void Switch::DrawContent(sf::RenderTarget& target) {
-	if (focus) content.setColor(sf::Color(102, 179, 255));
+	if (focus) content.setColor(sf::Color(199, 174, 119));
 	else content.setColor(sf::Color(255, 255, 255));
 
 	std::string toDisp = std::to_string(resolutions[current].first) + " x " + std::to_string(resolutions[current].second);
 	content.setString(toDisp);
-	content.setPosition(getMiddleCords(content, -8));
+	content.setPosition(getMiddleCords(content, -4));
 	target.draw(content);
 }
 

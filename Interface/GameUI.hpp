@@ -23,6 +23,7 @@ private:
 	InvUI eq;
 	Hud hud;
 	Player& player;
+	std::pair<unsigned int, unsigned int> resolution;
 public:
 	GameUI(Player&);
 
@@ -33,4 +34,5 @@ public:
 	void ProcessKey(sf::Event::KeyEvent);
 	bool IsSceneKey(sf::Event::KeyEvent);
 	bool IsActive();
+	void UpdateResolution(std::pair<unsigned int, unsigned int>);
 };

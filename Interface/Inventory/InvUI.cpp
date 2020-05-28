@@ -22,9 +22,12 @@ void InvUI::DrawSelf(sf::RenderTarget& target) {
 		to_move->draw(target, ghost_pos, sf::Color(255, 255, 255, 200));
 	}
 
-	//static titles
+	//Dynamic titles
+	title_eq.setPosition(position + sf::Vector2f((size.x / 2.0) + ((size.x / 2.0) - getTextSize(title_eq, "Equipment").x) / 2.0, 8));
 	target.draw(title_eq);
+	title_inv.setPosition(position + sf::Vector2f((size.x / 2.0) + ((size.x / 2.0) - getTextSize(title_inv, "Inventory").x) / 2.0, (size.y / 3.0) - 28));
 	target.draw(title_inv);
+	title_char.setPosition(position + sf::Vector2f(((size.x / 2) - getTextSize(title_char, "Character").x) / 2, 6));
 	target.draw(title_char);
 
 	//Draw subwin(ItemInfo)
@@ -42,17 +45,14 @@ void InvUI::SelfInit() {
 	//Title Inventory
 	title_inv = sf::Text("Inventory", font, 21);
 	title_inv.setFillColor(sf::Color::White);
-	title_inv.setPosition(position + sf::Vector2f((size.x / 2.0) + ((size.x / 2.0) - getTextSize(title_inv, "Inventory").x) / 2.0, (size.y / 3.0) - 28));
 
 	//Title Equipment
 	title_eq = sf::Text("Equipment", font, 21);
 	title_eq.setFillColor(sf::Color::White);
-	title_eq.setPosition(position + sf::Vector2f((size.x / 2.0) + ((size.x / 2.0) - getTextSize(title_eq, "Equipment").x) / 2.0, 8));
 
 	//Title Character
 	title_char = sf::Text("Character", font, 21);
 	title_char.setFillColor(sf::Color::White);
-	title_char.setPosition(position + sf::Vector2f(((size.x / 2) - getTextSize(title_char, "Character").x) / 2, 6));
 
 	//Other - flags
 	focus = 0;

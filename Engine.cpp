@@ -141,10 +141,10 @@ void Engine::RenderWorld(sf::RenderTarget& target) {
 }
 
 void Engine::RenderHud(sf::RenderTarget& target) {
+	GUI.UpdateResolution(std::pair(windowWidth, windowHeight));
 	GUI.DrawGUI(target);
 }
 
 void Engine::ResizeWindow(std::shared_ptr<sf::RenderWindow> window ,std::pair<unsigned int, unsigned int> resolution) {
 	window->setSize(sf::Vector2u(resolution.first, resolution.second));
-	
 }

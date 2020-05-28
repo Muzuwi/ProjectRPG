@@ -4,9 +4,6 @@
 SettUI::SettUI() { }
 
 void SettUI::SelfInit(){
-	title = sf::Text("Settings", font, 32);
-	title.setFillColor(sf::Color::White);
-	title.setPosition(position + sf::Vector2f((size.x - getTextSize(title, "Settings").x) / 2.0, 8));
 	SetButtons();
 }
 
@@ -19,7 +16,6 @@ void SettUI::SetButtons() {
 	focus = 0;
 
 	//Creating Buttons
-	sf::Vector2f size(196,32);
 	Button save("Save Game");
 	Button load("Load Game");
 	Button dummy(""); //Dummy element
@@ -36,7 +32,17 @@ void SettUI::SetButtons() {
 	buttons.push_back(menu);
 	buttons.push_back(exit);
 
+	buttons[focus].SetFocus();
+}
+
+void SettUI::DrawButtons(sf::RenderTarget& target) {
+	//Title
+	title = sf::Text("Settings", font, 32);
+	title.setFillColor(sf::Color::White);
+	title.setPosition(position + sf::Vector2f((size.x - getTextSize(title, "Settings").x) / 2.0, 8));
+
 	//Initializing
+	sf::Vector2f size(196, 32);
 	sf::Vector2f position(this->position.x + ((this->size.x - size.x) / 2), this->position.y + 64);
 	buttons[0].Init(position, size);
 	buttons[1].Init(position + sf::Vector2f(0, 40), size);
@@ -46,10 +52,6 @@ void SettUI::SetButtons() {
 	buttons[5].Init(position + sf::Vector2f(0, 220), size);
 	buttons[6].Init(position + sf::Vector2f(0, 260), size);
 
-	buttons[focus].SetFocus();
-}
-
-void SettUI::DrawButtons(sf::RenderTarget& target) {
 	for (int i = 0; i < buttons.size(); i++) {
 		buttons[i].Draw(target);
 	}

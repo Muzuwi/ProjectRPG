@@ -16,4 +16,7 @@ public:
 	void Draw(sf::RenderTarget&);
 	void DrawBackground(sf::RenderTarget&);
 	void DrawFrame(sf::RenderTarget&);
+
+	void setPosition(sf::Vector2f pos) { position = pos; }
+	void setSize(sf::Vector2f siz) { size = siz; }
 };

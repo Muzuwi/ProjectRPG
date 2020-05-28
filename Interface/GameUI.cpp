@@ -1,7 +1,7 @@
 #include "GameUI.hpp"
 
 GameUI::GameUI(Player& _player)
-: player(_player), eq(_player), hud(_player, sf::Vector2f(8,8)) {
+: player(_player), eq(_player), hud(_player, sf::Vector2f(8,8)), resolution(std::pair(800,600)) {
 	current = NONE;
 }
 
@@ -13,6 +13,9 @@ void GameUI::Init(std::shared_ptr<sf::RenderWindow> win) {
 }
 
 void GameUI::DrawGUI(sf::RenderTarget& target) {
+	settings.setPosition(sf::Vector2f((resolution.first - 300) / 2, (resolution.second - 400) / 2));
+	eq.setPosition(sf::Vector2f((resolution.first - 600) / 2, (resolution.second - 450) / 2));
+
 	hud.Draw(target);
 	if (current != NONE) {
 		if (current == SETTINGS) settings.Draw(target);
@@ -62,4 +65,8 @@ void GameUI::SetScene(sf::Event::KeyEvent key) {
 bool GameUI::IsActive() {
 	if (current == NONE) return false;
 	return true;
+}
+
+void GameUI::UpdateResolution(std::pair<unsigned int, unsigned int> new_res) {
+	if (new_res != resolution) resolution = new_res;
 }
