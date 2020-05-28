@@ -24,9 +24,9 @@ private:
 	Hud hud;
 	Player& player;
 public:
-	GameUI(Player& player);
+	GameUI(Player&);
 
-	void Init();
+	void Init(std::shared_ptr<sf::RenderWindow>);
 	void DrawGUI(sf::RenderTarget&);
 	
 	void SetScene(sf::Event::KeyEvent);

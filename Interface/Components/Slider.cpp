@@ -10,8 +10,6 @@ void Slider::Init(sf::Vector2f pos, double wid, std::string title) {
 
 	header = sf::Text(title, font, 16);
 	header.setFillColor(sf::Color::White);
-	header.setPosition(position + sf::Vector2f(16, -12));
-
 	final.setTexture(AssetManager::getUI("slider").getTexture());
 }
 
@@ -53,5 +51,17 @@ void Slider::DrawPointer(sf::RenderTarget& target) {
 
 void Slider::DrawHeader(sf::RenderTarget& target) {
 	header.setString(prefix + std::to_string((int)std::round(level * 100.0)) + " %");
+	header.setPosition(getMiddleCords(header, 0, -18));
 	target.draw(header);
+}
+
+sf::Vector2f Slider::getTextSize(sf::Text object) {
+	return sf::Vector2f(object.findCharacterPos(object.getString().getSize() - 1) - object.findCharacterPos(0));
+}
+
+sf::Vector2f Slider::getMiddleCords(sf::Text object, int offset_x, int offset_y) {	//offset_x by left, offset_y by top
+	sf::Vector2f result;
+	result.x = position.x + ((width - getTextSize(object).x) / 2) + offset_x;
+	result.y = position.y + ((32 - object.getCharacterSize()) / 2) + offset_y;
+	return result;
 }

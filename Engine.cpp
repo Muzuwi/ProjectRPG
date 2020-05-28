@@ -9,7 +9,7 @@ bool Engine::Init() {
 	window->setFramerateLimit(60);
 	
 	scene = INGAME;
-	GUI.Init();
+	GUI.Init(window);
 	world.setCurrentMap("default");
 
 	Item item {"sword", 1};
@@ -58,7 +58,7 @@ void Engine::RenderFrame() {
 	window->setView(view);
 	RenderWorld(*window);
 
-	window->setView(window->getDefaultView());
+	window->setView(sf::View(sf::Rect(0.f, 0.f, (float)windowWidth, (float)windowHeight)));
 	RenderHud(*window);
 
 	dialogEngine.draw(*window);
@@ -142,4 +142,9 @@ void Engine::RenderWorld(sf::RenderTarget& target) {
 
 void Engine::RenderHud(sf::RenderTarget& target) {
 	GUI.DrawGUI(target);
+}
+
+void Engine::ResizeWindow(std::shared_ptr<sf::RenderWindow> window ,std::pair<unsigned int, unsigned int> resolution) {
+	window->setSize(sf::Vector2u(resolution.first, resolution.second));
+	
 }

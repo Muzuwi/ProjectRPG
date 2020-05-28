@@ -6,6 +6,7 @@
 #include "Interface/Components/Button.hpp"
 #include "Interface/Components/Window.hpp"
 #include "Interface/Components/Slider.hpp"
+#include "Interface/Components/Switch.hpp"
 
 class SettUI : public Window {
 private:
@@ -18,6 +19,8 @@ private:
 	int focus; // Focus index
 	std::vector<Button> buttons;
 	Slider audio;
+	Switch resolution;
+	std::shared_ptr<sf::RenderWindow> window;
 public:
 	SettUI();
 	void SetButtons();
@@ -25,6 +28,8 @@ public:
 	void Call();
 	void DrawButtons(sf::RenderTarget&);
 	void ProcessKey(sf::Event::KeyEvent);
-	void AudioManager(sf::Event::KeyEvent key);
+	void AudioManager(sf::Event::KeyEvent);
+	void ResolutionManager(sf::Event::KeyEvent);
+	void SetWindow(std::shared_ptr<sf::RenderWindow> win) { window = win; };
 	sf::Vector2f getTextSize(sf::Text, std::string);
 };

@@ -5,8 +5,9 @@ GameUI::GameUI(Player& _player)
 	current = NONE;
 }
 
-void GameUI::Init() {
+void GameUI::Init(std::shared_ptr<sf::RenderWindow> win) {
 	settings.Init(sf::Vector2f(250, 100), sf::Vector2f(300, 400));
+	settings.SetWindow(win);
 	eq.Init(sf::Vector2f(100, 50), sf::Vector2f(600, 450));
 	hud.Init();
 }

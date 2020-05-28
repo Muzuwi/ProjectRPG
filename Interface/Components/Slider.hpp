@@ -25,6 +25,8 @@ public:
 
 	sf::Vector2f GetPosition() { return position; };
 	sf::Vector2f GetSize() { return sf::Vector2f(width, 32); }
+	sf::Vector2f getTextSize(sf::Text);
+	sf::Vector2f getMiddleCords(sf::Text, int = 0, int = 0);
 
 	void SetFocus() { focus = true; }
 	void RemoveFocus() { focus = false; }
