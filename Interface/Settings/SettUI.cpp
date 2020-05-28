@@ -3,17 +3,14 @@
 SettUI::SettUI() { }
 
 void SettUI::SelfInit(){
+	title = sf::Text("Settings", font, 32);
+	title.setFillColor(sf::Color::White);
+	title.setPosition(position + sf::Vector2f((size.x - getTextSize(title, "Settings").x) / 2.0, 8));
 	SetButtons();
 }
 
 void SettUI::DrawSelf(sf::RenderTarget& target) {
-	title.setFont(font);
-	title.setString("Settings");
-	title.setFillColor(sf::Color::Black);
-	title.setCharacterSize(24);
-	title.setPosition(sf::Vector2f(350.f, 115.f));
 	target.draw(title);
-
 	DrawButtons(target);
 }
 
@@ -38,13 +35,13 @@ void SettUI::SetButtons() {
 	buttons.push_back(exit);
 
 	//Initializing
-	sf::Vector2f position(this->position.x + ((this->size.x - size.x) / 2), this->position.y + 100);
+	sf::Vector2f position(this->position.x + ((this->size.x - size.x) / 2), this->position.y + 64);
 	buttons[0].Init(position, size);
 	buttons[1].Init(position + sf::Vector2f(0, 40), size);
-	audio.Init(sf::Vector2f(this->position.x + 32, position.y + 80), this->size.x - 64);
-	buttons[3].Init(position + sf::Vector2f(0, 120), size);
-	buttons[4].Init(position + sf::Vector2f(0, 160), size);
-	buttons[5].Init(position + sf::Vector2f(0, 200), size);
+	audio.Init(sf::Vector2f(this->position.x + 32, position.y + 100), this->size.x - 64, "Audio: ");
+	buttons[3].Init(position + sf::Vector2f(0, 140), size);
+	buttons[4].Init(position + sf::Vector2f(0, 180), size);
+	buttons[5].Init(position + sf::Vector2f(0, 220), size);
 
 	buttons[focus].SetFocus();
 }
@@ -92,4 +89,8 @@ void SettUI::ProcessKey(sf::Event::KeyEvent key) {
 	else if (key.code == sf::Keyboard::A or key.code == sf::Keyboard::D) {
 		if (focus == 2) AudioManager(key);
 	}
+}
+
+sf::Vector2f SettUI::getTextSize(sf::Text object, std::string text) {
+	return sf::Vector2f(object.findCharacterPos(text.size() - 1) - object.findCharacterPos(0));
 }

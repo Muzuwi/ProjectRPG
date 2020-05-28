@@ -26,4 +26,5 @@ public:
 	void DrawButtons(sf::RenderTarget&);
 	void ProcessKey(sf::Event::KeyEvent);
 	void AudioManager(sf::Event::KeyEvent key);
+	sf::Vector2f getTextSize(sf::Text, std::string);
 };

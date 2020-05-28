@@ -1,9 +1,14 @@
 #pragma once
+#include <cmath>
+#include <iomanip>
 #include <SFML/Graphics.hpp>
 #include "AssetManager.hpp"
 
 class Slider {
 protected:
+	const sf::Font& font;
+	sf::Text header;
+	std::string prefix;
 	sf::Sprite final;
 	sf::Vector2f position;
 	double width, level; // 0.0 ~ 1.0
@@ -11,11 +16,12 @@ protected:
 
 public:
 	Slider(double = 0.8);
-	void Init(sf::Vector2f, double);
+	void Init(sf::Vector2f, double, std::string);
 
 	void Draw(sf::RenderTarget&);
 	void DrawSlider(sf::RenderTarget&);
 	void DrawPointer(sf::RenderTarget&);
+	void DrawHeader(sf::RenderTarget&);
 
 	sf::Vector2f GetPosition() { return position; };
 	sf::Vector2f GetSize() { return sf::Vector2f(width, 32); }
