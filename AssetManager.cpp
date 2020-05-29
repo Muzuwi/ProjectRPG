@@ -118,6 +118,8 @@ void AssetManager::autoload() {
 	}
 
 	addJsonFile("GameContent/ItemList.json");
+
+	loadSavefile("GameContent/Savegame.json");
 }
 
 
@@ -155,4 +157,24 @@ void AssetManager::loadMaps() {
 				std::cout << "AssetManager::autoload()/ Adding map " << entry.path().filename() << "\n";
 		}
 	}
+}
+
+bool AssetManager::loadSavefile(const std::string& resourcePath) {
+	std::ifstream file;
+	file.open(resourcePath);
+	if(!file.good()) {
+		savefile = {};
+		file.close();
+		return false;
+	}
+	std::string json((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	file.close();
+
+	try {
+		auto j = nlohmann::json::parse(json);
+		savefile = j;
+	} catch (std::exception& ex) {
+		savefile = {};
+	}
+	return true;
 }

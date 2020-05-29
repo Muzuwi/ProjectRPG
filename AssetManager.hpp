@@ -4,6 +4,7 @@
 #include "Tools/json.hpp"
 #include "Graphics/Spritesheet.hpp"
 #include "World/TileSet.hpp"
+#include "Save.hpp"
 
 class Map;
 
@@ -17,10 +18,13 @@ private:
 	std::unordered_map<std::string, sf::Font> fonts;
 	std::unordered_map<std::string, std::shared_ptr<Map>> maps;
 
+	nlohmann::json savefile;
+
 	bool addSpritesheet(const std::string& resourcePath, std::unordered_map<std::string, Spritesheet>& map, Vec2u (*partitioner)(Vec2u textureSize) = nullptr);
 	bool addJsonFile(const std::string& resourcePath);
 	bool addFont(const std::string& resourcePath);
 	bool addMap(const std::string& resourcePath);
+	bool loadSavefile(const std::string& resourcePath);
 
 	static std::string getFilenameFromPath(const std::string& path);
 public:
@@ -99,6 +103,9 @@ public:
 		return get().maps;
 	}
 
+	static Savefile getSavefile() {
+		return Savefile(get().savefile);
+	}
 
 	AssetManager() {
 		this->autoload();
