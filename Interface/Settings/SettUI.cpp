@@ -84,7 +84,7 @@ void SettUI::Call() {
 	if (focus == 1) std::cout << "* Load Game *" << std::endl;
 	if (focus == 4) std::cout << "* Credits: *\n\t-Lukasz Kedziora \n\t-Maciej Tomaszewski" << std::endl;
 	if (focus == 5) std::cout << "* Main Menu *" << std::endl;
-	if (focus == 6) std::cout << "* Exit Game *" << std::endl;
+	if (focus == 6) window->close();
 }
 
 void SettUI::AudioManager(sf::Event::KeyEvent key) {
@@ -95,7 +95,7 @@ void SettUI::AudioManager(sf::Event::KeyEvent key) {
 void SettUI::ResolutionManager(sf::Event::KeyEvent key) {
 	if (key.code == sf::Keyboard::A) resolution.Previous();
 	if (key.code == sf::Keyboard::D) resolution.Next();
-	Engine::ResizeWindow(window, resolution.getResolution());
+	window->setSize(sf::Vector2u(resolution.getResolution().first, resolution.getResolution().second));
 }
 
 void SettUI::ProcessKey(sf::Event::KeyEvent key) {

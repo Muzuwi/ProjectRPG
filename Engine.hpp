@@ -47,6 +47,6 @@ public:
 	~Engine() {};
 
 	void Start();
-	static void ResizeWindow(std::shared_ptr<sf::RenderWindow>, std::pair<unsigned int, unsigned int>);
+	//static void ResizeWindow(std::shared_ptr<sf::RenderWindow>, std::pair<unsigned int, unsigned int>);
 };
 
