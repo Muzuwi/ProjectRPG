@@ -108,7 +108,7 @@ void ItemUI::SetButtons() {
 	buttons.push_back(b3);
 
 	//Initializing
-	sf::Vector2f newPos(position + sf::Vector2f(10, stats_height + descript_height + 52));
+	sf::Vector2f newPos(position + sf::Vector2f((this->size.x - 179) / 2, stats_height + descript_height + 52));
 	for (int i = 0; i < buttons.size(); i++) {
 		buttons[i].Init(newPos, size);
 		newPos += sf::Vector2f(48, 0);
