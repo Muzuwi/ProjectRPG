@@ -125,4 +125,7 @@ public:
 		}
 	}
 
+	std::map<std::string, int> SummaryBonusStats() {
+		//std::map<std::string, int> result;
+	}
 };

@@ -299,8 +299,8 @@ void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, int 
 										"MinPhysical","MaxPhysical",
 										"MinMagical","MaxMagical",
 										"MinPoison","MaxPoison",
+										"AttackSpeed",
 										"Crit",
-										"Precision",
 										"Armor",
 										"Dodge",
 										"MagicalRes",
@@ -308,13 +308,13 @@ void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, int 
 	};
 
 	//KEYS TO DISPLAY
-	std::vector<std::string> statNames{ "Life","",
-										"Mana","",
-										"Melee damage","",
-										"Magical damage","",
-										"Poison damage","",
+	std::vector<std::string> statNames{ "Life",				"",
+										"Mana",				"",
+										"Melee damage",		"",
+										"Magical damage",	"",
+										"Poison damage",	"",
+										"Attack speed",
 										"Critical",
-										"Precision",
 										"Armor",
 										"Dodge",
 										"Magical Resistance",
@@ -334,7 +334,7 @@ void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, int 
 	for (int i = 10; i < statNames.size(); i++) {
 		DrawIcon(target, stat_icons, icon_index, position, sf::Vector2f(32, 32));
 		std::string sufix = "";
-		if (statIndex[i] == "Crit" or statIndex[i] == "Precision" or statIndex[i] == "MagicalRes" or statIndex[i] == "PoisonRes") sufix = "%";
+		if (statIndex[i] == "Crit" or statIndex[i] == "MagicalRes" or statIndex[i] == "PoisonRes") sufix = "%";
 		DrawLine(target, position + sf::Vector2f(32, 8), ParseText(statistics[statIndex[i]], font_size, statNames[i] + ": ", sufix));
 		position += sf::Vector2f(0, 28);
 		icon_index++;

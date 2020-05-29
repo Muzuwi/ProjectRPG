@@ -42,31 +42,33 @@ void Player::setDefaultStatistics() {
 	statistics["MinPhysical"] = 3;
 	statistics["MaxPhysical"] = 5;
 		//Magical
-	statistics["MinMagical"] = 1;
-	statistics["MaxMagical"] = 2;
+	statistics["MinMagical"] = 0;
+	statistics["MaxMagical"] = 0;
 		//Poison
 	statistics["MinPoison"] = 0;
 	statistics["MaxPoison"] = 0;
 		//Other
-	statistics["Crit"] = 3;
-	statistics["Precision"] = 95; //%
+	statistics["AttackSpeed"] = 2;
+	statistics["Crit"] = 0;
 	//Defence
-	statistics["Armor"] = 2;
-	statistics["Dodge"] = 10;
+	statistics["Armor"] = 0;
+	statistics["Dodge"] = 1;		//%
 	//Resistances
-	statistics["MagicalRes"] = 0;
-	statistics["PoisonRes"] = 0;
+	statistics["MagicalRes"] = 0;	//%
+	statistics["PoisonRes"] = 0;	//%
 
 //========== EXPERIENCE ==========//
-	player_info["lvl"] = 8;
-	player_info["current"] = 2321;
-	player_info["next"] = 2656;
-	player_info["gold"] = 352;
+	player_info["lvl"] = 1;
+	player_info["current"] = 0;
+	player_info["next"] = 11;
+	player_info["gold"] = 25;
 }
 
 void Player::Lvlup() {
-	if(player_info["lvl"] < 30) player_info["lvl"] += 1;	//temporary cap: 30 lvl
-	player_info["current"] = 0;
-	player_info["next"] += (int)(player_info["next"] * (5.2 / player_info["lvl"]));
-	std::cout << "LvL: " << player_info["lvl"] << " -> " << player_info["next"] << std::endl;
+	if (player_info["lvl"] < 30) {	//temporary cap: 30 lvl
+		player_info["lvl"] += 1;
+		player_info["current"] = 0;
+		player_info["next"] += (int)(player_info["next"] * (5.2 / player_info["lvl"]));
+		std::cout << "LvL: " << player_info["lvl"] << " -> " << player_info["next"] << std::endl;
+	}
 }
