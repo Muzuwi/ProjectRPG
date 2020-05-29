@@ -80,8 +80,8 @@ void SettUI::Update(int change) {
 
 void SettUI::Call() {
 	//Obsługa Przycisków
-	if (focus == 0) std::cout << "* Save Game *" << std::endl;
-	if (focus == 1) std::cout << "* Load Game *" << std::endl;
+	if (focus == 0) WorldManager::shouldSaveGame();
+	if (focus == 1) WorldManager::shouldLoadGame();
 	if (focus == 4) std::cout << "* Credits: *\n\t-Lukasz Kedziora \n\t-Maciej Tomaszewski" << std::endl;
 	if (focus == 5) std::cout << "* Main Menu *" << std::endl;
 	if (focus == 6) window->close();

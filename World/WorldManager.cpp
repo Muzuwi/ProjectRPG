@@ -1,10 +1,14 @@
 #include <algorithm>
 #include "World/WorldManager.hpp"
 
+static bool s_should_save_game {false};
+static bool s_should_load_game {false};
+
 void WorldManager::setCurrentMap(const std::string &mapName) {
 	try {
 		currentMap = AssetManager::getMap(mapName);
 		currentMap->bindPlayer(player);
+		currentMapName = mapName;
 	} catch (std::exception&) {
 		std::cerr << "Failed loading map " << mapName << "\n";
 		return;
@@ -83,6 +87,16 @@ void WorldManager::draw(sf::RenderTarget &target) {
  *  Aktualizuje wszystkich aktorów świata oraz inne animacje
  */
 void WorldManager::updateWorld() {
+	if(s_should_save_game) {
+		saveGame();
+		s_should_save_game = false;
+	}
+
+	if(s_should_load_game) {
+		loadGame();
+		s_should_load_game = false;
+	}
+
 	player.update();
 	currentMap->updateActors();
 	if(!player.isMoving && currentMap->standingConnectionValid() && !MapTravel.isTravelling) {
@@ -100,8 +114,39 @@ bool WorldManager::handleMapTransfer(Connection conn) {
 		return false;
 	}
 
-	this->player.worldPosition.x = std::clamp(conn.targetPos.x, 0u, this->currentMap->getWidth());
-	this->player.worldPosition.y = std::clamp(conn.targetPos.y, 0u, this->currentMap->getHeight());
-	this->player.spritePosition = Vec2f(this->player.worldPosition) * (float)Tile::dimensions();
-	this->player.isMoving = false;
+	Vec2u worldPos {conn.targetPos};
+	worldPos.x = std::clamp(worldPos.x, 0u, this->currentMap->getWidth());
+	worldPos.y = std::clamp(worldPos.y, 0u, this->currentMap->getHeight());
+	player.setPosition(worldPos);
+} 
+
+void WorldManager::shouldSaveGame() {
+	s_should_save_game = true;
+}
+
+void WorldManager::shouldLoadGame() {
+	s_should_load_game = true;
+}
+
+void WorldManager::saveGame() {
+	auto save = AssetManager::getSavefile();
+	save.set("playerCurrentMap", currentMapName);
+	save.set("playerCurrentPos", player.getWorldPosition());
+	save.saveToFile();
+	std::cout << "Game saved successfully\n";
+}
+
+void WorldManager::loadGame() {
+	auto save = AssetManager::getSavefile();
+	try {
+		setCurrentMap(save.get<std::string>("playerCurrentMap"));
+
+		auto worldPos = save.get<Vec2u>("playerCurrentPos");
+		worldPos.x = std::clamp(worldPos.x, 0u, this->currentMap->getWidth());
+		worldPos.y = std::clamp(worldPos.y, 0u, this->currentMap->getHeight());
+		player.setPosition(worldPos);
+	} catch (std::exception&) {
+		std::cerr << "Failed loading game!\n";
+		return;
+	}
 }

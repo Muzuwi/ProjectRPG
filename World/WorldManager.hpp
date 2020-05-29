@@ -5,6 +5,8 @@
 
 class WorldManager {
 	std::shared_ptr<Map> currentMap;
+	std::string currentMapName;
+
 	Player player;
 
 	static const int mapTravelTime {10};
@@ -12,7 +14,13 @@ class WorldManager {
 		bool isTravelling {false};
 		int currentMapTravelTime {0};
 	} MapTravel;
+
+	void saveGame();
+	void loadGame();
 public:
+	static void shouldSaveGame();
+	static void shouldLoadGame();
+
 	WorldManager() {}
 
 	Map& getMap() {
