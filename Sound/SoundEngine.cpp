@@ -1,5 +1,6 @@
 #include "SoundEngine.hpp"
 
+static double s_master_volume {1.0};
 SoundEngine* SoundEngine::instance = nullptr;
 
 bool SoundEngine::playSound(const std::string &name) {
@@ -10,7 +11,8 @@ bool SoundEngine::playSound(const std::string &name) {
 		}
 	}
 
-	sounds.push_back(sf::Sound{buffers[name]});
+	sounds.emplace_back(sf::Sound{buffers[name]});
+	sounds.back().setVolume(s_master_volume*100.0);
 	sounds.back().play();
 
 	return true;
@@ -46,5 +48,15 @@ void SoundEngine::update() {
 void SoundEngine::playMusic(const std::string &name, bool looping) {
 	currentBGM.openFromFile("GameContent/BGM/"+name+".ogg");
 	currentBGM.setLoop(looping);
+	currentBGM.setVolume(s_master_volume * 100.0);
 	currentBGM.play();
+}
+
+void SoundEngine::setVolume(double volume) {
+	s_master_volume = volume;
+	for(auto& sound : instance->sounds) {
+		sound.setVolume(s_master_volume * 100.0);
+	}
+	if(instance->currentBGM.getStatus() == sf::Music::Playing)
+		instance->currentBGM.setVolume(s_master_volume * 100.0);
 }

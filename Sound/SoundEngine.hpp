@@ -15,6 +15,8 @@ class SoundEngine {
 	bool loadBuffer(const std::string& name);
 	bool isBuffered(const std::string& name);
 public:
+	static void setVolume(double volume);
+
 	SoundEngine() { instance = this; }
 	bool playSound(const std::string& name);
 	void update();
