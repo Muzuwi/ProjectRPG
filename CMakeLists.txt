@@ -18,9 +18,10 @@ add_library(RPGBase
         Sound/SoundEngine.cpp
         Interface/DialogEngine.cpp
         Interface/Components/Window.cpp
+        Interface/Components/Slider.cpp 
+        Interface/Components/Switch.cpp
         AssetManager.cpp
-        World/Item.cpp
-         "Interface/Components/Slider.cpp" "Interface/Components/Switch.cpp")
+        World/Item.cpp)
 
 
 add_executable(ProjectRPG
@@ -33,9 +34,10 @@ add_executable(ProjectRPG
     Interface/Components/Frame.cpp
     Interface/Inventory/Cell.cpp
     Interface/Inventory/ItemUI.cpp
+    Interface/Components/Slider.cpp
+    Interface/Components/Switch.cpp
     Engine.cpp
-    Main.cpp
-     "Interface/Components/Slider.cpp" "Interface/Components/Switch.cpp")
+    Main.cpp)
 
 if(MSVC) 
 target_link_libraries(ProjectRPG RPGBase sfml-audio-d sfml-graphics-d sfml-system-d sfml-window-d lua53)

@@ -59,7 +59,7 @@ void Player::setDefaultStatistics() {
 
 //========== EXPERIENCE ==========//
 	player_info["lvl"] = 8;
-	player_info["current"] = 289;
+	player_info["current"] = 2321;
 	player_info["next"] = 2656;
 	player_info["gold"] = 352;
 }

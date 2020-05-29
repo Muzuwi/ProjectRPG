@@ -39,7 +39,7 @@ void SettUI::DrawButtons(sf::RenderTarget& target) {
 	//Title
 	title = sf::Text("Settings", font, 32);
 	title.setFillColor(sf::Color::White);
-	title.setPosition(position + sf::Vector2f((size.x - getTextSize(title, "Settings").x) / 2.0, 8));
+	title.setPosition(position + sf::Vector2f((size.x - getTextSize(title).x) / 2.0, 8));
 
 	//Initializing
 	sf::Vector2f size(196, 32);
@@ -108,6 +108,6 @@ void SettUI::ProcessKey(sf::Event::KeyEvent key) {
 	}
 }
 
-sf::Vector2f SettUI::getTextSize(sf::Text object, std::string text) {
-	return sf::Vector2f(object.findCharacterPos(text.size() - 1) - object.findCharacterPos(0));
+sf::Vector2f SettUI::getTextSize(sf::Text object) {
+	return sf::Vector2f(object.findCharacterPos(object.getString().getSize() - 1) - object.findCharacterPos(0));
 }

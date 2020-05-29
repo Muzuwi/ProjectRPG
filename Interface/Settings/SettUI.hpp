@@ -31,6 +31,6 @@ public:
 	void AudioManager(sf::Event::KeyEvent);
 	void ResolutionManager(sf::Event::KeyEvent);
 	void SetWindow(std::shared_ptr<sf::RenderWindow> win) { window = win; };
-	sf::Vector2f getTextSize(sf::Text, std::string);
+	sf::Vector2f getTextSize(sf::Text);
 	std::pair<unsigned int, unsigned int> getRezolution() { return resolution.getResolution(); }
 };
