@@ -11,16 +11,15 @@ class Player final : public Actor, protected RenderableObject {
 
 	PlayerInventory inventory;
 public:
-	Player()
-	: Actor(0, 7), name("Andrzej") {
-		setDefaultStatistics();
-	}
+	Player();
 
 	void draw(sf::RenderTarget& target) const override;
 	std::string getName() const { return name; }
 	std::map<std::string, int>& getStatistics() { return statistics; }
 	std::map<std::string, int>& getPlayerInfo() { return player_info; }
 	Vec2u getDimensions() const override;
+
+	void setPosition(Vec2u worldPos);
 
 	PlayerInventory& getInventory() { return inventory; }
 protected:

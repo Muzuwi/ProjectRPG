@@ -2,6 +2,24 @@
 #include "AssetManager.hpp"
 #include "Player.hpp"
 
+Player::Player()
+: Actor(0, 7) {
+	auto save = AssetManager::getSavefile();
+
+	if(save.exists("playerName"))
+		name = save.get<std::string>("playerName");
+
+	if(save.exists("playerStats") && save.exists("playerInfo")) {
+		statistics = save.get<std::map<std::string, int>>("playerStats");
+		player_info = save.get<std::map<std::string, int>>("playerInfo");
+	} else {
+		setDefaultStatistics();
+	}
+
+	if(save.exists("playerCurrentPos"))
+		setPosition(save.get<Vec2u>("playerCurrentPos"));
+}
+
 void Player::draw(sf::RenderTarget &target) const {
 	sf::Sprite sprite;
 	switch(facing) {
@@ -62,6 +80,11 @@ void Player::setDefaultStatistics() {
 	player_info["current"] = 0;
 	player_info["next"] = 11;
 	player_info["gold"] = 25;
+
+	auto save = AssetManager::getSavefile();
+	save.set("playerStats", statistics);
+	save.set("playerInfo", player_info);
+	save.saveToFile();
 }
 
 void Player::Lvlup() {
@@ -71,4 +94,10 @@ void Player::Lvlup() {
 		player_info["next"] += (int)(player_info["next"] * (5.2 / player_info["lvl"]));
 		std::cout << "LvL: " << player_info["lvl"] << " -> " << player_info["next"] << std::endl;
 	}
+}
+
+void Player::setPosition(Vec2u worldPos) {
+	isMoving = false;
+	worldPosition = worldPos;
+	spritePosition = Vec2f(worldPos * Tile::dimensions());
 }
