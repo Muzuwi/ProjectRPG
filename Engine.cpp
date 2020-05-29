@@ -16,22 +16,6 @@ bool Engine::Init() {
 	} catch (std::exception&) {
 		world.setCurrentMap("default");
 	}
-
-	Item item {"sword", 1};
-
-	world.getPlayer().getInventory().addItem(item);
-	world.getPlayer().getInventory().addItem(item);
-	world.getPlayer().getInventory().addItem({"coin", 40});
-	world.getPlayer().getInventory().addItem({"coin", 40});
-	world.getPlayer().getInventory().addItem({"coin", 40});
-	world.getPlayer().getInventory().addItem({"coin", 40});
-	world.getPlayer().getInventory().addItem({"coin", 40});
-	world.getPlayer().getInventory().addItem({"sandaly", 1});
-	world.getPlayer().getInventory().addItem({"plaszcz", 1});
-	world.getPlayer().getInventory().addItem({"pawez", 1});
-	world.getPlayer().getInventory().addItem({"smieciogrzebki", 1});
-	world.getPlayer().getInventory().addItem({"sword3", 1});
-
 	return true;
 }
 
