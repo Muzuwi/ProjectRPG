@@ -5,6 +5,9 @@
 #include "Entity/PlayerInventory.hpp"
 
 class Player final : public Actor, protected RenderableObject {
+	friend class Script;
+	static Player* instance;
+
 	std::string name;
 	std::map<std::string, int> statistics;
 	std::map<std::string, int> player_info;

@@ -11,7 +11,9 @@ function firstTalk()
 
     if dialog.choice == 0 or dialog.choice == 2 then
         hatesMe = 2;
-        dialog:say("Hell yeah brother!"); 
+        dialog:say("Hell yeah brother!");
+        dialog:say("Have some coins!");
+        player:giveItem("coin", 50);
     else
         hatesMe = 1;
         dialog:say("Shame on you!");

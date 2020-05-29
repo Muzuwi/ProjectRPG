@@ -2,8 +2,12 @@
 #include "AssetManager.hpp"
 #include "Player.hpp"
 
+Player* Player::instance {nullptr};
+
 Player::Player()
 : Actor(0, 7) {
+	instance = this;
+
 	auto save = AssetManager::getSavefile();
 
 	if(save.exists("playerName"))

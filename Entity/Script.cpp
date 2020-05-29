@@ -4,6 +4,7 @@
 #include "Types.hpp"
 #include "Script.hpp"
 #include "Interface/DialogEngine.hpp"
+#include "Player.hpp"
 
 void Script::initBindings() {
 	m_lua_state.set_function("log", [this](const std::string& str) {
@@ -21,6 +22,16 @@ void Script::initBindings() {
 	                                            "move", &NPC::enqueueMove,
 	                                            "moving", &NPC::isMoving
 	                                            );
+	m_lua_state.new_usertype<Player>("Player", "giveItem",
+			[](Player& player, const std::string& item, unsigned count) -> void {
+				if(count == 0 || item.empty()) return;
+				const auto& list = AssetManager::getJSON("ItemList");
+				if(!list.contains(item)) return;
+
+				player.getInventory().addItem(*std::make_shared<Item>(item, count));
+				return;
+			});
+
 	m_lua_state.new_usertype<SoundEngine>("SoundEngine",
 			"playSound", &SoundEngine::playSound,
 			"playMusic", &SoundEngine::playMusic);
@@ -46,6 +57,7 @@ void Script::initBindings() {
 
 	m_lua_state.set("sound", SoundEngine::instance);
 	m_lua_state.set("dialog", DialogEngine::instance);
+	m_lua_state.set("player", Player::instance);
 }
 
 Script::Script(const std::string &scriptName) {
