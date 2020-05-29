@@ -88,8 +88,14 @@ void SettUI::Call() {
 }
 
 void SettUI::AudioManager(sf::Event::KeyEvent key) {
-	if (key.code == sf::Keyboard::A) audio.Decrease(0.1);
-	if (key.code == sf::Keyboard::D) audio.Increase(0.1);
+	if (key.code == sf::Keyboard::A) {
+		audio.Decrease(0.1);
+		SoundEngine::setVolume(audio.getLevel());
+	}
+	if (key.code == sf::Keyboard::D) {
+		audio.Increase(0.1);
+		SoundEngine::setVolume(audio.getLevel());
+	}
 }
 
 void SettUI::ResolutionManager(sf::Event::KeyEvent key) {
