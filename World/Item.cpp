@@ -160,7 +160,18 @@ std::string Item::getStats() const {
 	if(!list.contains(designator) || (!list[designator].contains("stats")))
 		return "undefined";
 
-	return list[designator]["stats"];
+	std::string text;
+	const auto& stats = list[designator]["stats"];
+
+	for(auto it = stats.begin(); it != stats.end(); ++it) {
+		const auto val = it->get<int>();
+		if(val > 0) text += '+';
+		text += std::to_string(val) + " ";
+		text += it.key();
+		if(it != --stats.end()) text += '\n';
+	}
+
+	return text;
 }
 
 bool operator==(const Item& a, const Item& b) {
