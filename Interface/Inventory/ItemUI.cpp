@@ -30,10 +30,8 @@ void ItemUI::DrawSelf(sf::RenderTarget& target) {
 
 	//Draw Value
 	target.draw(value);
-	sf::CircleShape coin;
-	coin.setFillColor(sf::Color(230, 181, 60));
-	coin.setRadius(7);
-	coin.setPosition(position + sf::Vector2f(size.x - 24, size.y - 24));
+	coin.setTexture(AssetManager::getUI("coin").getTexture());
+	coin.setPosition(position + sf::Vector2f(size.x - 26, size.y - 26));
 	target.draw(coin);
 
 	//Draw buttons
@@ -87,7 +85,7 @@ void ItemUI::SelfInit() {
 	stats.setPosition(position + sf::Vector2f(10, 46));
 	description.setPosition(position + sf::Vector2f(10, 46 + stat_size.y));
 	type.setPosition(position + sf::Vector2f(10, size.y - 26));
-	value.setPosition(position + sf::Vector2f(size.x - 65, size.y - 26));
+	value.setPosition(position + sf::Vector2f(size.x - 40, size.y - 26) - sf::Vector2f(getTextSize(value).x, 0) );
 
 	//Buttons
 	SetButtons();
@@ -178,4 +176,8 @@ sf::Vector2f ItemUI::getContentSize(std::string content, int fontsize) {
 	}
 
 	return sf::Vector2f(object_width, object_height);
+}
+
+sf::Vector2f ItemUI::getTextSize(sf::Text object) {
+	return sf::Vector2f(object.findCharacterPos(object.getString().getSize() - 1) - object.findCharacterPos(0));
 }

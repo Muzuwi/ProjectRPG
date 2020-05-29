@@ -9,6 +9,7 @@
 class ItemUI : public Window {
 protected:
 	const sf::Font& font;
+	sf::Sprite coin;
 
 	//Content to display
 	sf::Text name;
@@ -54,4 +55,5 @@ public:
 	void SetUseFlag(bool toSet) { use = toSet; }
 	void Update(int);
 	sf::Vector2f getContentSize(std::string, int);
+	sf::Vector2f getTextSize(sf::Text object);
 };
