@@ -23,14 +23,15 @@ public:
 	void DrawPointer(sf::RenderTarget&);
 	void DrawHeader(sf::RenderTarget&);
 
-	sf::Vector2f GetPosition() { return position; };
-	sf::Vector2f GetSize() { return sf::Vector2f(width, 32); }
-	sf::Vector2f getTextSize(sf::Text);
-	sf::Vector2f getMiddleCords(sf::Text, int = 0, int = 0);
+	sf::Vector2f GetPosition() const { return position; };
+	sf::Vector2f GetSize() const { return sf::Vector2f(width, 32); }
+	sf::Vector2f getTextSize(sf::Text) const ;
+	sf::Vector2f getMiddleCords(sf::Text, int = 0, int = 0) const;
 
 	void SetFocus() { focus = true; }
 	void RemoveFocus() { focus = false; }
 
 	void Increase(float offset) { level = (level + offset); if (level > 1.0) level = 1.0; }
 	void Decrease(float offset) { level = (level - offset); if (level < 0.0) level = 0.0; }
+	double getLevel() const { return level; }
 };

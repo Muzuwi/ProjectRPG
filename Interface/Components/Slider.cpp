@@ -54,11 +54,11 @@ void Slider::DrawHeader(sf::RenderTarget& target) {
 	target.draw(header);
 }
 
-sf::Vector2f Slider::getTextSize(sf::Text object) {
+sf::Vector2f Slider::getTextSize(sf::Text object) const {
 	return sf::Vector2f(object.findCharacterPos(object.getString().getSize() - 1) - object.findCharacterPos(0));
 }
 
-sf::Vector2f Slider::getMiddleCords(sf::Text object, int offset_x, int offset_y) {	//offset_x by left, offset_y by top
+sf::Vector2f Slider::getMiddleCords(sf::Text object, int offset_x, int offset_y) const {	//offset_x by left, offset_y by top
 	sf::Vector2f result;
 	result.x = position.x + ((width - getTextSize(object).x) / 2) + offset_x;
 	result.y = position.y + ((32 - object.getCharacterSize()) / 2) + offset_y;
