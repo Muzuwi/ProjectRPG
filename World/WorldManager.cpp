@@ -132,6 +132,7 @@ void WorldManager::saveGame() {
 	auto save = AssetManager::getSavefile();
 	save.set("playerCurrentMap", currentMapName);
 	save.set("playerCurrentPos", player.getWorldPosition());
+	player.getInventory().saveToSavegame();
 	save.saveToFile();
 	std::cout << "Game saved successfully\n";
 }
@@ -145,6 +146,8 @@ void WorldManager::loadGame() {
 		worldPos.x = std::clamp(worldPos.x, 0u, this->currentMap->getWidth());
 		worldPos.y = std::clamp(worldPos.y, 0u, this->currentMap->getHeight());
 		player.setPosition(worldPos);
+
+		player.getInventory().loadFromSavegame();
 	} catch (std::exception&) {
 		std::cerr << "Failed loading game!\n";
 		return;
