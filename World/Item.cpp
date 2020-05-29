@@ -155,6 +155,15 @@ std::string Item::getDescription() const {
 	return list[designator]["description"];
 }
 
+int Item::getStat(std::string statistic) const {
+	std::cout << designator << " "  << statistic << std::endl;
+	const auto& list = AssetManager::getJSON("ItemList");
+	if (!list.contains(designator) || !list[designator].contains("stats") || !list[designator]["stats"].contains(statistic) )
+		return 0;
+
+	return list[designator]["stats"][statistic];
+}
+
 std::string Item::getStats() const {
 	const auto& list = AssetManager::getJSON("ItemList");
 	if(!list.contains(designator) || (!list[designator].contains("stats")))

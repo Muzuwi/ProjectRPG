@@ -58,6 +58,7 @@ public:
 	std::string getName() const;
 	std::string getDescription() const;
 	std::string getStats() const;
+	int getStat(std::string) const;
 
 	void draw(sf::RenderTarget& target, Vec2f pos, sf::Color color = sf::Color::White) const;
 

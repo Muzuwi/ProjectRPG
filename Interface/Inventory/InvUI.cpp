@@ -325,8 +325,22 @@ void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, int 
 	int icon_index = 2;
 	//DRAW DOUBLE VALUE STATISTIC, (except 0 - 3) indexes 4 - 9
 	for (int i = 4; i < 10; i += 2) {
-		DrawIcon(target, stat_icons, i/2, position, sf::Vector2f(32, 32));
-		DrawLine(target, position + sf::Vector2f(32, 8), ParseText(statistics[statIndex[i]], statistics[statIndex[i+1]], font_size, statNames[i] + ": ", "-"));
+		/*
+		
+		UNDA COCSTUCTIO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		
+		*/
+		DrawIcon(target, stat_icons, i/2, position, sf::Vector2f(32, 32));	//int getStat(std::string) const;
+		int toDraw1 = statistics[statIndex[i]];
+		int toDraw2 = statistics[statIndex[i+1]];
+		for (unsigned j = 0; j < (unsigned)EquipmentSlot::_DummyEnd; ++j) {
+			auto item = player.getInventory().getEquipment().getEquipmentBySlot((EquipmentSlot)j);
+			if (item == nullptr) continue;
+			toDraw1 += item->getStat(statNames[i]);
+			toDraw2 += item->getStat(statNames[i]);
+			std::cout << item->getStat(statNames[i]) << std::endl;
+		}
+		DrawLine(target, position + sf::Vector2f(32, 8), ParseText(toDraw1, toDraw2, font_size, statNames[i] + ": ", "-"));
 		position += sf::Vector2f(0, 28);
 		if(i % 2 == 0) icon_index++;
 	}
