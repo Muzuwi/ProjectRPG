@@ -3,6 +3,7 @@
 #include <deque>
 #include <SFML/Graphics.hpp>
 #include "Interface/Components/Window.hpp"
+#include "Interface/Components/Button.hpp"
 #include "Dialog.hpp"
 #include <sol/forward.hpp>
 

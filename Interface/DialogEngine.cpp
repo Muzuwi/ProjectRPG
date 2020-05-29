@@ -2,6 +2,7 @@
 //#include <sol/sol.hpp>
 #include "DialogEngine.hpp"
 #include "Entity/Script.hpp"
+#include "OptionWindow.hpp"
 
 DialogEngine* DialogEngine::instance = nullptr;
 
@@ -25,40 +26,39 @@ void DialogEngine::draw(sf::RenderTarget &target) {
 	Dialog dialog = dialogBoxes.front();
 
 	Window dialogWindow;
-	Vec2f size {600.0f, 150.0f};
-	Vec2f pos {(800.0f - size.x) / 2.0f, (600 - size.y)};
-	dialogWindow.Init(pos, size);
-	dialogWindow.Draw(target);
+	sf::Vector2f windowSize = target.getView().getSize();
+	int ChoicesNum = dialog.getChoices().size();
+
+	Vec2f instance_position;
+	Vec2f instance_size;
 
 	if(dialog.getDialogType() == Dialog_Choice) {
-		Window choiceWindow;
-		Vec2f selfSize {100.0, 50.0};
-		selfSize.y *= dialog.getChoices().size();
-
-		choiceWindow.Init(pos + size - selfSize, selfSize);
-		choiceWindow.Draw(target);
-
-		sf::RectangleShape shape;
-		shape.setFillColor(sf::Color(255, 255, 255, 128));
-
-		float perSelection = selfSize.y / (float)dialog.getChoices().size();
-
-		shape.setPosition(pos+size-selfSize + (float)selection * Vec2f{0, perSelection});
-		shape.setSize(Vec2f(100.0, 50.0));
-		target.draw(shape);
-
-		unsigned i = 0;
+		int i = 0;
+		instance_size = sf::Vector2f((windowSize.x / 1.2), (ChoicesNum * 52 + 16));
+		instance_position = sf::Vector2f(((windowSize.x - instance_size.x) / 2), (windowSize.y - instance_size.y - 16) );
+		dialogWindow.Init(instance_position, sf::Vector2f(instance_size.x / 1.5, instance_size.y));
 		for(auto& choice : dialog.getChoices()) {
-			sf::Text text {choice, font, 30};
-			text.setFillColor(sf::Color::White);
-			text.setPosition(pos+size-selfSize + (float)(i++) * Vec2f{0.0, perSelection} + Vec2f{10.0f, 0.0f});
-			target.draw(text);
+			OptionWindow choiceWindow;
+			Vec2f selfSize{ (float)(instance_size.x - (instance_size.x / 1.5) + 4), 64.0 };
+
+			if (i == selection) choiceWindow.SetFocus();
+			else choiceWindow.RemoveFocus();
+
+			choiceWindow.Init(instance_position + sf::Vector2f(instance_size.x / 1.5, 52 * i++), selfSize, "quote_window");
+			choiceWindow.SetMessage(choice);
+			choiceWindow.Draw(target);
 		}
 	}
+	else {
+		instance_size = sf::Vector2f((windowSize.x / 1.2), (windowSize.y / 4 + 16) );
+		instance_position = sf::Vector2f(((windowSize.x - instance_size.x) / 2), (windowSize.y - instance_size.y - 16));
+		dialogWindow.Init(instance_position, instance_size);
+	}
+
+	dialogWindow.Draw(target);
 
 	sf::Text text{dialog.getText(), font, 30};
-	text.setFillColor(sf::Color::White);
-	text.setPosition(pos + Vec2f{10.0, 5.0});
+	text.setPosition(instance_position + Vec2f{10.0, 5.0});
 	target.draw(text);
 }
 

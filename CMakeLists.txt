@@ -21,7 +21,7 @@ add_library(RPGBase
         Interface/Components/Slider.cpp 
         Interface/Components/Switch.cpp
         AssetManager.cpp
-        World/Item.cpp)
+        World/Item.cpp "Interface/Components/RawWindow.cpp")
 
 
 add_executable(ProjectRPG
@@ -37,7 +37,7 @@ add_executable(ProjectRPG
     Interface/Components/Slider.cpp
     Interface/Components/Switch.cpp
     Engine.cpp
-    Main.cpp)
+    Main.cpp "Interface/Components/RawWindow.cpp")
 
 if(MSVC) 
 target_link_libraries(ProjectRPG RPGBase sfml-audio-d sfml-graphics-d sfml-system-d sfml-window-d lua53)

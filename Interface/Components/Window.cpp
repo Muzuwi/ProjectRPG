@@ -69,5 +69,4 @@ void Window::DrawFrame(sf::RenderTarget& target) {
 	final.setPosition(position + sf::Vector2f(16, size.y - 16));
 	target.draw(final);
 	//Draw exception staff
-	this->DrawSelf(target);
 }
