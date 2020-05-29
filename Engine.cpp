@@ -10,7 +10,12 @@ bool Engine::Init() {
 	
 	scene = INGAME;
 	GUI.Init(window);
-	world.setCurrentMap("default");
+
+	try {
+		world.setCurrentMap(AssetManager::getSavefile().get<std::string>("playerCurrentMap"));
+	} catch (std::exception&) {
+		world.setCurrentMap("default");
+	}
 
 	Item item {"sword", 1};
 
