@@ -2,10 +2,13 @@
 #include <vector>
 #include <memory>
 #include <cassert>
+#include "AssetManager.hpp"
 #include "World/Item.hpp"
 #include "Entity/PlayerEquipment.hpp"
 
 class PlayerInventory {
+	friend class WorldManager;
+
 	static const unsigned defaultSize = 64;
 	std::vector<std::shared_ptr<Item>> backpack;
 	PlayerEquipment equipment;
@@ -16,9 +19,66 @@ class PlayerInventory {
 		}
 		return backpack.size();
 	}
+
+	void loadFromSavegame() {
+		auto save = AssetManager::getSavefile();
+		if(save.exists("playerBackpack")) {
+			auto saved_backpack = save.get<std::vector<std::pair<std::string, unsigned>>>("playerBackpack");
+			if(saved_backpack.size() != defaultSize) {
+				std::cerr << "Savegame invalid! Mismatched backpack size\n";
+			}
+
+			backpack.clear();
+			backpack.resize(defaultSize);
+
+			for(unsigned i = 0; i < defaultSize && i < saved_backpack.size(); ++i) {
+				auto pair = saved_backpack[i];
+				if(!pair.first.empty() && pair.second != 0)
+					backpack[i] = std::make_shared<Item>(pair.first, pair.second);
+			}
+		}
+
+		if(save.exists("playerEquipment")) {
+			auto saved_equipment = save.get<std::vector<std::string>>("playerEquipment");
+			if(saved_equipment.size() != (unsigned)EquipmentSlot::_DummyEnd) {
+				std::cerr << "Savegame invalid! Mismatched equipment size\n";
+			}
+
+			equipment.clear();
+
+			for(unsigned i = 0; i < (unsigned)EquipmentSlot::_DummyEnd && i < saved_equipment.size(); ++i) {
+				if(!saved_equipment[i].empty())
+					equipment.setEquipment((EquipmentSlot)i,
+				                           std::make_shared<Item>(saved_equipment[i]));
+
+			}
+		}
+
+	}
+
+	void saveToSavegame() {
+		auto save = AssetManager::getSavefile();
+		std::vector<std::pair<std::string, unsigned>> backpackVec;
+		for(auto& item : backpack) {
+			if(!item)
+				backpackVec.push_back({"", 0});
+			else
+				backpackVec.push_back({item->getDesignator(), item->getStack()});
+		}
+		save.set("playerBackpack", backpackVec);
+
+		std::vector<std::string> eqVec;
+		for(unsigned i = 0; i < (unsigned)EquipmentSlot::_DummyEnd; ++i) {
+			auto item = equipment.getEquipmentBySlot((EquipmentSlot)i);
+			eqVec.push_back(item ? item->getDesignator()
+								 : "");
+		}
+		save.set("playerEquipment", eqVec);
+	}
 public:
 	PlayerInventory() {
 		backpack.resize(defaultSize);
+		loadFromSavegame();
 	}
 
 	const std::vector<std::shared_ptr<Item>>& getBackpack() const {

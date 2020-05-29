@@ -145,4 +145,15 @@ public:
 
 		return nullptr;
 	}
+
+	void clear() {
+		leftHanded = nullptr;
+		rightHanded = nullptr;
+		helmet = nullptr;
+		chest = nullptr;
+		pants = nullptr;
+		boots = nullptr;
+		for(unsigned i = 0; i < accessories.size(); ++i)
+			accessories[i] = nullptr;
+	}
 };
