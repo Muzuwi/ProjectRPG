@@ -156,7 +156,6 @@ std::string Item::getDescription() const {
 }
 
 int Item::getStat(std::string statistic) const {
-	std::cout << designator << " "  << statistic << std::endl;
 	const auto& list = AssetManager::getJSON("ItemList");
 	if (!list.contains(designator) || !list[designator].contains("stats") || !list[designator]["stats"].contains(statistic) )
 		return 0;

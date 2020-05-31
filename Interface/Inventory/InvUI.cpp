@@ -296,62 +296,85 @@ void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, int 
 	//KEYS FOR STATISTIC MAP
 	std::vector<std::string> statIndex{ "HP","MaxHP",
 										"MP","MaxMP",
-										"MinPhysical","MaxPhysical",
-										"MinMagical","MaxMagical",
-										"MinPoison","MaxPoison",
+										"Attack",
+										"Fire",
+										"Water",
+										"Lightning",
 										"AttackSpeed",
-										"Crit",
 										"Armor",
-										"Dodge",
-										"MagicalRes",
-										"PoisonRes"
+										"Resistance",
+										"Critical",
+										"Dodge"
 	};
 
 	//KEYS TO DISPLAY
 	std::vector<std::string> statNames{ "Life",				"",
 										"Mana",				"",
-										"Melee damage",		"",
-										"Magical damage",	"",
-										"Poison damage",	"",
+										"Melee damage",
+										"Fire damage",
+										"Water damage",
+										"Lightning damage",
 										"Attack speed",
-										"Critical",
 										"Armor",
+										"Resistance",
+										"Critical",
 										"Dodge",
-										"Magical Resistance",
-										"Poison Resistance"
 	};
 //=========================== END OF DATA =============================//
 
-	int icon_index = 2;
-	//DRAW DOUBLE VALUE STATISTIC, (except 0 - 3) indexes 4 - 9
-	for (int i = 4; i < 10; i += 2) {
-		/*
-		
-		UNDA COCSTUCTIO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
-		*/
-		DrawIcon(target, stat_icons, i/2, position, sf::Vector2f(32, 32));	//int getStat(std::string) const;
-		int toDraw1 = statistics[statIndex[i]];
-		int toDraw2 = statistics[statIndex[i+1]];
+	for (int i = 4; i < statIndex.size(); i++) {
+		//Draw Icon
+		DrawIcon(target, stat_icons, i - 2, position + sf::Vector2f(2, 2), sf::Vector2f(32, 32));
+
+		//Get Base statistic
+		double middle = statistics[statIndex[i]];
+
+		//Get all bonus statistic
 		for (unsigned j = 0; j < (unsigned)EquipmentSlot::_DummyEnd; ++j) {
 			auto item = player.getInventory().getEquipment().getEquipmentBySlot((EquipmentSlot)j);
 			if (item == nullptr) continue;
-			toDraw1 += item->getStat(statNames[i]);
-			toDraw2 += item->getStat(statNames[i]);
-			std::cout << item->getStat(statNames[i]) << std::endl;
+			middle += item->getStat(statIndex[i]);
 		}
-		DrawLine(target, position + sf::Vector2f(32, 8), ParseText(toDraw1, toDraw2, font_size, statNames[i] + ": ", "-"));
-		position += sf::Vector2f(0, 28);
-		if(i % 2 == 0) icon_index++;
-	}
-	//DRAW SINGLE VALUE STATISTIC, indexes 10 - to the end(13)
-	for (int i = 10; i < statNames.size(); i++) {
-		DrawIcon(target, stat_icons, icon_index, position, sf::Vector2f(32, 32));
-		std::string sufix = "";
-		if (statIndex[i] == "Crit" or statIndex[i] == "MagicalRes" or statIndex[i] == "PoisonRes") sufix = "%";
-		DrawLine(target, position + sf::Vector2f(32, 8), ParseText(statistics[statIndex[i]], font_size, statNames[i] + ": ", sufix));
-		position += sf::Vector2f(0, 28);
-		icon_index++;
+
+		std::string sufix = "";						//Default suffix
+		int ceil = int(middle + (middle * 0.15));	//ceil of middle
+		int floor = int(middle - (middle * 0.15));	//floor of middle
+
+		//Drawing and calculating depends of mechanic basis and kind of statistic
+		switch (i) {
+		case 4:		//Physical - Damage from 85% to 115% of middle value
+			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(floor, ceil, font_size, statNames[i] + ": ", "-"));
+			break;
+		case 5:		//Fire - Damage from 85% to 115% of middle value
+			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(floor, ceil, font_size, statNames[i] + ": ", "-"));
+			break;
+		case 6:		//Water	- Damage smaller but static, + reducting AS
+			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(middle, font_size, statNames[i] + ": "));
+			break;
+		case 7:		//Lighning - Huge damage, but from 0 to middle value
+			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(0, middle, font_size, statNames[i] + ": ", "-"));
+			break;
+		case 8:		//Attack speed - static value
+			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(middle, font_size, statNames[i] + ": ", sufix));
+			break;
+		case 9:		//Armor - static value
+			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(middle, font_size, statNames[i] + ": ", sufix));
+			break;
+		case 10:	//Resistance - static value in %
+			sufix = "%";
+			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(middle, font_size, statNames[i] + ": ", sufix));
+			break;
+		case 11:	//Critical - static value in %
+			sufix = "%";
+			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(middle, font_size, statNames[i] + ": ", sufix));
+			break;
+		case 12:	//Dodge - static value
+			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(middle, font_size, statNames[i] + ": ", sufix));
+			break;
+		}
+
+		//Update Pos
+		position += sf::Vector2f{ 0.f, 28.f };
 	}
 }
 

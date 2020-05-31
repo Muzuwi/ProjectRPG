@@ -10,8 +10,9 @@ Player::Player()
 
 	auto save = AssetManager::getSavefile();
 
-	if(save.exists("playerName"))
+	if (save.exists("playerName"))
 		name = save.get<std::string>("playerName");
+	else name = "Andrzej";
 
 	if(save.exists("playerStats") && save.exists("playerInfo")) {
 		statistics = save.get<std::map<std::string, int>>("playerStats");
@@ -60,24 +61,18 @@ void Player::setDefaultStatistics() {
 	statistics["MP"] = 12;
 	statistics["MaxMP"] = 35;
 	//Attack
-		//Physical
-	statistics["MinPhysical"] = 3;
-	statistics["MaxPhysical"] = 5;
-		//Magical
-	statistics["MinMagical"] = 0;
-	statistics["MaxMagical"] = 0;
-		//Poison
-	statistics["MinPoison"] = 0;
-	statistics["MaxPoison"] = 0;
-		//Other
-	statistics["AttackSpeed"] = 2;
-	statistics["Crit"] = 0;
+	statistics["Attack"] = 3;		//Physical Attack
+	statistics["Fire"] = 0;			//Fire Power
+	statistics["Water"] = 0;		//Water Power
+	statistics["Lightning"] = 0;	//Lightning Power
 	//Defence
-	statistics["Armor"] = 0;
-	statistics["Dodge"] = 1;		//%
-	//Resistances
-	statistics["MagicalRes"] = 0;	//%
-	statistics["PoisonRes"] = 0;	//%
+	statistics["AttackSpeed"] = 2;
+	statistics["Armor"] = 1;
+	statistics["Resistance"] = 0;
+	//Other
+	statistics["Critical"] = 0;		//%
+	statistics["Dodge"] = 0;
+	
 
 //========== EXPERIENCE ==========//
 	player_info["lvl"] = 1;
