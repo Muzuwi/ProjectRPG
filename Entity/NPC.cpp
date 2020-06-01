@@ -53,4 +53,26 @@ NPC::NPC(const std::string &texture, Vec2u worldPos, const std::string& scrName)
 	scriptName = scrName;
 	actorScript = std::make_shared<Script>(scrName);
 	actorScript->set("npc", this);
+	this->setDefaultStatistics();
+
+	try {
+		if(actorScript)
+			actorScript->executeFunction("onSpawn");
+	} catch (std::exception&) {}
+}
+
+void NPC::setDefaultStatistics() {
+	statistics["HP"] = 10;
+	statistics["MaxHP"] = 10;
+	statistics["MP"] = 20;
+	statistics["MaxMP"] = 20;
+	statistics["Attack"] = 5;
+	statistics["Fire"] = 0;
+	statistics["Water"] = 0;
+	statistics["Lightning"] = 0;
+	statistics["AttackSpeed"] = 2;
+	statistics["Armor"] = 1;
+	statistics["Resistance"] = 0;
+	statistics["Critical"] = 0;
+	statistics["Dodge"] = 0;
 }

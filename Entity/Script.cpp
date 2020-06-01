@@ -20,7 +20,8 @@ void Script::initBindings() {
 	                                            "spritePos", &NPC::spritePosition,
 	                                            "moveSpeed", &NPC::movementSpeed,
 	                                            "move", &NPC::enqueueMove,
-	                                            "moving", &NPC::isMoving
+	                                            "moving", &NPC::isMoving,
+	                                            "statistics", &NPC::statistics
 	                                            );
 	m_lua_state.new_usertype<Player>("Player", "giveItem",
 			[](Player& player, const std::string& item, unsigned count) -> void {

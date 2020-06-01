@@ -13,6 +13,7 @@ class NPC : public Actor, public RenderableObject {
 	std::string spritesheetName;
 	std::reference_wrapper<const Spritesheet> spritesheet;
 
+	void setDefaultStatistics();
 public:
 	NPC(const std::string& texture, Vec2u worldPos, const std::string& scriptName);
 	NPC(const NPC& npc) = delete;

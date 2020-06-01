@@ -1,5 +1,6 @@
 #pragma once
 #include <queue>
+#include <map>
 #include "Types.hpp"
 #include "World/Tile.hpp"
 
@@ -22,6 +23,7 @@ protected:
 	unsigned frameCounter;
 
 	std::queue<Direction> movementQueue;
+	std::map<std::string, int> statistics;
 	void enqueueMove(Direction dir);
 public:
 	Actor(unsigned type, unsigned moveSpeed)

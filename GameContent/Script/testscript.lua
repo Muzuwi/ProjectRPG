@@ -2,9 +2,13 @@
 n = 0
 hatesMe = 0
 
+function onSpawn()
+    npc.statistics["HP"] = 1000;
+end
+
 function firstTalk()
     dialog:say("Hello, my name is Test!");
-
+    dialog:say("My health is " .. npc.statistics["HP"] .. "!");
     dialog:ask("Say, do you like jazz?", 
         {"Yes", "Nope", "Yup"}
         );

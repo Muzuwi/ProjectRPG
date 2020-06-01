@@ -1,3 +1,7 @@
+function onSpawn()
+
+end
+
 function onMove()
 
 end
