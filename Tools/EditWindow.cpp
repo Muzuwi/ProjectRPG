@@ -96,6 +96,7 @@ void EditWindow::frameLoop() {
 	MouseMovement.hoverCoordinates.y = std::clamp(MouseMovement.hoverCoordinates.y, 0, EditingMap.height-1);
 
 	if(currentTool) currentTool->drawToolWindow(Vec2u(MouseMovement.hoverCoordinates),*editorWindow);
+	itemEditor.draw(*editorWindow);
 }
 
 void EditWindow::eventPoll() {

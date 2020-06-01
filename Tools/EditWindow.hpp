@@ -10,6 +10,7 @@
 #include "NPCCreator.hpp"
 #include "TilesetEditor.hpp"
 #include "ConnectionTool.hpp"
+#include "ItemEditor.hpp"
 
 class EditWindow {
 	unsigned width, height;
@@ -51,6 +52,7 @@ class EditWindow {
 
 	TilePicker picker;
 	TilesetEditor tilesEditor;
+	ItemEditor itemEditor;
 
 	Vec2i mapPosition;
 
