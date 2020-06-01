@@ -16,6 +16,7 @@ private:
 	void SelfInit();
 	
 	//Buttons
+	bool disp_credits;
 	int focus; // Focus index
 	std::vector<Button> buttons;
 	Slider audio;
@@ -27,10 +28,12 @@ public:
 	void Update(int);	//Changing focus
 	void Call();
 	void DrawButtons(sf::RenderTarget&);
+	bool IsCreditsActive() { return disp_credits; }
 	void ProcessKey(sf::Event::KeyEvent);
 	void AudioManager(sf::Event::KeyEvent);
 	void ResolutionManager(sf::Event::KeyEvent);
 	void SetWindow(std::shared_ptr<sf::RenderWindow> win) { window = win; };
 	sf::Vector2f getTextSize(sf::Text);
+	sf::Vector2f getMiddleCords(sf::Text object, int offset_x, int offset_y);
 	std::pair<unsigned int, unsigned int> getRezolution() { return resolution.getResolution(); }
 };

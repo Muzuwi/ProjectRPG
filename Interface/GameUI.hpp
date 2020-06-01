@@ -24,6 +24,7 @@ private:
 	Hud hud;
 	Player& player;
 	std::pair<unsigned int, unsigned int> resolution;
+	sf::Sprite credits;
 public:
 	GameUI(Player&);
 

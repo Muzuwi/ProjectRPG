@@ -10,15 +10,25 @@ void GameUI::Init(std::shared_ptr<sf::RenderWindow> win) {
 	settings.SetWindow(win);
 	eq.Init(sf::Vector2f(100, 50), sf::Vector2f(600, 450));
 	hud.Init();
+	credits = AssetManager::getUI("credits").getSprite();
 }
 
 void GameUI::DrawGUI(sf::RenderTarget& target) {
+	sf::Vector2f cred_pos((target.getView().getSize().x - 400) / 2, 250);
+	credits.setPosition(cred_pos);
 	settings.setPosition(sf::Vector2f((resolution.first - 300) / 2, (resolution.second - 400) / 2));
 	eq.setPosition(sf::Vector2f((resolution.first - 600) / 2, (resolution.second - 450) / 2));
 
 	hud.Draw(target);
 	if (current != NONE) {
-		if (current == SETTINGS) settings.Draw(target);
+		if (current == SETTINGS) {
+			if (settings.IsCreditsActive()) {
+				sf::Vector2f cred_pos((target.getView().getSize().x - 400) / 2, 64);
+				credits.setPosition(cred_pos);
+				target.draw(credits);
+			}
+			else settings.Draw(target);
+		}
 		else if (current == EQ) eq.Draw(target);
 	}
 }
