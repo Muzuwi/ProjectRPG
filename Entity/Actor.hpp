@@ -42,6 +42,7 @@ public:
 	Vec2f getSpritePosition() const { return spritePosition; }
 	Direction getDirection()  const { return facing; }
 	unsigned getMoveSpeed()   const { return movementSpeed; }
+	std::map<std::string, int>& getStatistics() { return statistics; }
 
 	void setFacing(Direction dir) { facing = dir; }
 

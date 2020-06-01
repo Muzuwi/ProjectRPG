@@ -11,6 +11,8 @@ bool Engine::Init() {
 	scene = INGAME;
 	GUI.Init(window);
 
+	test.Init();		//########## TEST ################
+
 	try {
 		world.setCurrentMap(AssetManager::getSavefile().get<std::string>("playerCurrentMap"));
 	} catch (std::exception&) {
@@ -51,6 +53,10 @@ void Engine::RenderFrame() {
 	RenderHud(*window);
 
 	dialogEngine.draw(*window);
+
+	//======= TEST =========
+	test.Draw(*window);
+	//======================
 
 	window->display();
 }

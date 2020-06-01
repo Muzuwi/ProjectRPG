@@ -13,6 +13,7 @@ public:
 		final.setTextureRect(sf::IntRect(212, 0, 44, 64));
 		final.setPosition(position + sf::Vector2f(size.x,0));
 		target.draw(final);
+		message.setPosition(position + sf::Vector2f(8, 8));
 		target.draw(message);
 	}
 	void SelfInit()override {

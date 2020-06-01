@@ -7,6 +7,7 @@
 #include "Interface/GameUI.hpp"
 #include "Sound/SoundEngine.hpp"
 #include "Interface/DialogEngine.hpp"
+#include "BattleSystem/BattleEngine.hpp"
 
 enum Focus{
 	INGAME = 0,
@@ -30,6 +31,7 @@ private:
 	SoundEngine soundEngine;
 	DialogEngine dialogEngine;
 	GameUI GUI;
+	BattleEngine test;
 
 	void RenderWorld(sf::RenderTarget&);
 	void RenderHud(sf::RenderTarget&);
@@ -42,7 +44,7 @@ private:
 
 public:
 	Engine()
-	: GUI(world.getPlayer()){};
+	: GUI(world.getPlayer()), test(world.getPlayer()){};
 
 	~Engine() {};
 
