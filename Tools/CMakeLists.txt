@@ -15,12 +15,19 @@ add_executable(RPGEditor
         Tool.hpp Brush.hpp TilePicker.hpp CursorTool.hpp NPCCreator.hpp)
 
 find_library(OpenGL OpenGL GL)
-add_dependencies(RPGEditor RPGBase ImGui)
+
+target_link_libraries(RPGEditor
+    ImGui
+    RPGBase
+    Extern
+    Resource
+    Interface
+)
 
 if(MSVC)
-    target_link_libraries(RPGEditor opengl32 RPGBase ImGui sfml-audio-d sfml-graphics-d sfml-system-d sfml-window-d lua53)
+    target_link_libraries(RPGEditor opengl32 ImGui sfml-audio-d sfml-graphics-d sfml-system-d sfml-window-d lua53)
 endif(MSVC)
 
 if(UNIX)
-    target_link_libraries(RPGEditor OpenGL RPGBase ImGui -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-window -llua)
+    target_link_libraries(RPGEditor OpenGL ImGui -lsfml-audio -lsfml-graphics -lsfml-system -lsfml-window -llua)
 endif(UNIX)
