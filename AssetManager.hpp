@@ -18,6 +18,8 @@ private:
 	std::unordered_map<std::string, sf::Font> fonts;
 	std::unordered_map<std::string, std::shared_ptr<Map>> maps;
 
+	Spritesheet itemset;
+
 	nlohmann::json savefile;
 
 	bool addSpritesheet(const std::string& resourcePath, std::unordered_map<std::string, Spritesheet>& map, Vec2u (*partitioner)(Vec2u textureSize) = nullptr);

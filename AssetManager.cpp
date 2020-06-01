@@ -117,6 +117,9 @@ void AssetManager::autoload() {
 		}
 	}
 
+	addSpritesheet("GameContent/ItemList.png", UI, [](Vec2u size) -> Vec2u {
+		return { 32,32};
+	});
 	addJsonFile("GameContent/ItemList.json");
 
 	loadSavefile("GameContent/Savegame.json");

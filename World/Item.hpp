@@ -40,6 +40,7 @@ class Item {
 	unsigned value;
 	unsigned stackCount;
 	unsigned maxStack;
+	unsigned itemSpriteIndex;
 public:
 	Item(const std::string& itemDesignator);
 	Item(const std::string& itemDesignator, unsigned count);

@@ -35,6 +35,7 @@ Item::Item(const std::string &itemDesignator)
 	this->value = val;
 	this->maxStack = maxSt;
 	this->stackCount = 1;
+	config["itemSprite"].get_to<unsigned>(this->itemSpriteIndex);
 }
 
 Item::Item(const std::string &itemDesignator, unsigned count)
@@ -122,7 +123,7 @@ std::string Item::getTypeString(ItemType type) {
 }
 
 void Item::draw(sf::RenderTarget &target, Vec2f pos, sf::Color color) const {
-	auto sprite = AssetManager::getUI(designator).getSprite();
+	auto sprite = AssetManager::getUI("ItemList").getSprite(itemSpriteIndex);
 	sprite.setPosition(pos);
 	sprite.setColor(color);
 	target.draw(sprite);
