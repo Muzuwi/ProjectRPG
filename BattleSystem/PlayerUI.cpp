@@ -1,7 +1,7 @@
 #include "PlayerUI.hpp"
 
 PlayerUI::PlayerUI(Player& entity)
-	: player(entity), statistics(entity.getStatistics()), player_info(entity.getPlayerInfo()), font(AssetManager::getFont("VCR_OSD_MONO")), active(false)
+	: player(entity), statistics(entity.getStatistics()), player_info(entity.getPlayerInfo()), font(AssetManager::getFont("VCR_OSD_MONO"))
 {
 
 }
@@ -10,57 +10,11 @@ void PlayerUI::DrawSelf(sf::RenderTarget& target) {
 	//Draw Content
 	DrawPlayerInfo(target, position + sf::Vector2f(16, 8), 18);
 	DrawStatistics(target, position + sf::Vector2f(16, 144), 16);
-	
-	OptionWindow quickAttack;
-	OptionWindow heavyAttack;
-	OptionWindow defend;
-	OptionWindow useItem;
-	OptionWindow flee;
-
-	sf::Vector2f selfSize = { 108, 40 };
-	sf::Vector2f selfPosition = sf::Vector2f(0, (selfSize.y - 8));
-	int j = 5;
-
-	for (int i = 0; i < buttons.size(); i++) {
-		if (i == focus) buttons[i].SetFocus();
-		else buttons[i].RemoveFocus();
-		buttons[i].SetPosition(position + size - sf::Vector2f(0, selfPosition.y * j--));
-		buttons[i].Draw(target);
-	}
 }
 
 void PlayerUI::SelfInit() {
 	//Getting sprites
 	stat_icons.setTexture(AssetManager::getUI("stat_icons").getTexture());	//stat_icons
-
-	OptionWindow quickAttack;
-	OptionWindow heavyAttack;
-	OptionWindow defend;
-	OptionWindow useItem;
-	OptionWindow flee;
-
-	sf::Vector2f selfSize = { 108, 40 };
-	sf::Vector2f selfPosition = sf::Vector2f(0, (selfSize.y - 8));
-	int i = 5;
-	quickAttack.Init(position + size - sf::Vector2f(0, selfPosition.y * i--), selfSize, "quote_window", 16);
-	quickAttack.SetMessage("Quick Attack");
-	heavyAttack.Init(position + size - sf::Vector2f(0, selfPosition.y * i--), selfSize, "quote_window", 16);
-	heavyAttack.SetMessage("Heavy Attack");
-	defend.Init(position + size - sf::Vector2f(0, selfPosition.y * i--), selfSize - sf::Vector2f(20, 0), "quote_window", 16);
-	defend.SetMessage("Defend");
-	useItem.Init(position + size - sf::Vector2f(0, selfPosition.y * i--), selfSize - sf::Vector2f(44, 0), "quote_window", 16);
-	useItem.SetMessage("Use Item");
-	flee.Init(position + size - sf::Vector2f(0, selfPosition.y * i--), selfSize - sf::Vector2f(68, 0), "quote_window", 16);
-	flee.SetMessage("Flee");
-
-	buttons.push_back(quickAttack);
-	buttons.push_back(heavyAttack);
-	buttons.push_back(defend);
-	buttons.push_back(useItem);
-	buttons.push_back(flee);
-
-	//Other - flags
-	focus = 0;
 }
 
 void PlayerUI::DrawIcon(sf::RenderTarget& target, sf::Sprite& object, int index, sf::Vector2f position, sf::Vector2f size) {
@@ -205,26 +159,4 @@ sf::Text PlayerUI::ParseText(int value, int fontSize, std::string prefix, std::s
 
 sf::Vector2f PlayerUI::getTextSize(sf::Text object, std::string text) {
 	return sf::Vector2f(object.findCharacterPos(text.size() - 1) - object.findCharacterPos(0));
-}
-
-void PlayerUI::ProcessKey(sf::Event::KeyEvent key) {
-	if (key.code == sf::Keyboard::W) Update(-1);
-	else if (key.code == sf::Keyboard::S) Update(1);
-	else if (key.code == sf::Keyboard::Space) Call();
-}
-
-void PlayerUI::Call() {
-	//Obs³uga Przycisków
-	if (focus == 0) std::cout << "QUICK ATTACK" << std::endl;
-	if (focus == 1) std::cout << "HEAVY ATTACK" << std::endl;
-	if (focus == 2) std::cout << "DEFEND" << std::endl;
-	if (focus == 3) std::cout << "USE ITEM" << std::endl;
-	if (focus == 4) active = false;
-}
-
-void PlayerUI::Update(int change) {
-	focus = focus + change;
-	if (focus < 0) focus = buttons.size() + focus;
-	else focus = focus % (buttons.size());
-	buttons[focus].SetFocus();
 }

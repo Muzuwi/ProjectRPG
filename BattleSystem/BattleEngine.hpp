@@ -20,7 +20,8 @@ private:
 	EnemyUI enemyWindow;
 	QueueUI queueWindow;
 	bool active;
-
+	int focus;			//current focus
+	std::vector<OptionWindow> buttons;
 	sf::Sprite player_sprit, enemy_sprit;
 public:
 	BattleEngine(Player& yo) : player(yo), enemy(nullptr), queue(), playerWindow(yo), enemyWindow(yo), active(false) {}
@@ -35,11 +36,14 @@ public:
 	void DrawAnimationFrame(sf::RenderTarget&);
 	void DrawInterface(sf::RenderTarget&);
 	void DrawQueue(sf::RenderTarget&);
+	void DrawButtons(sf::RenderTarget&, sf::Vector2f);
 
 	bool InitBattle(std::shared_ptr<Actor>);
 	void Enqueue(int);
 
-	void ProcessKey(sf::Event::KeyEvent key);
+	void ProcessKey(sf::Event::KeyEvent);
+	void Call();
+	void Update(int);
 
 	bool IsActive() { return active; }
 };
