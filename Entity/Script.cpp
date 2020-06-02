@@ -4,6 +4,7 @@
 #include "Types.hpp"
 #include "Script.hpp"
 #include "Interface/DialogEngine.hpp"
+#include "Interface/ShopEngine.hpp"
 #include "Player.hpp"
 
 void Script::initBindings() {
@@ -56,9 +57,40 @@ void Script::initBindings() {
 					} ),
 			"choice", &DialogEngine::selection );
 
+	m_lua_state.new_usertype<Shop>("Shop",
+			"addSelling", [](Shop& engine, const std::string& id, unsigned sell_price, unsigned count) {
+		        std::cout << "addselling\n";
+		        ShopItem item;
+		        item.designator = id;
+		        item.price = sell_price;
+		        item.count = count;
+				engine.shopItems.push_back(item);
+	        },
+	        "addBuyBonus", [](Shop& engine, const std::string& id, double bonus) {
+				std::cout << "addbuybonus\n";
+				SellItem item;
+				item.designator = id;
+				item.priceMultiplier = bonus;
+				engine.sellBonuses.push_back(item);
+			},
+	        "setTraderName", [](Shop& engine, const std::string& name) {
+				std::cout << "settradername\n";
+				engine.traderName = name;
+			}
+	);
+
+	m_lua_state.new_usertype<ShopEngine>("ShopEngine",
+			"open", sol::yielding(
+					[this](ShopEngine& engine, Shop shop) {
+						engine.initializeShop(shop, this);
+						this->m_scheduler = CoroutineScheduler::ShopEngine;
+					})
+	);
+
 	m_lua_state.set("sound", SoundEngine::instance);
 	m_lua_state.set("dialog", DialogEngine::instance);
 	m_lua_state.set("player", Player::instance);
+	m_lua_state.set("shop", ShopEngine::instance);
 }
 
 Script::Script(const std::string &scriptName) {

@@ -29,12 +29,15 @@ add_library(Interface
     Interface/Components/Frame.cpp
     Interface/Components/Slider.cpp
     Interface/Components/Switch.cpp
+    Interface/Components/UnsignedSwitch.cpp
     Interface/Components/RawWindow.cpp
     Interface/Inventory/Cell.cpp
     Interface/Inventory/InvUI.cpp
     Interface/Inventory/ItemUI.cpp
     Interface/Settings/SettUI.cpp
- "BattleSystem/BattleEngine.cpp" "BattleSystem/PlayerUI.cpp" "BattleSystem/EnemyUI.cpp" "BattleSystem/QueueUI.cpp")
+    Interface/ShopEngine.cpp
+ "BattleSystem/BattleEngine.cpp" "BattleSystem/PlayerUI.cpp" "BattleSystem/EnemyUI.cpp" "BattleSystem/QueueUI.cpp"
+)
 
 add_library(RPGBase
     Entity/Actor.cpp

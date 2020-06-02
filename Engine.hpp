@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <SFML/Graphics.hpp>
+#include "Interface/ShopEngine.hpp"
 #include "World/WorldManager.hpp"
 #include "AssetManager.hpp"
 #include "Interface/Hud.hpp"
@@ -13,7 +14,8 @@ enum Focus{
 	INGAME = 0,
 	INTERFACE = 1,
 	BATTLE = 2,
-	DIALOG = 3
+	DIALOG = 3,
+	SHOP = 4
 };
 
 class Engine
@@ -29,6 +31,7 @@ private:
 	WorldManager world;
 	SoundEngine soundEngine;
 	DialogEngine dialogEngine;
+	ShopEngine shopEngine;
 	GameUI GUI;
 	BattleEngine battleEngine;
 
@@ -43,7 +46,7 @@ private:
 
 public:
 	Engine()
-	: GUI(world.getPlayer()), battleEngine(world.getPlayer()){};
+	: GUI(world.getPlayer()), battleEngine(world.getPlayer()), shopEngine(world.getPlayer()) {};
 
 	~Engine() {};
 

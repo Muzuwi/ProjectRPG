@@ -1,5 +1,4 @@
 #include <cassert>
-//#include <sol/sol.hpp>
 #include "DialogEngine.hpp"
 #include "Entity/Script.hpp"
 #include "OptionWindow.hpp"

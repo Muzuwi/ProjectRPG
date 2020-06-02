@@ -57,6 +57,7 @@ void Engine::RenderFrame() {
 		RenderHud(*window);
 
 		dialogEngine.draw(*window);
+		shopEngine.draw(*window);
 	}
 
 	window->display();
@@ -96,6 +97,9 @@ void Engine::ProcessInput() {
 				} else if (scene == DIALOG) {
 					dialogEngine.handleKeyEvent(event.key);
 					if(!dialogEngine.isDialogPresent()) scene = INGAME;
+				} else if (scene == SHOP) {
+					shopEngine.handleKeyEvent(event.key);
+					if(!shopEngine.isShopOpen()) scene = INGAME;
 				}
 				else if (scene == BATTLE) {
 					battleEngine.ProcessKey(event.key);
@@ -117,6 +121,11 @@ void Engine::Update() {
 	world.updateWorld();
 	soundEngine.update();
 	dialogEngine.update();
+
+	if(dialogEngine.isDialogPresent())
+		scene = DIALOG;
+	if(shopEngine.isShopOpen() && (scene == INGAME || scene == DIALOG))
+		scene = SHOP;
 }
 
 void Engine::MainLoop() {
