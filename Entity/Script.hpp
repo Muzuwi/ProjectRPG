@@ -6,7 +6,8 @@
 enum class CoroutineScheduler {
 	None,
 	DialogEngine,
-	ShopEngine
+	ShopEngine,
+	BattleEngine
 };
 
 enum class CoroutineStatus {

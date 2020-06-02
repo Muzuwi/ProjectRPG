@@ -1,4 +1,5 @@
 #include <fstream>
+#include <BattleSystem/BattleEngine.hpp>
 #include "Sound/SoundEngine.hpp"
 #include "Entity/NPC.hpp"
 #include "Types.hpp"
@@ -87,10 +88,21 @@ void Script::initBindings() {
 					})
 	);
 
+	m_lua_state.new_usertype<BattleEngine>("BattleEngine",
+				"start", sol::yielding(
+							[this](BattleEngine& engine) {
+								auto* npc = m_lua_state["npc"].get<NPC*>();
+								engine.InitBattle(npc, this);
+								this->m_scheduler = CoroutineScheduler::BattleEngine;
+							}
+						)
+			);
+
 	m_lua_state.set("sound", SoundEngine::instance);
 	m_lua_state.set("dialog", DialogEngine::instance);
 	m_lua_state.set("player", Player::instance);
 	m_lua_state.set("shop", ShopEngine::instance);
+	m_lua_state.set("battle", BattleEngine::instance);
 }
 
 Script::Script(const std::string &scriptName) {

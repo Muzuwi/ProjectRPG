@@ -103,7 +103,10 @@ void Engine::ProcessInput() {
 				}
 				else if (scene == BATTLE) {
 					battleEngine.ProcessKey(event.key);
+					std::cout << "battle key event\n";
 					if (!battleEngine.IsActive()) scene = INGAME;
+					if(scene == INGAME)
+						std::cout << "is ingame\n";
 				}
 			}
 			default: break;
@@ -122,10 +125,17 @@ void Engine::Update() {
 	soundEngine.update();
 	dialogEngine.update();
 
+	if(battleEngine.IsActive()) {
+		scene = BATTLE;
+		if(battleEngine.updateBattle() != BattleState::InProgress)
+			scene = INGAME;
+	}
 	if(dialogEngine.isDialogPresent())
 		scene = DIALOG;
 	if(shopEngine.isShopOpen() && (scene == INGAME || scene == DIALOG))
 		scene = SHOP;
+
+
 }
 
 void Engine::MainLoop() {

@@ -17,8 +17,18 @@ enum Action {
 	FLEE = 5
 };
 
+enum class BattleState {
+	InProgress,
+	Fleed,
+	Victory,
+	Defeat
+};
+
 class BattleEngine {
+	friend class Script;
 private:
+	static BattleEngine* instance;
+
 	Actor* enemy;
 	Player& player;
 	std::queue<Turn> queue;
@@ -38,6 +48,7 @@ public:
 	BattleEngine(Player& yo) : player(yo), enemy(nullptr), queue(), playerWindow(yo), enemyWindow(nullptr), active(false){
 		std::random_device rd;
 		mt = std::mt19937(rd());
+		instance = this;
 	}
 
 	void Init();
@@ -50,8 +61,8 @@ public:
 	//void DrawAnimationFrame(sf::RenderTarget&);
 	void DrawInterface(sf::RenderTarget&);
 	void DrawButtons(sf::RenderTarget&, sf::Vector2f);
-	void ProcessTurn();
-	void BattleLoop();
+	BattleState ProcessTurn();
+	BattleState updateBattle();
 	void PlayerTurn(Action);
 	void EnemyTurn();
 	void QuickAtack(Actor&, Actor&);
@@ -59,7 +70,7 @@ public:
 	void Victory();
 	void EndBattle();
 
-	bool InitBattle(Actor*);
+	bool InitBattle(Actor*, Script*);
 	void Enqueue();
 
 	void ProcessKey(sf::Event::KeyEvent);

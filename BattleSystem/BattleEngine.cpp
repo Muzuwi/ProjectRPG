@@ -1,7 +1,10 @@
+#include "Entity/Script.hpp"
 #include "BattleSystem/BattleEngine.hpp"
 
+BattleEngine* BattleEngine::instance {nullptr};
+static Script* caller {nullptr};
+
 void BattleEngine::Init() {
-	
 
 	background = AssetManager::getUI("battle_back").getSprite();
 	interface = AssetManager::getUI("windowskin").getSprite();
@@ -163,7 +166,7 @@ void BattleEngine::ProcessKey(sf::Event::KeyEvent key) {
 }
 
 void BattleEngine::Call() {
-	//Obs³uga Przycisków
+	//Obsï¿½uga Przyciskï¿½w
 	if (focus == 0) current = QUICK;
 	if (focus == 1) current = HEAVY;
 	if (focus == 2) current = DEFEND;
@@ -177,7 +180,9 @@ void BattleEngine::Update(int change) {
 	if (focus >= buttons.size()) focus = buttons.size() - 1;
 }
 
-bool BattleEngine::InitBattle(Actor* hao) {
+bool BattleEngine::InitBattle(Actor* hao, Script* _caller) {
+	caller = _caller;
+	std::cout << "Init battle\n";
 	if (hao == nullptr) return false;
 	enemy = hao;
 	enemyWindow.SetEnemy(hao);
@@ -189,17 +194,18 @@ bool BattleEngine::InitBattle(Actor* hao) {
 	return true;
 }
 
-void BattleEngine::BattleLoop() {
-	ProcessTurn();
+BattleState BattleEngine::updateBattle() {
+	return ProcessTurn();
 }
 
-void BattleEngine::ProcessTurn() {
+BattleState BattleEngine::ProcessTurn() {
 	Turn next = queue.front();
 	if (next == PLAYER) {
 		if (current != NOTYET) {
 			PlayerTurn(current);
 			queue.pop();
 			Enqueue();
+			current = NOTYET;
 		}
 	}
 	else if (next == ENEMY) {
@@ -208,12 +214,20 @@ void BattleEngine::ProcessTurn() {
 		Enqueue();
 	}
 
-	if (enemy->getStatistics()["HP"] < 0) {
-		Victory();
+	if(active) {
+		if (enemy->getStatistics()["HP"] <= 0) {
+			Victory();
+			return BattleState::Victory;
+		}
+		else if (player.getStatistics()["HP"] <= 0) {
+			Defeat();
+			return BattleState::Defeat;
+		} else {
+			return BattleState::InProgress;
+		}
 	}
-	else if (player.getStatistics()["HP"] < 0) {
-		Defeat();
-	}
+
+	return BattleState::Fleed;
 }
 
 void BattleEngine::PlayerTurn(Action action) {
@@ -297,14 +311,23 @@ void BattleEngine::Enqueue() {
 
 void BattleEngine::Victory() {
 	std::cout << "ZWYCIESTWO!" << std::endl;
+	EndBattle();
 }
 
 void BattleEngine::Defeat() {
-	std::cout << "PORA¯KA!" << std::endl;
+	std::cout << "PORAï¿½KA!" << std::endl;
+	EndBattle();
 }
 
 void BattleEngine::EndBattle() {
+	std::cout << "end battle\n";
 	while (!queue.empty()) queue.pop();
 	enemy = nullptr;
 	active = false;
+
+	if(caller) {
+		auto result = caller->resumePausedCoroutine();
+		if(result == CoroutineStatus::OrphanedCaller)
+			caller = nullptr;
+	}
 }
