@@ -8,7 +8,7 @@ bool Engine::Init() {
 	if (!window) return false;
 	window->setFramerateLimit(60);
 	
-	scene = BATTLE;
+	scene = INGAME;
 	GUI.Init(window);
 	battleEngine.Init();
 

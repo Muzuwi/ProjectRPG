@@ -6,11 +6,20 @@
 #include "PlayerUI.hpp"
 #include "EnemyUI.hpp"
 #include "BattleSystem/QueueUI.hpp"
+#include <random> 
 
+enum Action {
+	NOTYET = 0,
+	QUICK = 1,
+	HEAVY = 2,
+	DEFEND = 3,
+	ITEM = 4,
+	FLEE = 5
+};
 
 class BattleEngine {
 private:
-	std::shared_ptr<Actor> enemy;
+	Actor* enemy;
 	Player& player;
 	std::queue<Turn> queue;
 	sf::Sprite interface;
@@ -23,8 +32,13 @@ private:
 	int focus;			//current focus
 	std::vector<OptionWindow> buttons;
 	sf::Sprite player_sprit, enemy_sprit;
+	std::mt19937 mt;
+	Action current;
 public:
-	BattleEngine(Player& yo) : player(yo), enemy(nullptr), queue(), playerWindow(yo), enemyWindow(yo), active(false) {}
+	BattleEngine(Player& yo) : player(yo), enemy(nullptr), queue(), playerWindow(yo), enemyWindow(nullptr), active(false){
+		std::random_device rd;
+		mt = std::mt19937(rd());
+	}
 
 	void Init();
 	void Draw(sf::RenderTarget&);
@@ -32,13 +46,20 @@ public:
 	void DrawBattleBack(sf::RenderTarget&);
 	void DrawPlayer(sf::RenderTarget&, sf::Vector2f);
 	void DrawEnemy(sf::RenderTarget&, sf::Vector2f);
-	void DrawAnimation(sf::RenderTarget&);
-	void DrawAnimationFrame(sf::RenderTarget&);
+	//void DrawAnimation(sf::RenderTarget&);
+	//void DrawAnimationFrame(sf::RenderTarget&);
 	void DrawInterface(sf::RenderTarget&);
-	void DrawQueue(sf::RenderTarget&);
 	void DrawButtons(sf::RenderTarget&, sf::Vector2f);
+	void ProcessTurn();
+	void BattleLoop();
+	void PlayerTurn(Action);
+	void EnemyTurn();
+	void QuickAtack(Actor&, Actor&);
+	void Defeat();
+	void Victory();
+	void EndBattle();
 
-	bool InitBattle(std::shared_ptr<Actor>);
+	bool InitBattle(Actor*);
 	void Enqueue();
 
 	void ProcessKey(sf::Event::KeyEvent);

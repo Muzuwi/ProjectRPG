@@ -1,9 +1,13 @@
 #include "EnemyUI.hpp"
 
-EnemyUI::EnemyUI(Player& entity)
-	: player(entity), statistics(entity.getStatistics()), player_info(entity.getPlayerInfo()), font(AssetManager::getFont("VCR_OSD_MONO"))
+EnemyUI::EnemyUI(Actor* entity)
+	: enemy(entity), font(AssetManager::getFont("VCR_OSD_MONO"))
 {
 
+}
+
+void EnemyUI::SetEnemy(Actor* entity) {
+	enemy = entity;
 }
 
 void EnemyUI::DrawSelf(sf::RenderTarget& target) {
@@ -26,26 +30,29 @@ void EnemyUI::DrawIcon(sf::RenderTarget& target, sf::Sprite& object, int index, 
 
 void EnemyUI::DrawPlayerInfo(sf::RenderTarget& target, sf::Vector2f offset, int font_size) {
 	//Name
-	sf::Text name(player.getName(), font, font_size + 1);
+	sf::Text name("Przeciwnik", font, font_size + 1);
 	name.setFillColor(sf::Color::Black);
 	name.setPosition(offset);
 	target.draw(name);
 
 	//Level
-	offset += sf::Vector2f(0, font_size + 4);
-	DrawLine(target, offset, ParseText(player_info["lvl"], font_size - 2, "level "), sf::Color::Green);
+	offset += sf::Vector2f(0, font_size + 4);//
 
 	//HP
 	offset += sf::Vector2f(0, font_size + 4);
 	DrawIcon(target, stat_icons, 0, offset, sf::Vector2f(32, 32));
-	DrawLine(target, offset + sf::Vector2f(28, 8), ParseText(statistics["HP"], statistics["MaxHP"], font_size - 2, "", "/"), sf::Color::Red);
-	DrawBar(target, offset + sf::Vector2f(0, 28), statistics["HP"], statistics["MaxHP"], sf::Vector2f(size.x - 32, 4), sf::Color::Red);
+	int maxhp = enemy->getStatistics()["MaxHP"];
+	int hp = enemy->getStatistics()["HP"];
+	DrawLine(target, offset + sf::Vector2f(28, 8), ParseText(hp, maxhp, font_size - 2, "", "/"), sf::Color::Red);
+	DrawBar(target, offset + sf::Vector2f(0, 28), hp, maxhp, sf::Vector2f(size.x - 32, 4), sf::Color::Red);
 
 	//MP
 	offset += sf::Vector2f(0, 32);
 	DrawIcon(target, stat_icons, 1, offset, sf::Vector2f(32, 32));
-	DrawLine(target, offset + sf::Vector2f(28, 8), ParseText(statistics["MP"], statistics["MaxMP"], font_size - 2, "", "/"), sf::Color::Blue);
-	DrawBar(target, offset + sf::Vector2f(0, 28), statistics["MP"], statistics["MaxMP"], sf::Vector2f(size.x - 32, 4), sf::Color::Blue);
+	int maxmp = enemy->getStatistics()["MaxMP"];
+	int mp = enemy->getStatistics()["MP"];
+	DrawLine(target, offset + sf::Vector2f(28, 8), ParseText(mp, maxmp, font_size - 2, "", "/"), sf::Color::Blue);
+	DrawBar(target, offset + sf::Vector2f(0, 28), mp, maxmp, sf::Vector2f(size.x - 32, 4), sf::Color::Blue);
 }
 
 void EnemyUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, int font_size) {
@@ -71,14 +78,7 @@ void EnemyUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, in
 		DrawIcon(target, stat_icons, i - 2, position + sf::Vector2f(2, 2), sf::Vector2f(32, 32));
 
 		//Get Base statistic
-		double middle = statistics[statIndex[i]];
-
-		//Get all bonus statistic
-		for (unsigned j = 0; j < (unsigned)EquipmentSlot::_DummyEnd; ++j) {
-			auto item = player.getInventory().getEquipment().getEquipmentBySlot((EquipmentSlot)j);
-			if (item == nullptr) continue;
-			middle += item->getStat(statIndex[i]);
-		}
+		double middle = enemy->getStatistics()[statIndex[i]];
 
 		std::string sufix = "";						//Default suffix
 		int ceil = int(middle + (middle * 0.15));	//ceil of middle

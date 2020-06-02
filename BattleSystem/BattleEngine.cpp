@@ -1,12 +1,14 @@
 #include "BattleSystem/BattleEngine.hpp"
-#include <stdlib.h>
-#include <time.h> 
 
 void BattleEngine::Init() {
+	
+
 	background = AssetManager::getUI("battle_back").getSprite();
 	interface = AssetManager::getUI("windowskin").getSprite();
+
 	playerWindow.Init(sf::Vector2f(0, 0), sf::Vector2f(0, 0));
 	enemyWindow.Init(sf::Vector2f(0, 0), sf::Vector2f(0, 0));
+
 	player_sprit = AssetManager::getCharacter("playersprite").getSprite(0);
 	enemy_sprit = AssetManager::getCharacter("playersprite").getSprite(0);
 
@@ -40,13 +42,9 @@ void BattleEngine::Init() {
 	buttons.push_back(flee);
 
 	//symulation of start battle
-	active = true;
+	active = false;
 
 	queueWindow.Init(sf::Vector2f(100, 0), sf::Vector2f(496, 64), player_sprit, enemy_sprit);
-	//TEMP
-	turnCouner = 1;
-	for (int i = 0; i < 15; i++) Enqueue();
-	queueWindow.SetQueue(queue);
 }
 
 void BattleEngine::Draw(sf::RenderTarget& target) {
@@ -166,14 +164,11 @@ void BattleEngine::ProcessKey(sf::Event::KeyEvent key) {
 
 void BattleEngine::Call() {
 	//Obs³uga Przycisków
-	if (focus == 0) {
-		queue.pop();
-		Enqueue();
-	}
-	if (focus == 1) std::cout << "HEAVY ATTACK" << std::endl;
-	if (focus == 2) std::cout << "DEFEND" << std::endl;
-	if (focus == 3) std::cout << "USE ITEM" << std::endl;
-	if (focus == 4) active = false;
+	if (focus == 0) current = QUICK;
+	if (focus == 1) current = HEAVY;
+	if (focus == 2) current = DEFEND;
+	if (focus == 3) current = ITEM;
+	if (focus == 4) current = FLEE;
 }
 
 void BattleEngine::Update(int change) {
@@ -182,36 +177,107 @@ void BattleEngine::Update(int change) {
 	if (focus >= buttons.size()) focus = buttons.size() - 1;
 }
 
-bool BattleEngine::InitBattle(std::shared_ptr<Actor> hao) {
-	active = true;
-
+bool BattleEngine::InitBattle(Actor* hao) {
 	if (hao == nullptr) return false;
 	enemy = hao;
-
-	turnCouner = 0;
+	enemyWindow.SetEnemy(hao);
+	turnCouner = 1;
 	for (int i = 0; i < 15; i++) Enqueue();
-
+	queueWindow.SetQueue(queue);
+	active = true;
+	current = NOTYET;
 	return true;
+}
+
+void BattleEngine::BattleLoop() {
+	ProcessTurn();
+}
+
+void BattleEngine::ProcessTurn() {
+	Turn next = queue.front();
+	if (next == PLAYER) {
+		if (current != NOTYET) {
+			PlayerTurn(current);
+			queue.pop();
+			Enqueue();
+		}
+	}
+	else if (next == ENEMY) {
+		EnemyTurn();
+		queue.pop();
+		Enqueue();
+	}
+
+	if (enemy->getStatistics()["HP"] < 0) {
+		Victory();
+	}
+	else if (player.getStatistics()["HP"] < 0) {
+		Defeat();
+	}
+}
+
+void BattleEngine::PlayerTurn(Action action) {
+	switch (action)
+	{
+	case QUICK:
+		QuickAtack(player, *enemy);
+		break;
+	case HEAVY:
+		break;
+	case DEFEND:
+		break;
+	case ITEM:
+		break;
+	case FLEE:
+		EndBattle();
+		break;
+	default:
+		break;
+	}
+}
+
+void BattleEngine::QuickAtack(Actor& source, Actor& target) {
+	int melee = source.getStatistics()["Attack"];
+	int defence = target.getStatistics()["Armor"];
+
+	std::uniform_real_distribution<double> melee_dmg(melee*0.85, melee*1.15);
+	double damage = melee_dmg(mt) - defence;
+
+	int fire = source.getStatistics()["Fire"];
+	int water = source.getStatistics()["Water"];
+	int thunder = source.getStatistics()["Lightning"];
+	int resistance = target.getStatistics()["Resistance"];
+
+	std::uniform_real_distribution<double> fire_dmg(fire * 0.85, fire * 1.15);
+	std::uniform_real_distribution<double> thunder_dmg(0, thunder);
+
+	int magic_damage;
+	if (resistance > 100.0) {
+		magic_damage = -(water + fire_dmg(mt) + thunder_dmg(mt) * ((100.0 - resistance) / 100.0));
+	}
+	else magic_damage = water + fire_dmg(mt) + thunder_dmg(mt) * (resistance / 100.0);
+	
+	target.getStatistics()["HP"] -= (magic_damage + damage);
+}
+
+void BattleEngine::EnemyTurn() {
+	QuickAtack(*enemy, player);
 }
 
 void BattleEngine::Enqueue() {
 	int playerAS, ememyAS;
-	playerAS = 3;//player.getStatistics()["AttackSpeed"];
-	ememyAS = 2;//enemy->getStatistics()["AttackSpeed"];
+	playerAS = 3;	//player.getStatistics()["AttackSpeed"];
+	ememyAS = 2;	//enemy->getStatistics()["AttackSpeed"];
 
 	double playerChance = 1.0 * (turnCouner % 2);
 	double ASmodifier = (playerAS - ememyAS) / 33.0;
 
-	srand(time(NULL));
-
-	//Heating up
-	for (int i = 0; i < turnCouner * 2; i++) rand();
-	double random = (rand() % 100) / 100.0;
+	std::uniform_real_distribution<double> dist(0, 1.0);
+	double random = dist(mt);
 
 	if (turnCouner % 2 == 1) {
 		queue.push(PLAYER);
 		if (ASmodifier > 0.0) { //Chance for bonus turn for player
-			std::cout << "Tura: " << turnCouner << ". [ " << random << " / " << (ASmodifier) << " ] " << std::endl;
 			if (random < ASmodifier) {
 				queue.push(PLAYER);
 			}
@@ -220,11 +286,24 @@ void BattleEngine::Enqueue() {
 	else{
 		queue.push(ENEMY);
 		if (ASmodifier < 0.0) {	//Chance for bonus turn for enemy
-			std::cout << "Tura: " << turnCouner << ". [ " << random << " / " << (ASmodifier * -1.0) << " ] " << std::endl;
 			if (random < ASmodifier * -1.0) {
 				queue.push(ENEMY);
 			}
 		}
 	}	
 	turnCouner++;
+}
+
+void BattleEngine::Victory() {
+	std::cout << "ZWYCIESTWO!" << std::endl;
+}
+
+void BattleEngine::Defeat() {
+	std::cout << "PORA¯KA!" << std::endl;
+}
+
+void BattleEngine::EndBattle() {
+	while (!queue.empty()) queue.pop();
+	enemy = nullptr;
+	active = false;
 }
