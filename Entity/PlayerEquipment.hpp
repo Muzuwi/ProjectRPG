@@ -3,8 +3,8 @@
 #include <array>
 
 enum class EquipmentSlot {
-	RightHand = 0,
-	LeftHand,
+	Weapon = 0,
+	Shield,
 	Helmet,
 	Gloves,
 	Chest,
@@ -17,8 +17,8 @@ enum class EquipmentSlot {
 };
 
 class PlayerEquipment {
-	std::shared_ptr<Item> leftHanded;
-	std::shared_ptr<Item> rightHanded;
+	std::shared_ptr<Item> weapon;
+	std::shared_ptr<Item> shield;
 	std::shared_ptr<Item> helmet;
 	std::shared_ptr<Item> chest;
 	std::shared_ptr<Item> pants;
@@ -28,11 +28,11 @@ public:
 	bool setEquipment(EquipmentSlot slot, const std::shared_ptr<Item>& item) {
 		if (!item) {
 			switch (slot) {
-			case EquipmentSlot::LeftHand:
-				leftHanded = nullptr;
+			case EquipmentSlot::Weapon:
+				weapon = nullptr;
 				break;
-			case EquipmentSlot::RightHand:
-				rightHanded = nullptr;
+			case EquipmentSlot::Shield:
+				shield = nullptr;
 				break;
 			case EquipmentSlot::Helmet:
 				helmet = nullptr;
@@ -63,15 +63,15 @@ public:
 		}
 		
 		switch(slot) {
-			case EquipmentSlot::LeftHand:
-				if(!(item->getType() == ItemType::WeaponBow || item->getType() == ItemType::WeaponSword))
+			case EquipmentSlot::Weapon:
+				if(!(item->getType() == ItemType::WeaponBow || item->getType() == ItemType::WeaponSword || item->getType() == ItemType::WeaponStaff))
 					return false;
-				leftHanded = item;
+				weapon = item;
 				break;
-			case EquipmentSlot::RightHand:
-				if(!(item->getType() == ItemType::WeaponBow || item->getType() == ItemType::WeaponSword))
+			case EquipmentSlot::Shield:
+				if(!(item->getType() == ItemType::Shield) )
 					return false;
-				rightHanded = item;
+				shield = item;
 				break;
 			case EquipmentSlot::Helmet:
 				if(item->getType() != ItemType::ArmorHelmet)
@@ -121,10 +121,10 @@ public:
 
 	std::shared_ptr<Item> getEquipmentBySlot(EquipmentSlot slot) {
 		switch(slot) {
-			case EquipmentSlot::LeftHand:
-				return leftHanded;
-			case EquipmentSlot::RightHand:
-				return rightHanded;
+			case EquipmentSlot::Weapon:
+				return weapon;
+			case EquipmentSlot::Shield:
+				return shield;
 			case EquipmentSlot::Helmet:
 				return helmet;
 			case EquipmentSlot::Chest:
@@ -147,8 +147,8 @@ public:
 	}
 
 	void clear() {
-		leftHanded = nullptr;
-		rightHanded = nullptr;
+		weapon = nullptr;
+		shield = nullptr;
 		helmet = nullptr;
 		chest = nullptr;
 		pants = nullptr;

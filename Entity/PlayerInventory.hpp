@@ -160,8 +160,10 @@ public:
         auto type = item->getType();
         EquipmentSlot eqSlot;
         switch(type) {
-        	case ItemType::WeaponSword: eqSlot = EquipmentSlot::RightHand; break;
-	        case ItemType::WeaponBow: eqSlot = EquipmentSlot::RightHand; break;
+        	case ItemType::WeaponSword: eqSlot = EquipmentSlot::Weapon; break;
+	        case ItemType::WeaponBow: eqSlot = EquipmentSlot::Weapon; break;
+	        case ItemType::WeaponStaff: eqSlot = EquipmentSlot::Weapon; break;
+	        case ItemType::Shield: eqSlot = EquipmentSlot::Shield; break;
         	case ItemType::ArmorHelmet: eqSlot = EquipmentSlot::Helmet; break;
 	        case ItemType::ArmorBoots: eqSlot = EquipmentSlot::Boots; break;
 	        case ItemType::ArmorChest: eqSlot = EquipmentSlot::Chest; break;

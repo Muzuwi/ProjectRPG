@@ -28,6 +28,8 @@ enum class ItemType : unsigned {
 
 	WeaponSword    = 70,
 	WeaponBow      = 71,
+	WeaponStaff    = 72,
+	Shield		   = 73,
 };
 
 class Script;

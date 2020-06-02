@@ -260,6 +260,7 @@ void BattleEngine::QuickAtack(Actor& source, Actor& target) {
 	target.getStatistics()["HP"] -= (magic_damage + damage);
 }
 
+
 void BattleEngine::EnemyTurn() {
 	QuickAtack(*enemy, player);
 }
