@@ -70,3 +70,7 @@ void Window::DrawFrame(sf::RenderTarget& target) {
 	target.draw(final);
 	//Draw exception staff
 }
+
+void Window::setTint(sf::Color color) {
+	final.setColor(color);
+}

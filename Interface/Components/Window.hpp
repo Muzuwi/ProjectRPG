@@ -18,4 +18,5 @@ public:
 	void DrawFrame(sf::RenderTarget&);
 	void setPosition(sf::Vector2f pos) { position = pos; }
 	void setSize(sf::Vector2f siz) { size = siz; }
+	void setTint(sf::Color);
 };
