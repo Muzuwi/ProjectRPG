@@ -117,6 +117,8 @@ std::string Item::getTypeString(ItemType type) {
 			return "Sword";
 		case ItemType::WeaponBow:
 			return "Bow";
+		case ItemType::EquipGloves:
+			return "Gloves";
 	}
 
 	return "undefined";
