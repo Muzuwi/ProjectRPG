@@ -9,7 +9,8 @@ void QueueUI::Draw(sf::RenderTarget& target) {
 void QueueUI::DrawQueue(sf::RenderTarget& target) {
 	sf::Vector2f offset = { 8,8 };
 	enemy.setColor(sf::Color::Red);
-	while (!queue.empty()) {
+	int i = 0;
+	while (i < 15 and !queue.empty()) {
 		Turn current = queue.front();
 		if (current == PLAYER) {
 			player.setPosition(position + offset);
@@ -21,5 +22,6 @@ void QueueUI::DrawQueue(sf::RenderTarget& target) {
 		}
 		offset += sf::Vector2f{32,0};
 		queue.pop();
+		i++;
 	}
 }

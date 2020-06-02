@@ -44,7 +44,8 @@ void BattleEngine::Init() {
 
 	queueWindow.Init(sf::Vector2f(100, 0), sf::Vector2f(496, 64), player_sprit, enemy_sprit);
 	//TEMP
-	for (int i = 0; i < 15; i++) { if (i % 2 == 0)queue.push(PLAYER); else queue.push(ENEMY); }
+	turnCouner = 1;
+	for (int i = 0; i < 15; i++) Enqueue();
 	queueWindow.SetQueue(queue);
 }
 
@@ -165,7 +166,10 @@ void BattleEngine::ProcessKey(sf::Event::KeyEvent key) {
 
 void BattleEngine::Call() {
 	//Obs³uga Przycisków
-	if (focus == 0) std::cout << "QUICK ATTACK" << std::endl;
+	if (focus == 0) {
+		queue.pop();
+		Enqueue();
+	}
 	if (focus == 1) std::cout << "HEAVY ATTACK" << std::endl;
 	if (focus == 2) std::cout << "DEFEND" << std::endl;
 	if (focus == 3) std::cout << "USE ITEM" << std::endl;
@@ -185,28 +189,42 @@ bool BattleEngine::InitBattle(std::shared_ptr<Actor> hao) {
 	enemy = hao;
 
 	turnCouner = 0;
-	for (int i = 0; i < 15; i++) Enqueue(++turnCouner);
+	for (int i = 0; i < 15; i++) Enqueue();
 
 	return true;
 }
 
-void BattleEngine::Enqueue(int turn) {
+void BattleEngine::Enqueue() {
 	int playerAS, ememyAS;
-	playerAS = player.getStatistics()["AttackSpeed"];
-	ememyAS = enemy->getStatistics()["AttackSpeed"];
+	playerAS = 3;//player.getStatistics()["AttackSpeed"];
+	ememyAS = 2;//enemy->getStatistics()["AttackSpeed"];
 
-	double playerChance = 1.0 * (turn % 2);
-	double ASmodifier = playerAS / (double)ememyAS;
-	playerChance += (ASmodifier / 2);
+	double playerChance = 1.0 * (turnCouner % 2);
+	double ASmodifier = (playerAS - ememyAS) / 33.0;
 
 	srand(time(NULL));
-	double random = (rand() % 100) / 100;
-	if (random <= playerChance) {
+
+	//Heating up
+	for (int i = 0; i < turnCouner * 2; i++) rand();
+	double random = (rand() % 100) / 100.0;
+
+	if (turnCouner % 2 == 1) {
 		queue.push(PLAYER);
-		std::cout << "PLAYER" << std::endl;	//TESTING
+		if (ASmodifier > 0.0) { //Chance for bonus turn for player
+			std::cout << "Tura: " << turnCouner << ". [ " << random << " / " << (ASmodifier) << " ] " << std::endl;
+			if (random < ASmodifier) {
+				queue.push(PLAYER);
+			}
+		}
 	}
 	else{
 		queue.push(ENEMY);
-		std::cout << "ENEMY" << std::endl; //TESTING
+		if (ASmodifier < 0.0) {	//Chance for bonus turn for enemy
+			std::cout << "Tura: " << turnCouner << ". [ " << random << " / " << (ASmodifier * -1.0) << " ] " << std::endl;
+			if (random < ASmodifier * -1.0) {
+				queue.push(ENEMY);
+			}
+		}
 	}	
+	turnCouner++;
 }

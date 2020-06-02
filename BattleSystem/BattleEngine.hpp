@@ -39,7 +39,7 @@ public:
 	void DrawButtons(sf::RenderTarget&, sf::Vector2f);
 
 	bool InitBattle(std::shared_ptr<Actor>);
-	void Enqueue(int);
+	void Enqueue();
 
 	void ProcessKey(sf::Event::KeyEvent);
 	void Call();
