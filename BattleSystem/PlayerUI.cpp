@@ -118,6 +118,7 @@ void PlayerUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, i
 			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(middle, font_size, "", sufix));
 			break;
 		case 12:	//Dodge - static value
+			sufix = "%";
 			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(middle, font_size, "", sufix));
 			break;
 		}

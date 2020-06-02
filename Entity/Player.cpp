@@ -91,8 +91,25 @@ void Player::Lvlup() {
 		player_info["lvl"] += 1;
 		player_info["current"] = 0;
 		player_info["next"] += (int)(player_info["next"] * (5.2 / player_info["lvl"]));
-		std::cout << "LvL: " << player_info["lvl"] << " -> " << player_info["next"] << std::endl;
+		statistics["MaxHP"] += (int)(statistics["MaxHP"] * (2.3 / player_info["lvl"]));
+		statistics["MaxMP"] += (int)(statistics["MaxMP"] * (2.1 / player_info["lvl"]));
+		statistics["HP"] = statistics["MaxHP"];
+		statistics["MP"] = statistics["MaxMP"];
 	}
+}
+
+void Player::GainEXP(int amount) {
+	player_info["current"] += amount;
+	while(player_info["current"] >= player_info["next"]) {
+		int overflow = player_info["current"] - player_info["next"];
+		Lvlup();
+		player_info["current"] += overflow;
+	}
+}
+
+void Player::GainGold(int amount) {
+	player_info["gold"] += amount;
+	if (player_info["gold"] > 9999) player_info["gold"] = 9999;
 }
 
 void Player::setPosition(Vec2u worldPos) {

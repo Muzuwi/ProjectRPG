@@ -20,8 +20,9 @@ public:
 	std::map<std::string, int>& getStatistics() { return statistics; }
 	std::map<std::string, int>& getPlayerInfo() { return player_info; }
 	Vec2u getDimensions() const override;
-
+	void GainEXP(int);
 	void setPosition(Vec2u worldPos);
+	void GainGold(int);
 
 	PlayerInventory& getInventory() { return inventory; }
 protected:

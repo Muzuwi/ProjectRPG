@@ -368,7 +368,8 @@ void InvUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, int 
 			sufix = "%";
 			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(middle, font_size, statNames[i] + ": ", sufix));
 			break;
-		case 12:	//Dodge - static value
+		case 12:	//Dodge - static value in %
+			sufix = "%";
 			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(middle, font_size, statNames[i] + ": ", sufix));
 			break;
 		}

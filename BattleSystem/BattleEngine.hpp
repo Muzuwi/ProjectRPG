@@ -11,7 +11,7 @@
 enum Action {
 	NOTYET = 0,
 	QUICK = 1,
-	HEAVY = 2,
+	HEAL = 2,
 	DEFEND = 3,
 	ITEM = 4,
 	FLEE = 5
@@ -39,6 +39,7 @@ private:
 	EnemyUI enemyWindow;
 	QueueUI queueWindow;
 	bool active;
+	bool defending;
 	int focus;			//current focus
 	std::vector<OptionWindow> buttons;
 	sf::Sprite player_sprit, enemy_sprit;
@@ -65,7 +66,9 @@ public:
 	BattleState updateBattle();
 	void PlayerTurn(Action);
 	void EnemyTurn();
-	void QuickAtack(Actor&, Actor&);
+	void QuickAtack(Actor&, Actor&, bool);
+	void Heal(Actor&);
+	void Defend(Actor&);
 	void Defeat();
 	void Victory();
 	void EndBattle();

@@ -1,5 +1,7 @@
 #include "Entity/Script.hpp"
 #include "BattleSystem/BattleEngine.hpp"
+#include "World/WorldManager.hpp"
+#include "Entity/NPC.hpp"
 
 BattleEngine* BattleEngine::instance {nullptr};
 static Script* caller {nullptr};
@@ -12,15 +14,13 @@ void BattleEngine::Init() {
 	playerWindow.Init(sf::Vector2f(0, 0), sf::Vector2f(0, 0));
 	enemyWindow.Init(sf::Vector2f(0, 0), sf::Vector2f(0, 0));
 
-	player_sprit = AssetManager::getCharacter("playersprite").getSprite(0);
-	enemy_sprit = AssetManager::getCharacter("playersprite").getSprite(0);
-
 	focus = 0;
+	defending = false;
 
 	//Buttons
 	OptionWindow quickAttack;
 	OptionWindow heavyAttack;
-	OptionWindow useItem;
+	//OptionWindow useItem;
 	OptionWindow defend;
 	OptionWindow flee;
 
@@ -30,9 +30,9 @@ void BattleEngine::Init() {
 	quickAttack.Init(sf::Vector2f(0,0), selfSize, "quote_window", 16);
 	quickAttack.SetMessage("Quick Attack");
 	heavyAttack.Init(sf::Vector2f(0, 0), selfSize, "quote_window", 16);
-	heavyAttack.SetMessage("Heavy Attack");
-	useItem.Init(sf::Vector2f(0, 0), selfSize - sf::Vector2f(20, 0), "quote_window", 16);
-	useItem.SetMessage("Use Item");
+	heavyAttack.SetMessage("Heal");
+	//useItem.Init(sf::Vector2f(0, 0), selfSize - sf::Vector2f(20, 0), "quote_window", 16);
+	//useItem.SetMessage("Use Item");
 	defend.Init(sf::Vector2f(0, 0), selfSize - sf::Vector2f(44, 0), "quote_window", 16);
 	defend.SetMessage("Defend");
 	flee.Init(sf::Vector2f(0, 0), selfSize - sf::Vector2f(68, 0), "quote_window", 16);
@@ -40,14 +40,12 @@ void BattleEngine::Init() {
 
 	buttons.push_back(quickAttack);
 	buttons.push_back(heavyAttack);
-	buttons.push_back(useItem);
+	//buttons.push_back(useItem);
 	buttons.push_back(defend);
 	buttons.push_back(flee);
 
 	//symulation of start battle
 	active = false;
-
-	queueWindow.Init(sf::Vector2f(100, 0), sf::Vector2f(496, 64), player_sprit, enemy_sprit);
 }
 
 void BattleEngine::Draw(sf::RenderTarget& target) {
@@ -127,7 +125,7 @@ void BattleEngine::DrawPlayer(sf::RenderTarget& target, sf::Vector2f offset) {
 }
 
 void BattleEngine::DrawEnemy(sf::RenderTarget& target, sf::Vector2f offset) {
-	sf::Sprite toDraw = AssetManager::getCharacter("playersprite").getSprite(6);
+	sf::Sprite toDraw = AssetManager::getCharacter(dynamic_cast<NPC*>(enemy)->getSpritesheetName()).getSprite(6);
 	toDraw.setPosition(offset + sf::Vector2f{ 517,272 });
 	target.draw(toDraw);
 }
@@ -155,8 +153,14 @@ void BattleEngine::DrawButtons(sf::RenderTarget& target, sf::Vector2f offset) {
 		if (i == focus) buttons[i].SetFocus();
 		else buttons[i].RemoveFocus();
 		buttons[i].SetPosition(offset - sf::Vector2f(0, selfPosition.y * j--));
-		buttons[i].Draw(target);
 	}
+
+	if (player.getStatistics()["MP"] < 25) {
+		buttons[1].SetColor(sf::Color(38, 38, 38));
+	}
+	else buttons[1].SetColor(sf::Color(255, 255, 255));
+
+	for (int i = 0; i < buttons.size(); i++) buttons[i].Draw(target);
 }
 
 void BattleEngine::ProcessKey(sf::Event::KeyEvent key) {
@@ -168,10 +172,10 @@ void BattleEngine::ProcessKey(sf::Event::KeyEvent key) {
 void BattleEngine::Call() {
 	//Obs�uga Przycisk�w
 	if (focus == 0) current = QUICK;
-	if (focus == 1) current = HEAVY;
+	if (focus == 1 and player.getStatistics()["MP"] > 25) current = HEAL;
 	if (focus == 2) current = DEFEND;
-	if (focus == 3) current = ITEM;
-	if (focus == 4) current = FLEE;
+	//if (focus == 3) current = ITEM;
+	if (focus == 3) current = FLEE;
 }
 
 void BattleEngine::Update(int change) {
@@ -185,12 +189,18 @@ bool BattleEngine::InitBattle(Actor* hao, Script* _caller) {
 	std::cout << "Init battle\n";
 	if (hao == nullptr) return false;
 	enemy = hao;
+
 	enemyWindow.SetEnemy(hao);
 	turnCouner = 1;
 	for (int i = 0; i < 15; i++) Enqueue();
 	queueWindow.SetQueue(queue);
 	active = true;
 	current = NOTYET;
+
+	player_sprit = AssetManager::getCharacter("playersprite").getSprite(0);
+	enemy_sprit = AssetManager::getCharacter(dynamic_cast<NPC*>(enemy)->getSpritesheetName()).getSprite(0);
+	queueWindow.Init(sf::Vector2f(100, 0), sf::Vector2f(496, 64), player_sprit, enemy_sprit);
+
 	return true;
 }
 
@@ -215,14 +225,15 @@ BattleState BattleEngine::ProcessTurn() {
 	}
 
 	if(active) {
+		if (player.getStatistics()["HP"] <= 0) {
+			Defeat();
+			return BattleState::Defeat;
+		} 
 		if (enemy->getStatistics()["HP"] <= 0) {
 			Victory();
 			return BattleState::Victory;
 		}
-		else if (player.getStatistics()["HP"] <= 0) {
-			Defeat();
-			return BattleState::Defeat;
-		} else {
+		else {
 			return BattleState::InProgress;
 		}
 	}
@@ -234,14 +245,16 @@ void BattleEngine::PlayerTurn(Action action) {
 	switch (action)
 	{
 	case QUICK:
-		QuickAtack(player, *enemy);
+		QuickAtack(player, *enemy, true);
 		break;
-	case HEAVY:
+	case HEAL:
+		Heal(player);
 		break;
 	case DEFEND:
+		Defend(player);
 		break;
-	case ITEM:
-		break;
+	//case ITEM:
+	//break;
 	case FLEE:
 		EndBattle();
 		break;
@@ -250,33 +263,102 @@ void BattleEngine::PlayerTurn(Action action) {
 	}
 }
 
-void BattleEngine::QuickAtack(Actor& source, Actor& target) {
-	int melee = source.getStatistics()["Attack"];
-	int defence = target.getStatistics()["Armor"];
+void BattleEngine::QuickAtack(Actor& source, Actor& target, bool source_is_player) {
+	std::uniform_int_distribution<int> doge(0, 100);
 
-	std::uniform_real_distribution<double> melee_dmg(melee*0.85, melee*1.15);
-	double damage = melee_dmg(mt) - defence;
+	if (doge(mt) > source.getStatistics()["Dodge"]) {
 
-	int fire = source.getStatistics()["Fire"];
-	int water = source.getStatistics()["Water"];
-	int thunder = source.getStatistics()["Lightning"];
-	int resistance = target.getStatistics()["Resistance"];
+		int melee = source.getStatistics()["Attack"];
+		int defence = target.getStatistics()["Armor"];
 
-	std::uniform_real_distribution<double> fire_dmg(fire * 0.85, fire * 1.15);
-	std::uniform_real_distribution<double> thunder_dmg(0, thunder);
+		if (source_is_player) {
+			for (unsigned j = 0; j < (unsigned)EquipmentSlot::_DummyEnd; ++j) {
+				auto item = player.getInventory().getEquipment().getEquipmentBySlot((EquipmentSlot)j);
+				if (item == nullptr) continue;
+				melee += item->getStat("Attack");
+			}
+		}
+		else {
+			for (unsigned j = 0; j < (unsigned)EquipmentSlot::_DummyEnd; ++j) {
+				auto item = player.getInventory().getEquipment().getEquipmentBySlot((EquipmentSlot)j);
+				if (item == nullptr) continue;
+				defence += item->getStat("Armor");
+			}
+		}
 
-	int magic_damage;
-	if (resistance > 100.0) {
-		magic_damage = -(water + fire_dmg(mt) + thunder_dmg(mt) * ((100.0 - resistance) / 100.0));
+		double damage;
+		std::uniform_real_distribution<double> melee_dmg(melee * 0.85, melee * 1.15);
+
+		if (defending == true) {
+			damage = melee_dmg(mt) - (defence * 0.3);
+		}
+		else {
+			damage = melee_dmg(mt) - defence;
+		}
+
+		std::uniform_int_distribution<int> crit(0, 100);
+		if (crit(mt) < source.getStatistics()["Crit"]) {
+			damage *= 2.0;
+		}
+
+		int fire = source.getStatistics()["Fire"];
+		int water = source.getStatistics()["Water"];
+		int thunder = source.getStatistics()["Lightning"];
+		int resistance = target.getStatistics()["Resistance"];
+
+		if (source_is_player) {
+			for (unsigned j = 0; j < (unsigned)EquipmentSlot::_DummyEnd; ++j) {
+				auto item = player.getInventory().getEquipment().getEquipmentBySlot((EquipmentSlot)j);
+				if (item == nullptr) continue;
+				fire += item->getStat("Fire");
+				water += item->getStat("Water");
+				thunder += item->getStat("Lightning");
+			}
+		}
+		else {
+			for (unsigned j = 0; j < (unsigned)EquipmentSlot::_DummyEnd; ++j) {
+				auto item = player.getInventory().getEquipment().getEquipmentBySlot((EquipmentSlot)j);
+				if (item == nullptr) continue;
+				defence += item->getStat("Resistance");
+			}
+		}
+
+		std::uniform_real_distribution<double> fire_dmg(fire * 0.85, fire * 1.15);
+		std::uniform_real_distribution<double> thunder_dmg(0, thunder);
+
+		int magic_damage;
+		if (resistance > 100.0) {
+			magic_damage = -(water + fire_dmg(mt) + thunder_dmg(mt) * ((100.0 - resistance) / 100.0));
+		}
+		else magic_damage = water + fire_dmg(mt) + thunder_dmg(mt) * (resistance / 100.0);
+
+		target.getStatistics()["HP"] -= (magic_damage + damage);
+		if (defending == true) {
+			source.getStatistics()["HP"] -= (source.getStatistics()["Attack"] * 0.15);
+			defending = false;
+		}
+
+		if (target.getStatistics()["HP"] > target.getStatistics()["MaxHP"]) target.getStatistics()["HP"] = target.getStatistics()["MaxHP"];
+		if (target.getStatistics()["HP"] < 0) target.getStatistics()["HP"] = 0;
+
+		if (source.getStatistics()["HP"] > source.getStatistics()["MaxHP"]) source.getStatistics()["HP"] = source.getStatistics()["MaxHP"];
+		if (source.getStatistics()["HP"] < 0) source.getStatistics()["HP"] = 0;
 	}
-	else magic_damage = water + fire_dmg(mt) + thunder_dmg(mt) * (resistance / 100.0);
-	
-	target.getStatistics()["HP"] -= (magic_damage + damage);
 }
 
+void BattleEngine::Heal(Actor& source) {
+	source.getStatistics()["HP"] += (source.getStatistics()["HP"] * 0.15) + (source.getStatistics()["Water"] * 0.5);
+	if (source.getStatistics()["HP"] > source.getStatistics()["MaxHP"]) source.getStatistics()["HP"] = source.getStatistics()["MaxHP"];
+	source.getStatistics()["MP"] -= 25;
+	if (source.getStatistics()["MP"] < 0 ) source.getStatistics()["MP"] = 0;
+}
+
+void BattleEngine::Defend(Actor& source) {
+	defending = true;
+}
 
 void BattleEngine::EnemyTurn() {
-	QuickAtack(*enemy, player);
+	QuickAtack(*enemy, player, false);
 }
 
 void BattleEngine::Enqueue() {
@@ -310,17 +392,18 @@ void BattleEngine::Enqueue() {
 }
 
 void BattleEngine::Victory() {
-	std::cout << "ZWYCIESTWO!" << std::endl;
+	std::uniform_int_distribution<int> gold((enemy->getStatistics()["MaxHP"]/75), (enemy->getStatistics()["MaxHP"] / 50));
+	player.GainEXP(enemy->getStatistics()["MaxHP"] / (player.getPlayerInfo()["lvl"]));
+	player.GainGold(gold(mt));
 	EndBattle();
 }
 
 void BattleEngine::Defeat() {
-	std::cout << "PORA�KA!" << std::endl;
+	WorldManager::shouldLoadGame();
 	EndBattle();
 }
 
 void BattleEngine::EndBattle() {
-	std::cout << "end battle\n";
 	while (!queue.empty()) queue.pop();
 	enemy = nullptr;
 	active = false;

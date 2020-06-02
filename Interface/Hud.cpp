@@ -40,7 +40,7 @@ void Hud::Draw(sf::RenderTarget& target) {
 
 		//Cut and draw Exp Bar
 		exp.setTextureRect(sf::IntRect(0, exp_size.y - exp_size.y *shiftExp, exp_size.x, exp_size.y *shiftExp));
-		exp.setPosition(position + sf::Vector2f(0, exp_size.y - exp_size.y * shiftExp) + sf::Vector2f(3, 8));
+		exp.setPosition(position + sf::Vector2f(0, exp_size.y - exp_size.y * shiftExp) + sf::Vector2f(3, 9));
 		target.draw(exp);
 
 		//Make dynamic texts

@@ -8,7 +8,6 @@ void QueueUI::Draw(sf::RenderTarget& target) {
 
 void QueueUI::DrawQueue(sf::RenderTarget& target) {
 	sf::Vector2f offset = { 8,8 };
-	enemy.setColor(sf::Color::Red);
 	int i = 0;
 	while (i < 15 and !queue.empty()) {
 		Turn current = queue.front();
