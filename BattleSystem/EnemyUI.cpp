@@ -1,76 +1,30 @@
-#include "PlayerUI.hpp"
+#include "EnemyUI.hpp"
 
-PlayerUI::PlayerUI(Player& entity)
-	: player(entity), statistics(entity.getStatistics()), player_info(entity.getPlayerInfo()), font(AssetManager::getFont("VCR_OSD_MONO")), active(false)
+EnemyUI::EnemyUI(Player& entity)
+	: player(entity), statistics(entity.getStatistics()), player_info(entity.getPlayerInfo()), font(AssetManager::getFont("VCR_OSD_MONO"))
 {
 
 }
 
-void PlayerUI::DrawSelf(sf::RenderTarget& target) {
+void EnemyUI::DrawSelf(sf::RenderTarget& target) {
 	//Draw Content
 	DrawPlayerInfo(target, position + sf::Vector2f(16, 8), 18);
-	DrawStatistics(target, position + sf::Vector2f(16, 144), 16);
-	
-	OptionWindow quickAttack;
-	OptionWindow heavyAttack;
-	OptionWindow defend;
-	OptionWindow useItem;
-	OptionWindow flee;
-
-	sf::Vector2f selfSize = { 108, 40 };
-	sf::Vector2f selfPosition = sf::Vector2f(0, (selfSize.y - 8));
-	int j = 5;
-
-	for (int i = 0; i < buttons.size(); i++) {
-		if (i == focus) buttons[i].SetFocus();
-		else buttons[i].RemoveFocus();
-		buttons[i].SetPosition(position + size - sf::Vector2f(0, selfPosition.y * j--));
-		buttons[i].Draw(target);
-	}
+	DrawStatistics(target, position + sf::Vector2f(16, 132), 16);
 }
 
-void PlayerUI::SelfInit() {
+void EnemyUI::SelfInit() {
 	//Getting sprites
 	stat_icons.setTexture(AssetManager::getUI("stat_icons").getTexture());	//stat_icons
-
-	OptionWindow quickAttack;
-	OptionWindow heavyAttack;
-	OptionWindow defend;
-	OptionWindow useItem;
-	OptionWindow flee;
-
-	sf::Vector2f selfSize = { 108, 40 };
-	sf::Vector2f selfPosition = sf::Vector2f(0, (selfSize.y - 8));
-	int i = 5;
-	quickAttack.Init(position + size - sf::Vector2f(0, selfPosition.y * i--), selfSize, "quote_window", 16);
-	quickAttack.SetMessage("Quick Attack");
-	heavyAttack.Init(position + size - sf::Vector2f(0, selfPosition.y * i--), selfSize, "quote_window", 16);
-	heavyAttack.SetMessage("Heavy Attack");
-	defend.Init(position + size - sf::Vector2f(0, selfPosition.y * i--), selfSize - sf::Vector2f(20, 0), "quote_window", 16);
-	defend.SetMessage("Defend");
-	useItem.Init(position + size - sf::Vector2f(0, selfPosition.y * i--), selfSize - sf::Vector2f(44, 0), "quote_window", 16);
-	useItem.SetMessage("Use Item");
-	flee.Init(position + size - sf::Vector2f(0, selfPosition.y * i--), selfSize - sf::Vector2f(68, 0), "quote_window", 16);
-	flee.SetMessage("Flee");
-
-	buttons.push_back(quickAttack);
-	buttons.push_back(heavyAttack);
-	buttons.push_back(defend);
-	buttons.push_back(useItem);
-	buttons.push_back(flee);
-
-	//Other - flags
-	focus = 0;
 }
 
-void PlayerUI::DrawIcon(sf::RenderTarget& target, sf::Sprite& object, int index, sf::Vector2f position, sf::Vector2f size) {
+void EnemyUI::DrawIcon(sf::RenderTarget& target, sf::Sprite& object, int index, sf::Vector2f position, sf::Vector2f size) {
 	object.setTextureRect(sf::IntRect(index * 32, 0, size.x, size.y));
 	object.setColor(sf::Color(255, 255, 255, 160));
 	object.setPosition(position);
 	target.draw(object);
 }
 
-void PlayerUI::DrawPlayerInfo(sf::RenderTarget& target, sf::Vector2f offset, int font_size) {
+void EnemyUI::DrawPlayerInfo(sf::RenderTarget& target, sf::Vector2f offset, int font_size) {
 	//Name
 	sf::Text name(player.getName(), font, font_size + 1);
 	name.setFillColor(sf::Color::Black);
@@ -92,14 +46,9 @@ void PlayerUI::DrawPlayerInfo(sf::RenderTarget& target, sf::Vector2f offset, int
 	DrawIcon(target, stat_icons, 1, offset, sf::Vector2f(32, 32));
 	DrawLine(target, offset + sf::Vector2f(28, 8), ParseText(statistics["MP"], statistics["MaxMP"], font_size - 2, "", "/"), sf::Color::Blue);
 	DrawBar(target, offset + sf::Vector2f(0, 28), statistics["MP"], statistics["MaxMP"], sf::Vector2f(size.x - 32, 4), sf::Color::Blue);
-
-	//EXP
-	offset += sf::Vector2f(0, 40);
-	DrawBar(target, offset, player_info["current"], player_info["next"], sf::Vector2f(size.x - 32, 4), sf::Color::Yellow);
-	DrawLine(target, offset + sf::Vector2f(0, 3), ParseText(player_info["current"], player_info["next"], font_size - 4, "EXP: ", "/"), sf::Color::White);
 }
 
-void PlayerUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, int font_size) {
+void EnemyUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, int font_size) {
 
 	//=============================== DATA ===============================//
 		//KEYS FOR STATISTIC MAP
@@ -138,10 +87,10 @@ void PlayerUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, i
 		//Drawing and calculating depends of mechanic basis and kind of statistic
 		switch (i) {
 		case 4:		//Physical - Damage from 85% to 115% of middle value
-			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(floor, ceil, font_size,"", "-"));
+			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(floor, ceil, font_size, "", "-"));
 			break;
 		case 5:		//Fire - Damage from 85% to 115% of middle value
-			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(floor, ceil, font_size,"", "-"));
+			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(floor, ceil, font_size, "", "-"));
 			break;
 		case 6:		//Water	- Damage smaller but static, + reducting AS
 			DrawLine(target, position + sf::Vector2f(32, 8), ParseText(middle, font_size, ""));
@@ -173,14 +122,14 @@ void PlayerUI::DrawStatistics(sf::RenderTarget& target, sf::Vector2f position, i
 	}
 }
 
-void PlayerUI::DrawLine(sf::RenderTarget& target, sf::Vector2f position, sf::Text text, sf::Color color) {
+void EnemyUI::DrawLine(sf::RenderTarget& target, sf::Vector2f position, sf::Text text, sf::Color color) {
 	text.setFont(font);
 	text.setColor(color);
 	text.setPosition(position);
 	target.draw(text);
 }
 
-void PlayerUI::DrawBar(sf::RenderTarget& target, sf::Vector2f position, int val1, int val2, sf::Vector2f size, sf::Color color) {
+void EnemyUI::DrawBar(sf::RenderTarget& target, sf::Vector2f position, int val1, int val2, sf::Vector2f size, sf::Color color) {
 	//BACK
 	Frame object_back;
 	object_back.Init(position, size);
@@ -193,38 +142,16 @@ void PlayerUI::DrawBar(sf::RenderTarget& target, sf::Vector2f position, int val1
 	target.draw(fill);
 }
 
-sf::Text PlayerUI::ParseText(int value1, int value2, int fontSize, std::string prefix, std::string separator, std::string sufix) {
+sf::Text EnemyUI::ParseText(int value1, int value2, int fontSize, std::string prefix, std::string separator, std::string sufix) {
 	std::string line = prefix + std::to_string(value1) + separator + std::to_string(value2) + sufix;
 	return sf::Text(line, font, fontSize);
 }
 
-sf::Text PlayerUI::ParseText(int value, int fontSize, std::string prefix, std::string sufix) {
+sf::Text EnemyUI::ParseText(int value, int fontSize, std::string prefix, std::string sufix) {
 	std::string line = prefix + std::to_string(value) + sufix;
 	return sf::Text(line, font, fontSize);
 }
 
-sf::Vector2f PlayerUI::getTextSize(sf::Text object, std::string text) {
+sf::Vector2f EnemyUI::getTextSize(sf::Text object, std::string text) {
 	return sf::Vector2f(object.findCharacterPos(text.size() - 1) - object.findCharacterPos(0));
-}
-
-void PlayerUI::ProcessKey(sf::Event::KeyEvent key) {
-	if (key.code == sf::Keyboard::W) Update(-1);
-	else if (key.code == sf::Keyboard::S) Update(1);
-	else if (key.code == sf::Keyboard::Space) Call();
-}
-
-void PlayerUI::Call() {
-	//Obs³uga Przycisków
-	if (focus == 0) std::cout << "QUICK ATTACK" << std::endl;
-	if (focus == 1) std::cout << "HEAVY ATTACK" << std::endl;
-	if (focus == 2) std::cout << "DEFEND" << std::endl;
-	if (focus == 3) std::cout << "USE ITEM" << std::endl;
-	if (focus == 4) active = false;
-}
-
-void PlayerUI::Update(int change) {
-	focus = focus + change;
-	if (focus < 0) focus = buttons.size() + focus;
-	else focus = focus % (buttons.size());
-	buttons[focus].SetFocus();
 }

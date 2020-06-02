@@ -44,7 +44,7 @@ void DialogEngine::draw(sf::RenderTarget &target) {
 			if (i == selection) choiceWindow.SetFocus();
 			else choiceWindow.RemoveFocus();
 
-			choiceWindow.Init(instance_position + sf::Vector2f(instance_size.x / 1.5, 52 * i++), selfSize, "quote_window");
+			choiceWindow.Init(instance_position + sf::Vector2f(instance_size.x / 1.5, 52 * i++), selfSize, "quote_window", 24);
 			choiceWindow.SetMessage(choice);
 			choiceWindow.Draw(target);
 		}

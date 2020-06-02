@@ -9,16 +9,17 @@ protected:
 	int fontsize;
 public:
 	void DrawSelf(sf::RenderTarget& target) override {
-		final.setScale(1.0, 1.0);
+		final.setScale(1.0, (size.y) / 64);
 		final.setTextureRect(sf::IntRect(212, 0, 44, 64));
 		final.setPosition(position + sf::Vector2f(size.x,0));
 		target.draw(final);
-		message.setPosition(position + sf::Vector2f(8, 8));
+		message.setCharacterSize(fontsize);
+		message.setPosition(position + sf::Vector2f(4, (size.y - fontsize)/4));
 		target.draw(message);
 	}
-	void SelfInit()override {
+	void SelfInit(int fsiz)override {
 		message = sf::Text(" ", font, 24);
-		fontsize = 24;
+		fontsize = fsiz;
 		SetFontColor(sf::Color::Black);
 		message.setPosition(position + sf::Vector2f(8, 8));
 	}

@@ -8,13 +8,13 @@ include_directories(.)
 add_library(Extern
     Entity/Script.cpp
     JsonOverloads.cpp
- "BattleSystem/BattleEngine.cpp" "BattleSystem/PlayerUI.cpp")
+ "BattleSystem/BattleEngine.cpp" "BattleSystem/PlayerUI.cpp" "BattleSystem/EnemyUI.cpp" "BattleSystem/QueueUI.cpp")
 
 add_library(Resource
     AssetManager.cpp
     Sound/SoundEngine.cpp
     Graphics/Spritesheet.cpp
- "BattleSystem/BattleEngine.cpp" "BattleSystem/PlayerUI.cpp")
+ "BattleSystem/BattleEngine.cpp" "BattleSystem/PlayerUI.cpp" "BattleSystem/EnemyUI.cpp" "BattleSystem/QueueUI.cpp")
 
 add_library(Interface
     Interface/GameUI.cpp
@@ -34,7 +34,7 @@ add_library(Interface
     Interface/Inventory/InvUI.cpp
     Interface/Inventory/ItemUI.cpp
     Interface/Settings/SettUI.cpp
- "BattleSystem/BattleEngine.cpp" "BattleSystem/PlayerUI.cpp")
+ "BattleSystem/BattleEngine.cpp" "BattleSystem/PlayerUI.cpp" "BattleSystem/EnemyUI.cpp" "BattleSystem/QueueUI.cpp")
 
 add_library(RPGBase
     Entity/Actor.cpp
@@ -44,13 +44,13 @@ add_library(RPGBase
     World/Map.cpp
     World/TileSet.cpp
     World/WorldManager.cpp
- "BattleSystem/BattleEngine.cpp" "BattleSystem/PlayerUI.cpp")
+ "BattleSystem/BattleEngine.cpp" "BattleSystem/PlayerUI.cpp" "BattleSystem/EnemyUI.cpp" "BattleSystem/QueueUI.cpp")
 
 
 add_executable(ProjectRPG
     Engine.cpp
     Main.cpp
- "BattleSystem/BattleEngine.cpp" "BattleSystem/PlayerUI.cpp")
+ "BattleSystem/BattleEngine.cpp" "BattleSystem/PlayerUI.cpp" "BattleSystem/EnemyUI.cpp" "BattleSystem/QueueUI.cpp")
 
 target_link_libraries(ProjectRPG
     RPGBase

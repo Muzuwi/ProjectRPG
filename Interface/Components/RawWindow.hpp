@@ -8,11 +8,11 @@ protected:
 	sf::Vector2f position, size;
 	const sf::Font& font;
 	virtual void DrawSelf(sf::RenderTarget&) { }
-	virtual void SelfInit() { }
+	virtual void SelfInit(int) { }
 public:
 	RawWindow();
 	~RawWindow();
-	void Init(sf::Vector2f, sf::Vector2f, std::string);
+	void Init(sf::Vector2f, sf::Vector2f, std::string, int);
 	void Draw(sf::RenderTarget&);
 	void SetPosition(sf::Vector2f pos) { position = pos; }
 	void setSize(sf::Vector2f siz) { size = siz; }

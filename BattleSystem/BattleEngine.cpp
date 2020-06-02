@@ -6,12 +6,27 @@ void BattleEngine::Init() {
 	background = AssetManager::getUI("battle_back").getSprite();
 	interface = AssetManager::getUI("windowskin").getSprite();
 	playerWindow.Init(sf::Vector2f(0, 0), sf::Vector2f(0, 0));
+	enemyWindow.Init(sf::Vector2f(0, 0), sf::Vector2f(0, 0));
+	player_sprit = AssetManager::getCharacter("playersprite").getSprite(0);
+	enemy_sprit = AssetManager::getCharacter("playersprite").getSprite(0);
+
+	//symulation of start battle
+	active = true;
+	playerWindow.setActive();
+
+	queueWindow.Init(sf::Vector2f(100, 0), sf::Vector2f(496, 64), player_sprit, enemy_sprit);
+	//TEMP
+	for (int i = 0; i < 15; i++) { if (i % 2 == 0)queue.push(PLAYER); else queue.push(ENEMY); }
+	queueWindow.SetQueue(queue);
 }
 
 void BattleEngine::Draw(sf::RenderTarget& target) {
 	DrawBackground(target);
 	DrawBattleBack(target);
 	DrawInterface(target);
+
+	queueWindow.SetQueue(queue);
+	queueWindow.Draw(target);
 }
 
 void BattleEngine::DrawBackground(sf::RenderTarget& target) {
@@ -71,16 +86,42 @@ void BattleEngine::DrawBattleBack(sf::RenderTarget& target) {
 
 		interface.setScale(1.0, 1.0);
 	}
+	DrawPlayer(target, battleBackPos);
+	DrawEnemy(target, battleBackPos);
+}
+
+void BattleEngine::DrawPlayer(sf::RenderTarget& target, sf::Vector2f offset) {
+	sf::Sprite toDraw = AssetManager::getCharacter("playersprite").getSprite(10);
+	toDraw.setPosition(offset + sf::Vector2f{ 227,272 });
+	target.draw(toDraw);
+}
+
+void BattleEngine::DrawEnemy(sf::RenderTarget& target, sf::Vector2f offset) {
+	sf::Sprite toDraw = AssetManager::getCharacter("playersprite").getSprite(6);
+	toDraw.setPosition(offset + sf::Vector2f{ 517,272 });
+	target.draw(toDraw);
 }
 
 void BattleEngine::DrawInterface(sf::RenderTarget& target) {
 	sf::Vector2f size = { 816, 624 };
-	playerWindow.setPosition(sf::Vector2f(8, (target.getSize().y -(size.y * 0.50)) / 2.0));
-	playerWindow.setSize(sf::Vector2f(200, size.y * 0.68));
+	playerWindow.setPosition(sf::Vector2f(8, (target.getSize().y -(size.y * 0.35)) / 2.0));
+	playerWindow.setSize(sf::Vector2f(164, size.y * 0.58));
 	playerWindow.Draw(target);
+
+	enemyWindow.setSize(sf::Vector2f(164, size.y * 0.58));
+	enemyWindow.setPosition(sf::Vector2f(target.getSize().x - 172, (target.getSize().y - (size.y * 0.35)) / 2.0));
+	enemyWindow.Draw(target);
+}
+
+void BattleEngine::ProcessKey(sf::Event::KeyEvent key) {
+	playerWindow.ProcessKey(key);
+	if (!playerWindow.isActive()) active = false;
 }
 
 bool BattleEngine::InitBattle(std::shared_ptr<Actor> hao) {
+	active = true;
+	playerWindow.setActive();
+
 	if (hao == nullptr) return false;
 	enemy = hao;
 

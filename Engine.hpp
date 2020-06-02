@@ -13,8 +13,7 @@ enum Focus{
 	INGAME = 0,
 	INTERFACE = 1,
 	BATTLE = 2,
-	MAINMENU = 3,
-	DIALOG = 4
+	DIALOG = 3
 };
 
 class Engine
@@ -31,7 +30,7 @@ private:
 	SoundEngine soundEngine;
 	DialogEngine dialogEngine;
 	GameUI GUI;
-	BattleEngine test;
+	BattleEngine battleEngine;
 
 	void RenderWorld(sf::RenderTarget&);
 	void RenderHud(sf::RenderTarget&);
@@ -44,7 +43,7 @@ private:
 
 public:
 	Engine()
-	: GUI(world.getPlayer()), test(world.getPlayer()){};
+	: GUI(world.getPlayer()), battleEngine(world.getPlayer()){};
 
 	~Engine() {};
 

@@ -6,7 +6,7 @@
 #include "Interface/OptionWindow.hpp"
 #include "Entity/Player.hpp"
 
-class PlayerUI: public Window {
+class EnemyUI: public Window {
 protected:
 	const sf::Font& font;
 
@@ -15,7 +15,6 @@ protected:
 
 	//Indexes
 	int focus;			//current focus
-	bool active;
 
 	//Icons
 	sf::Sprite stat_icons;
@@ -31,7 +30,7 @@ protected:
 	void DrawSelf(sf::RenderTarget&)override;
 	void SelfInit();
 public:
-	PlayerUI(Player&);
+	EnemyUI(Player&);
 	//Drawing Functions
 	void DrawPlayerInfo(sf::RenderTarget&, sf::Vector2f, int);
 	void DrawStatistics(sf::RenderTarget&, sf::Vector2f, int);
@@ -40,15 +39,10 @@ public:
 	void DrawIcon(sf::RenderTarget&, sf::Sprite&, int, sf::Vector2f, sf::Vector2f);
 	//Procesing Functions
 	void ProcessKey(sf::Event::KeyEvent);
-	void Call();
-	void Update(int);
 	//Parsing Functions
 	sf::Text ParseText(int value1, int value2, int = 16, std::string = "", std::string = "", std::string = "");
 	sf::Text ParseText(int value, int = 16, std::string = "", std::string = "");
 	//Other
 	sf::Vector2f getTextSize(sf::Text, std::string);
-
-	bool isActive() { return active; }
-	void setActive() { active = true; }
 };
 

@@ -8,10 +8,9 @@ bool Engine::Init() {
 	if (!window) return false;
 	window->setFramerateLimit(60);
 	
-	scene = INGAME;
+	scene = BATTLE;
 	GUI.Init(window);
-
-	test.Init();		//########## TEST ################
+	battleEngine.Init();
 
 	try {
 		world.setCurrentMap(AssetManager::getSavefile().get<std::string>("playerCurrentMap"));
@@ -24,39 +23,41 @@ bool Engine::Init() {
 void Engine::RenderFrame() {
 	window->clear();
 
-	auto player = world.getPlayer();
-	auto& map = world.getMap();
-	auto playerCentre = player.getSpritePosition() + Vec2f(player.getDimensions()/2u);
-	Vec2f worldSize (map.getWidth() * Tile::dimensions(), map.getHeight() * Tile::dimensions());
-	Vec2f viewCenter = playerCentre;
-	Vec2f viewport = Vec2f(windowWidth, windowHeight);
-	Vec2f viewportHalf (viewport / 2.0f);
-	if(playerCentre.x + viewportHalf.x > worldSize.x)
-		viewCenter.x = worldSize.x - viewportHalf.x;
-	if(playerCentre.y + viewportHalf.y > worldSize.y)
-		viewCenter.y = worldSize.y - viewportHalf.y;
-	if(playerCentre.x - viewportHalf.x < 0)
-		viewCenter.x = viewportHalf.x;
-	if(playerCentre.y - viewportHalf.y < 0)
-		viewCenter.y = viewportHalf.y;
-	if(worldSize.x < viewport.x)
-		viewCenter.x = worldSize.x / 2.0f;
-	if(worldSize.y < viewport.y)
-		viewCenter.y = worldSize.y / 2.0f;
+	if (scene == BATTLE) {
+		window->setView(sf::View(sf::Rect(0.f, 0.f, (float)windowWidth, (float)windowHeight)));
+		battleEngine.Draw(*window);
+	}
+	else {
+		auto player = world.getPlayer();
+		auto& map = world.getMap();
+		auto playerCentre = player.getSpritePosition() + Vec2f(player.getDimensions() / 2u);
+		Vec2f worldSize(map.getWidth() * Tile::dimensions(), map.getHeight() * Tile::dimensions());
+		Vec2f viewCenter = playerCentre;
+		Vec2f viewport = Vec2f(windowWidth, windowHeight);
+		Vec2f viewportHalf(viewport / 2.0f);
+		if (playerCentre.x + viewportHalf.x > worldSize.x)
+			viewCenter.x = worldSize.x - viewportHalf.x;
+		if (playerCentre.y + viewportHalf.y > worldSize.y)
+			viewCenter.y = worldSize.y - viewportHalf.y;
+		if (playerCentre.x - viewportHalf.x < 0)
+			viewCenter.x = viewportHalf.x;
+		if (playerCentre.y - viewportHalf.y < 0)
+			viewCenter.y = viewportHalf.y;
+		if (worldSize.x < viewport.x)
+			viewCenter.x = worldSize.x / 2.0f;
+		if (worldSize.y < viewport.y)
+			viewCenter.y = worldSize.y / 2.0f;
 
-	sf::View view(viewCenter, Vec2f(windowWidth, windowHeight));
+		sf::View view(viewCenter, Vec2f(windowWidth, windowHeight));
 
-	window->setView(view);
-	RenderWorld(*window);
+		window->setView(view);
+		RenderWorld(*window);
 
-	window->setView(sf::View(sf::Rect(0.f, 0.f, (float)windowWidth, (float)windowHeight)));
-	RenderHud(*window);
+		window->setView(sf::View(sf::Rect(0.f, 0.f, (float)windowWidth, (float)windowHeight)));
+		RenderHud(*window);
 
-	dialogEngine.draw(*window);
-
-	//======= TEST =========
-	test.Draw(*window);
-	//======================
+		dialogEngine.draw(*window);
+	}
 
 	window->display();
 }
@@ -95,6 +96,10 @@ void Engine::ProcessInput() {
 				} else if (scene == DIALOG) {
 					dialogEngine.handleKeyEvent(event.key);
 					if(!dialogEngine.isDialogPresent()) scene = INGAME;
+				}
+				else if (scene == BATTLE) {
+					battleEngine.ProcessKey(event.key);
+					if (!battleEngine.IsActive()) scene = INGAME;
 				}
 			}
 			default: break;
