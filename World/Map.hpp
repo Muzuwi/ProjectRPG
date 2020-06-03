@@ -25,6 +25,7 @@ class Map {
 	} standingOnConnection;
 
 	std::string tilesetName;
+	std::string bgMusic;
 
 	Vec2u size;
 
@@ -93,6 +94,10 @@ public:
 	Connection getStandingConnection() {
 		standingOnConnection.valid = false;
 		return standingOnConnection.goingThroughConnection;
+	}
+
+	const std::string& music() {
+		return bgMusic;
 	}
 
 	friend class EditWindow;

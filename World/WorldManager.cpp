@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "World/WorldManager.hpp"
+#include "Sound/SoundEngine.hpp"
 
 static bool s_should_save_game {false};
 static bool s_should_load_game {false};
@@ -9,6 +10,9 @@ void WorldManager::setCurrentMap(const std::string &mapName) {
 		currentMap = AssetManager::getMap(mapName);
 		currentMap->bindPlayer(player);
 		currentMapName = mapName;
+		std::cout << "play music: '" << currentMap->music() << "'\n";
+		if(!currentMap->music().empty())
+			SoundEngine::get().playMusic(currentMap->music(), true);
 	} catch (std::exception&) {
 		std::cerr << "Failed loading map " << mapName << "\n";
 		return;
@@ -107,8 +111,7 @@ void WorldManager::updateWorld() {
 
 bool WorldManager::handleMapTransfer(Connection conn) {
 	try {
-		currentMap = AssetManager::getMap(conn.targetMap);
-		currentMap->bindPlayer(player);
+		setCurrentMap(conn.targetMap);
 	} catch (std::exception&) {
 		std::cerr << "Failed loading map " << conn.targetMap << "\n";
 		return false;
@@ -132,7 +135,7 @@ void WorldManager::saveGame() {
 	auto save = AssetManager::getSavefile();
 	save.set("playerCurrentMap", currentMapName);
 	save.set("playerCurrentPos", player.getWorldPosition());
-	player.getInventory().saveToSavegame();
+	player.saveToSavegame();
 	save.saveToFile();
 	std::cout << "Game saved successfully\n";
 }

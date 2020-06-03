@@ -46,6 +46,9 @@ void SoundEngine::update() {
 }
 
 void SoundEngine::playMusic(const std::string &name, bool looping) {
+	if(currentBGM.getStatus() == sf::SoundSource::Playing)
+		currentBGM.stop();
+
 	currentBGM.openFromFile("GameContent/BGM/"+name+".ogg");
 	currentBGM.setLoop(looping);
 	currentBGM.setVolume(s_master_volume * 100.0);

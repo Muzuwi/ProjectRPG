@@ -65,6 +65,9 @@ Map Map::from_file(const std::string& mapName) {
 	if(!js["mapData"]["connections"].is_null())
 		newMap.connections = js["mapData"]["connections"].get<std::vector<Connection>>();
 
+	if(!js["mapConfig"]["backgroundMusic"].is_null())
+		newMap.bgMusic = js["mapConfig"]["backgroundMusic"].get<std::string>();
+
 	return newMap;
 }
 
@@ -101,6 +104,7 @@ void Map::serializeToFile(const std::string &filename) {
 	}
 
 	j["mapData"]["connections"] = this->connections;
+	j["mapConfig"]["backgroundMusic"] = this->bgMusic;
 
 	file << j.dump(1, '\t');
 	file.close();
@@ -117,6 +121,7 @@ Map::Map(const Map &map)
 	this->npcs = map.npcs;
 	this->connections = map.connections;
 	this->standingOnConnection = map.standingOnConnection;
+	this->bgMusic = map.bgMusic;
 
 	for(unsigned layer = 0; layer < 3; layer++)
 		this->floorTiles[layer] = map.floorTiles[layer];
