@@ -7,22 +7,7 @@ Player* Player::instance {nullptr};
 Player::Player()
 : Actor(0, 7) {
 	instance = this;
-
-	auto save = AssetManager::getSavefile();
-
-	if (save.exists("playerName"))
-		name = save.get<std::string>("playerName");
-	else name = "Andrzej";
-
-	if(save.exists("playerStats") && save.exists("playerInfo")) {
-		statistics = save.get<std::map<std::string, int>>("playerStats");
-		player_info = save.get<std::map<std::string, int>>("playerInfo");
-	} else {
-		setDefaultStatistics();
-	}
-
-	if(save.exists("playerCurrentPos"))
-		setPosition(save.get<Vec2u>("playerCurrentPos"));
+	this->loadFromSavegame();
 }
 
 void Player::draw(sf::RenderTarget &target) const {
@@ -116,4 +101,30 @@ void Player::setPosition(Vec2u worldPos) {
 	isMoving = false;
 	worldPosition = worldPos;
 	spritePosition = Vec2f(worldPos * Tile::dimensions());
+}
+
+void Player::saveToSavegame() {
+	inventory.saveToSavegame();
+
+	auto save = AssetManager::getSavefile();
+	save.set("playerStats", statistics);
+	save.set("playerInfo", player_info);
+}
+
+void Player::loadFromSavegame() {
+	auto save = AssetManager::getSavefile();
+
+	if (save.exists("playerName"))
+		name = save.get<std::string>("playerName");
+	else name = "Andrzej";
+
+	if(save.exists("playerStats") && save.exists("playerInfo")) {
+		statistics = save.get<std::map<std::string, int>>("playerStats");
+		player_info = save.get<std::map<std::string, int>>("playerInfo");
+	} else {
+		setDefaultStatistics();
+	}
+
+	if(save.exists("playerCurrentPos"))
+		setPosition(save.get<Vec2u>("playerCurrentPos"));
 }

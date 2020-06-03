@@ -12,6 +12,9 @@ class Player final : public Actor, protected RenderableObject {
 	std::map<std::string, int> player_info;
 
 	PlayerInventory inventory;
+
+	void saveToSavegame();
+	void loadFromSavegame();
 public:
 	Player();
 

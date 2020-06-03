@@ -8,6 +8,7 @@
 
 class PlayerInventory {
 	friend class WorldManager;
+	friend class Player;
 
 	static const unsigned defaultSize = 64;
 	std::vector<std::shared_ptr<Item>> backpack;
