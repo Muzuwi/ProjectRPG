@@ -241,6 +241,7 @@ void Map::drawTiles(sf::RenderTarget &target) {
  */
 void Map::drawTiles(sf::RenderTarget &target, unsigned layer) {
 	assert(layer < 3);
+	if (layerVertices[layer].getVertexCount() != 0)
 	target.draw(&layerVertices[layer][0], layerVertices[layer].getVertexCount(), sf::Quads, &tileset.getTexture());
 	this->drawSpecial(target);
 }
