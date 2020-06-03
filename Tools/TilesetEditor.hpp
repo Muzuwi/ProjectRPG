@@ -49,7 +49,7 @@ public:
 			tileset->serializeToFile();
 
 
-		if(ImGui::Checkbox("", &currTile.collision[(unsigned)Direction::Left]))
+		if(ImGui::Checkbox("##Left", &currTile.collision[(unsigned)Direction::Left]))
 			tileset->serializeToFile();
 
 		ImGui::SameLine();
@@ -61,7 +61,7 @@ public:
 			tileset->serializeToFile();
 		}
 		ImGui::SameLine();
-		if(ImGui::Checkbox("", &currTile.collision[(unsigned)Direction::Right]))
+		if(ImGui::Checkbox("##Right", &currTile.collision[(unsigned)Direction::Right]))
 			tileset->serializeToFile();
 
 		ImGui::Dummy(ImVec2(20.0f, 0.0f));
