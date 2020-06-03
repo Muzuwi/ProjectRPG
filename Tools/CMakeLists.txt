@@ -20,6 +20,7 @@ target_link_libraries(RPGEditor
     ImGui
     RPGBase
     Extern
+    RPGBase
     Resource
     Interface
 )

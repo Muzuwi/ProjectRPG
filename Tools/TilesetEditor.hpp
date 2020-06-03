@@ -32,19 +32,32 @@ public:
 
 		Tile& currTile = tileset->tiles[editingType];
 
-		ImGui::Begin("Tileset Editor", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+		ImGui::Begin("Tileset Editor");
 		ImGui::Text("Editing tile type %i", editingType);
+
+		ImGui::Separator();
+		ImGui::Columns(2);
 
 		sf::Sprite sprite;
 		ImGui::Image(spritesheet->getSprite(editingType), Vec2f(Tile::dimensions() * 2.0f, Tile::dimensions() * 2.0f));
 
+
+
 		ImGui::Dummy(ImVec2(20.0f, 0.0f));
 		ImGui::SameLine(); ImGui::Checkbox("U", &currTile.collision[(unsigned)Direction::Up]);
 
-		ImGui::Checkbox("L", &currTile.collision[(unsigned)Direction::Left]);
-		ImGui::SameLine();  ImGui::Dummy(ImVec2(5.0f, 0.0f));
+
+		ImGui::Checkbox("", &currTile.collision[(unsigned)Direction::Left]);
+//		ImGui::SameLine();  ImGui::Dummy(ImVec2(5.0f, 0.0f));
 		ImGui::SameLine();
-		ImGui::Checkbox("R", &currTile.collision[(unsigned)Direction::Right]);
+		if(ImGui::Button("x")) {
+			currTile.collision[0] = true;
+			currTile.collision[1] = true;
+			currTile.collision[2] = true;
+			currTile.collision[3] = true;
+		}
+		ImGui::SameLine();
+		ImGui::Checkbox("", &currTile.collision[(unsigned)Direction::Right]);
 
 		ImGui::Dummy(ImVec2(20.0f, 0.0f));
 		ImGui::SameLine();
@@ -53,8 +66,9 @@ public:
 		ImGui::Text("Collisions");
 		ImGui::Separator();
 
+		ImGui::NextColumn();
 		ImGui::InputScalar("Priority", ImGuiDataType_U32, &currTile.priority);
-
+		ImGui::NextColumn();
 
 		ImGui::SameLine();
 		if(ImGui::Button("Save changes")) {
