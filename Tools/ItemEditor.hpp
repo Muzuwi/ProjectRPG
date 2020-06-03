@@ -93,9 +93,39 @@ public:
 			if(ImGui::BeginPopup("Modify Item", ImGuiWindowFlags_Popup)) {
 				static char namebuf[64];
 				static char descrbuf[64];
+				static int type = 0;
+				static unsigned price = 0;
+				static int rarity = 0;
 
 				ImGui::InputText("Name", namebuf, 64);
 				ImGui::InputText("Description", descrbuf, 64);
+
+				ImGui::RadioButton("Generic", &type, 0);
+				ImGui::SameLine(); ImGui::RadioButton("Quest", &type , 1);
+				ImGui::SameLine(); ImGui::RadioButton("Consume", &type , 2);
+
+				ImGui::RadioButton("Helmet", &type , 30);
+				ImGui::SameLine(); ImGui::RadioButton("Chest", &type , 31);
+				ImGui::SameLine(); ImGui::RadioButton("Pants", &type , 32);
+				ImGui::SameLine(); ImGui::RadioButton("Boots", &type , 33);
+
+				ImGui::RadioButton("Ring", &type , 50);
+				ImGui::SameLine(); ImGui::RadioButton("Necklace", &type , 51);
+				ImGui::SameLine(); ImGui::RadioButton("Gloves", &type , 52);
+				ImGui::SameLine(); ImGui::RadioButton("Braces", &type , 53);
+
+				ImGui::RadioButton("Sword", &type , 70);
+				ImGui::SameLine(); ImGui::RadioButton("Bow", &type , 71);
+				ImGui::SameLine(); ImGui::RadioButton("Staff", &type , 72);
+				ImGui::SameLine(); ImGui::RadioButton("Shield", &type , 73);
+
+				ImGui::InputScalar("Price", ImGuiDataType_U32, &price);
+
+				ImGui::RadioButton("Common", &rarity , 0);
+				ImGui::SameLine(); ImGui::RadioButton("Uncommon", &rarity , 1);
+				ImGui::SameLine(); ImGui::RadioButton("Rare", &rarity , 2);
+				ImGui::SameLine(); ImGui::RadioButton("Legendary", &rarity , 3);
+				ImGui::SameLine(); ImGui::RadioButton("Epic", &rarity , 4);
 
 				if(ImGui::Button("Modify")) {
 					std::string namestr {namebuf};
@@ -103,6 +133,9 @@ public:
 					if(!namestr.empty() && !descrstr.empty()) {
 						(*EditingItem.json_node)["name"] = namestr;
 						(*EditingItem.json_node)["description"] = descrstr;
+						(*EditingItem.json_node)["type"] = type;
+						(*EditingItem.json_node)["price"] = price;
+						(*EditingItem.json_node)["rarity"] = rarity;
 						stop_editing();
 						ImGui::CloseCurrentPopup();
 					} else {

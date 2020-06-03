@@ -7,6 +7,7 @@
 #include "Entity/NPC.hpp"
 
 class NPCCreator : public Tool {
+	std::vector<std::tuple<std::string, Vec2f>> sortedSpritesheets;
 	std::string selectedSpritesheet;
 	std::string scriptFilename;
 	NPC* pointingAtNPC;
@@ -15,13 +16,15 @@ class NPCCreator : public Tool {
 
 	void drawCreatorUI(Vec2u hoverCoords, sf::RenderTarget &target) {
 		if(ImGui::BeginCombo("Spritesheet", selectedSpritesheet.c_str())) {
-			for(const auto& key : AssetManager::getAllCharacters() ) {
-				std::string name = key.first + " (" + std::to_string(key.second.getSpriteSize().x)
-				                   + "x" + std::to_string(key.second.getSpriteSize().y) + ")";
+			for(const auto& key : sortedSpritesheets ) {
+				auto sName = std::get<0>(key);
+				auto res = std::get<1>(key);
+				std::string name = sName + " (" + std::to_string((unsigned)res.x)
+				                   + "x" + std::to_string((unsigned)res.y) + ")";
 				if(ImGui::Selectable(name.c_str()))
-					selectedSpritesheet = key.first;
+					selectedSpritesheet = sName;
 
-				if(key.first == selectedSpritesheet)
+				if(sName == selectedSpritesheet)
 					ImGui::SetItemDefaultFocus();
 			}
 			ImGui::EndCombo();
@@ -34,7 +37,7 @@ class NPCCreator : public Tool {
 			scriptFilename = std::string(scriptFname);
 			if(!selectedSpritesheet.empty() && !scriptFilename.empty()) {
 				if(selectedNPC) {
-					selectedNPC->spritesheet = AssetManager::getTileset(selectedSpritesheet);
+					selectedNPC->spritesheet = AssetManager::getCharacter(selectedSpritesheet);
 					selectedNPC->scriptName = scriptFilename;
 				}
 				else pickingLocation = true;
@@ -68,6 +71,18 @@ public:
 		pointingAtNPC = nullptr;
 		selectedNPC = nullptr;
 		pickingLocation = false;
+
+		for(const auto& ch : AssetManager::getAllCharacters()) {
+			sortedSpritesheets.emplace_back(
+					std::tuple<std::string, Vec2f>(ch.first, ch.second.getSpriteSize())
+					);
+		}
+		std::sort(sortedSpritesheets.begin(), sortedSpritesheets.end(),
+		[](const std::tuple<std::string, Vec2f>& a, const std::tuple<std::string, Vec2f>& b) -> bool {
+			return std::lexicographical_compare(std::get<0>(a).begin(), std::get<0>(a).end(),
+			                                    std::get<0>(b).begin(), std::get<0>(b).end()
+					);
+		});
 	}
 
 	void drawToolWindow(Vec2u hoverCoords, sf::RenderTarget &target) override {

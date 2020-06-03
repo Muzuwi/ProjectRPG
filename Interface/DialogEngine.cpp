@@ -5,8 +5,9 @@
 
 DialogEngine* DialogEngine::instance = nullptr;
 
-DialogEngine::DialogEngine() {
-	assert(font.loadFromFile("GameContent/Fonts/arial.ttf"));
+DialogEngine::DialogEngine()
+: font(AssetManager::getFont("VCR_OSD_MONO")){
+
 	instance = this;
 	selection = 0;
 }
