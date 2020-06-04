@@ -5,7 +5,7 @@
 Player* Player::instance {nullptr};
 
 Player::Player()
-: Actor(0, 7) {
+: Actor(0, 4) {
 	instance = this;
 	this->loadFromSavegame();
 }

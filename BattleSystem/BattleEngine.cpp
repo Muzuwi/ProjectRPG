@@ -158,7 +158,10 @@ void BattleEngine::DrawButtons(sf::RenderTarget& target, sf::Vector2f offset) {
 	if (player.getStatistics()["MP"] < 25) {
 		buttons[1].SetColor(sf::Color(38, 38, 38));
 	}
-	else buttons[1].SetColor(sf::Color(255, 255, 255));
+	else {
+		if(focus == 1) buttons[1].SetColor(sf::Color(183, 149, 77));
+		else buttons[1].SetColor(sf::Color(94, 129, 209));
+	}
 
 	for (int i = 0; i < buttons.size(); i++) buttons[i].Draw(target);
 }
@@ -190,6 +193,7 @@ bool BattleEngine::InitBattle(Actor* hao, Script* _caller) {
 	if (hao == nullptr) return false;
 	enemy = hao;
 
+	while (!queue.empty()) queue.pop();
 	enemyWindow.SetEnemy(hao);
 	turnCouner = 1;
 	for (int i = 0; i < 15; i++) Enqueue();
@@ -404,7 +408,6 @@ void BattleEngine::Defeat() {
 }
 
 void BattleEngine::EndBattle() {
-	while (!queue.empty()) queue.pop();
 	enemy = nullptr;
 	active = false;
 

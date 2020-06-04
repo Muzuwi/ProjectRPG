@@ -20,7 +20,7 @@ Item::Item(const std::string &itemDesignator)
 	config["maxStack"].get_to<unsigned>(maxSt);
 
 	std::string scriptName { };
-	config["script"].get_to<std::string>(scriptName);
+	//config["script"].get_to<std::string>(scriptName);
 
 	if(!scriptName.empty()) {
 		try {
